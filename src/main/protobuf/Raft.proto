@@ -1,0 +1,49 @@
+option java_package = "com.chicm.cmraft.protobuf.generated";
+option java_outer_classname = "RaftProtos";
+option java_generic_services = true;
+option java_generate_equals_and_hash = true;
+option optimize_for = SPEED;
+
+message ServerId {
+  required string host_name = 1;
+  optional uint32 port = 2;
+  optional uint64 thread_id = 3;
+}
+
+message RequestHeader {
+  optional uint32 id = 1;
+  optional string call_name = 2;
+}
+
+message ResponseHeader {
+  optional uint32 id = 1;
+}
+
+message HeartBeatRequest {
+  optional ServerId server = 1;
+}
+
+message HeartBeatResponse {
+}
+
+message ServerListRequest {
+}
+
+message ServerListResponse {
+  repeated ServerId server = 1;
+}
+
+message LeaderVoteRequest {
+  optional ServerId leader = 1;
+}
+
+message LeaderVoteResponse {
+  optional bool approved = 1;
+}
+
+service RaftService {
+  rpc beatHeart(HeartBeatRequest)  
+    returns(HeartBeatResponse);
+  rpc listServer(ServerListRequest) 
+    returns(ServerListResponse);
+}
