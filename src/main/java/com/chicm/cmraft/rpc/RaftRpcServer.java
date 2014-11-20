@@ -33,12 +33,12 @@ public class RaftRpcServer {
   private RaftRpcService service = null;
   
   public static void main(String[] args) throws Exception {
-    RaftRpcServer server = new RaftRpcServer(150);
+    RaftRpcServer server = new RaftRpcServer(5);
     server.startRpcServer();
     
     final RaftRpcClient client = new RaftRpcClient();
     
-    for(int i = 0; i < 200; i++) {
+    for(int i = 0; i < 2; i++) {
       new Thread(new Runnable() {
         public void run() {
           client.sendRequest();
@@ -72,15 +72,15 @@ public class RaftRpcServer {
     public void completed(AsynchronousSocketChannel channel, AsynchronousServerSocketChannel serverChannel) {
       
       serverChannel.accept(serverChannel, this);
-      LOG.debug(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
+      System.out.println(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
 
       for(;;) {
         try {
-          processRequest(channel);
+          processRequest2(channel);
         } catch(Exception e) {
           e.printStackTrace(System.out);
         }
-        LOG.debug("SERVER PROCESS FINISHED: " + channel);
+        LOG.info("SERVER PROCESS FINISHED: " + channel);
       }
       //serverChannel.accept(serverChannel, this);
  
@@ -101,6 +101,52 @@ public class RaftRpcServer {
       
       System.out.println("Server started");
     }
+  }
+  
+  private void processRequest2(AsynchronousSocketChannel channel) 
+      throws InterruptedException, ExecutionException {
+    try {
+     
+      ByteBuffer buf = ByteBuffer.allocate(DEFAULT_BYTEBUFFER_SIZE);
+      int len = channel.read(buf).get();
+      if(len <= 0) {
+        System.out.println("server: connection closed by client");
+        return;
+      }
+      LOG.info("SERVER READ LEN:" + len);
+      System.out.println("SERVER READ LEN:" + len);
+      buf.flip();
+      byte[] data = new byte[len];
+      buf.get(data);
+      
+      CodedInputStream cis = CodedInputStream .newInstance(data);
+      int messageSize = cis.readRawVarint32();
+      int sizesize = cis.getTotalBytesRead();
+      int nRemaining = messageSize + sizesize - len;
+      
+      if(nRemaining > 0) {
+        ByteBuffer buf2 = ByteBuffer.allocate(nRemaining);
+        if(channel.read(buf2).get() < nRemaining) {
+          LOG.error("FAILED read data, remaining:" + nRemaining);
+          return;
+        }
+        byte[] data2 = new byte[messageSize + sizesize];
+        System.arraycopy(data, 0, data2, 0, len);
+        
+        buf2.flip();
+        buf2.get(data2, len, nRemaining);
+        data = data2;
+      }
+      int offset = sizesize;
+      //RequestHeader header = RequestHeader. newBuilder().mergeFrom(data, offset, headerSize ).build();
+      //System.out.println("server: header parsed:" + header.toString());
+      
+      
+    } catch (InterruptedException | ExecutionException e) {
+      throw e;
+    } catch(Exception e) {
+      e.printStackTrace(System.out);
+    } 
   }
   
   private void processRequest(AsynchronousSocketChannel channel)

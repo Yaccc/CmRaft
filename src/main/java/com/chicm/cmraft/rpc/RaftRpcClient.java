@@ -22,8 +22,6 @@ public class RaftRpcClient {
   static final Log LOG = LogFactory.getLog(RaftRpcClient.class);
   private ConnectionPool connections = null;
   private static volatile AtomicInteger client_call_id = new AtomicInteger(1);
-  //private BlockingInterface service = null;
-  //public static SocketChannel ch = null;
   
   public static void main(String[] args) throws Exception {
     RaftRpcServer server = new RaftRpcServer(150);
@@ -70,13 +68,7 @@ public class RaftRpcClient {
     
     InetSocketAddress isa = new InetSocketAddress("localhost", 12888);
     connections = ConnectionPool.createConnectionPool(isa, 5, 500);
-    //services = ClientServicePool.createClientServicePool(isa, 1, 100);
     
-    
-   // BlockingRpcChannel c = new BlockingRpcChannelImplementation(this, );
-   // BlockingRpcChannel c = RaftRpcClient.createBlockingRpcChannel();
-   // System.out.println("client: get service1");
-   // service =  RaftService.newBlockingStub(c);
   }
   
   public Connection getConnection() {
@@ -87,52 +79,7 @@ public class RaftRpcClient {
     return client_call_id.incrementAndGet();
   }
   
-  /*
-  public BlockingInterface getService() {
-    InetSocketAddress isa = new InetSocketAddress("localhost", 12888);
-   // BlockingInterface service = null;
-    //return services.getService();
-    try  {
-      SocketChannel channel = SocketChannel.open();
-      channel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
-      if(channel.connect(isa)) {
-        System.out.println("client: connected");
-      } else
-        System.out.println("client: connection failed");
-      
-      System.out.println("client: get service2");
-      //services.add(service);
-      RaftRpcClient.ch = channel;
-      
-      ServerId.Builder sbuilder = ServerId.newBuilder();
-      sbuilder.setHostName("localhost");
-      sbuilder.setPort(11111);
-      
-      HeartBeatRequest.Builder builder = HeartBeatRequest.newBuilder();
-      builder.setServer(sbuilder.build());
-      //Thread.sleep(1000);
-      //service.beatHeart(null, builder.build());
-      
-    } catch(Exception e) {
-      e.printStackTrace(System.out);
-    }
-System.out.println("client: get service done");
-    return null;
-  }*/
-  /*
-  public void run() {
-    try (SocketChannel channel = SocketChannel.open()) {
-      SocketAddress adr = new InetSocketAddress("localhost", 9999);
-      channel.connect(adr);
-      BlockingRpcChannel c = new BlockingRpcChannelImplementation(this, channel);
-      BlockingInterface service =  PersonService.newBlockingStub(c);
-      Person p = AddPerson.newPerson(id,  name, String.format("%s@aaa.com", name), "11111111");
-      service.add(null, p);
-    
-    } catch(Exception e) {
-      e.printStackTrace(System.out);
-    }
-  }*/
+ 
   
   public static BlockingRpcChannel createBlockingRpcChannel(SocketChannel channel) {
     return new RaftRpcClient.BlockingRpcChannelImplementation(channel);
@@ -185,8 +132,10 @@ System.out.println("client: get service done");
         builder.setId(getCallId()); 
         builder.setRequestName(md.getName());
         
-        RequestHeader head = builder.build();
+        RequestHeader header = builder.build();
+        int len = RpcUtils.writeRpc(channel, header, request);
         
+        /*
         ByteBuffer buf = ByteBuffer.allocate(1000);
         
         byte[] headersize = new byte[10];
@@ -198,11 +147,9 @@ System.out.println("client: get service done");
         buf.put(request.toByteArray());
         
         buf.flip();
-        int len = channel.write(buf);
-        //channel.
+        int len = channel.write(buf);*/
         System.out.println("client write: " + len);
         System.out.println("client channel: " + channel);
-        //RaftRpcClient.ch.write(buf);
     } catch(Exception e) {
       e.printStackTrace(System.out);
     }
