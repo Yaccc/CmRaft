@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService.BlockingInterface;
 import com.google.protobuf.BlockingService;
@@ -108,43 +109,12 @@ public class RaftRpcServer {
       throws InterruptedException, ExecutionException {
     try {
       long curtime1 = System.currentTimeMillis();
-      RpcUtils.parseRpcFromChannel(channel, getService());
+      RpcCall call = RpcUtils.parseRpcFromChannel(channel, getService());
       long curtime2 = System.currentTimeMillis();
       LOG.info("Parsing request takes: " + (curtime2-curtime1) + " ms");
-      /*
-      LOG.debug("entering process2...");
-      ByteBuffer buf = ByteBuffer.allocate(DEFAULT_BYTEBUFFER_SIZE);
-      int len = channel.read(buf).get();
-      if(len <= 0) {
-        LOG.error("server: connection closed by client");
-        return;
-      }
-      LOG.debug("SERVER READ LEN:" + len);
-      buf.flip();
-      byte[] data = new byte[len];
-      buf.get(data);
       
-      CodedInputStream cis = CodedInputStream .newInstance(data);
-      int messageSize = cis.readRawVarint32();
-      int sizesize = cis.getTotalBytesRead();
-      int nRemaining = messageSize + sizesize - len;
-      
-      if(nRemaining > 0) {
-        ByteBuffer buf2 = ByteBuffer.allocate(nRemaining);
-        if(channel.read(buf2).get() < nRemaining) {
-          LOG.error("FAILED read data, remaining:" + nRemaining);
-          return;
-        }
-        byte[] data2 = new byte[messageSize + sizesize];
-        System.arraycopy(data, 0, data2, 0, len);
-        
-        buf2.flip();
-        buf2.get(data2, len, nRemaining);
-        data = data2;
-      }
-      int offset = sizesize; */
-      //RequestHeader header = RequestHeader. newBuilder().mergeFrom(data, offset, headerSize ).build();
-      //System.out.println("server: header parsed:" + header.toString());
+      //MethodDescriptor md = getService().getDescriptorForType().findMethodByName(call.getHeader().);
+      Message response = getService().callBlockingMethod(call.getMd(), null, call.getRequest());
       
       
     } catch (InterruptedException | ExecutionException e) {
@@ -153,6 +123,15 @@ public class RaftRpcServer {
     } catch(Exception e) {
       e.printStackTrace(System.out);
     } 
+  }
+  
+  private void sendResponse(AsynchronousSocketChannel channel, RpcCall call, Message response) {
+    ResponseHeader.Builder builder = ResponseHeader.newBuilder();
+    builder.setId(call.getCallId()); 
+    ResponseHeader header = builder.build();
+    
+    RpcUtils.writeRpc(channel, header, response);
+    
   }
   
   private void processRequest(AsynchronousSocketChannel channel)

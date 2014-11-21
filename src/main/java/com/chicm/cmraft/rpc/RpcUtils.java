@@ -185,7 +185,7 @@ public class RpcUtils {
         //System.out.println("Map:" + handle.getMap());
       }
       LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
-      call = new RpcCall(header, body);
+      call = new RpcCall(header.getId(), header, body, md);
       LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
     
   } catch (InterruptedException | ExecutionException e) {

@@ -1,34 +1,46 @@
 package com.chicm.cmraft.rpc;
 
+import com.google.protobuf.Descriptors.MethodDescriptor;
 import com.google.protobuf.Message;
 
 public class RpcCall {
-  private long callId;
-  private Message requestHeader;
+  private int callId;
+  private Message header;
   private Message request;
+  private MethodDescriptor md;
   
-  public RpcCall(Message requestHeader, Message request) {
+  public MethodDescriptor getMd() {
+    return md;
+  }
+
+  public void setMd(MethodDescriptor md) {
+    this.md = md;
+  }
+
+  public RpcCall(int callId, Message header, Message request, MethodDescriptor md) {
     this.request = request;
-    this.requestHeader = requestHeader;
+    this.header = header;
+    this.md = md;
+    this.callId = callId;
   }
   
-  public long getCallId() {
+  public int getCallId() {
     return callId;
   }
-  public void setCallId(long callId) {
+  public void setCallId(int callId) {
     this.callId = callId;
   }
   /**
    * @return the requestHeader
    */
-  public Message getRequestHeader() {
-    return requestHeader;
+  public Message getHeader() {
+    return header;
   }
   /**
    * @param requestHeader the requestHeader to set
    */
-  public void setRequestHeader(Message requestHeader) {
-    this.requestHeader = requestHeader;
+  public void setHeader(Message header) {
+    this.header = header;
   }
   /**
    * @return the request
