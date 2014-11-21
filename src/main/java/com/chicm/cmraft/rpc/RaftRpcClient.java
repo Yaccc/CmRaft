@@ -25,11 +25,11 @@ public class RaftRpcClient {
   private static volatile AtomicInteger client_call_id = new AtomicInteger(1);
   
   public static void main(String[] args) throws Exception {
-    RaftRpcServer server = new RaftRpcServer(15);
+    RaftRpcServer server = new RaftRpcServer(50);
     server.startRpcServer();
     final RaftRpcClient client = new RaftRpcClient();
     
-    for(int i = 0; i < 1; i++) {
+    for(int i = 0; i < 20; i++) {
     new Thread(new Runnable() {
       public void run() {
         client.sendRequest();
