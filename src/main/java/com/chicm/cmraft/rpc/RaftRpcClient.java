@@ -24,11 +24,11 @@ public class RaftRpcClient {
   private static volatile AtomicInteger client_call_id = new AtomicInteger(1);
   
   public static void main(String[] args) throws Exception {
-    RaftRpcServer server = new RaftRpcServer(150);
+    RaftRpcServer server = new RaftRpcServer(15);
     server.startRpcServer();
     final RaftRpcClient client = new RaftRpcClient();
     
-    for(int i = 0; i < 100; i++) {
+    for(int i = 0; i < 1; i++) {
     new Thread(new Runnable() {
       public void run() {
         client.sendRequest();
@@ -67,7 +67,7 @@ public class RaftRpcClient {
   public RaftRpcClient() {
     
     InetSocketAddress isa = new InetSocketAddress("localhost", 12888);
-    connections = ConnectionPool.createConnectionPool(isa, 5, 500);
+    connections = ConnectionPool.createConnectionPool(isa, 1, 500);
     
   }
   
@@ -140,16 +140,16 @@ public class RaftRpcClient {
         
         byte[] headersize = new byte[10];
         CodedOutputStream cos = CodedOutputStream.newInstance(headersize);
-        cos.writeRawVarint32(head.getSerializedSize()); 
+        cos.writeRawVarint32(header.getSerializedSize()); 
         
-        buf.put(headersize, 0, cos.computeRawVarint32Size(head.getSerializedSize()));
-        buf.put(head.toByteArray());
+        buf.put(headersize, 0, cos.computeRawVarint32Size(header.getSerializedSize()));
+        buf.put(header.toByteArray());
         buf.put(request.toByteArray());
         
         buf.flip();
         int len = channel.write(buf);*/
-        System.out.println("client write: " + len);
-        System.out.println("client channel: " + channel);
+        LOG.debug("client write: " + len);
+        LOG.debug("client channel: " + channel);
     } catch(Exception e) {
       e.printStackTrace(System.out);
     }

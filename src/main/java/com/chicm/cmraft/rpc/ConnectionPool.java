@@ -31,18 +31,12 @@ public class ConnectionPool {
     final ConnectionPool pool = new ConnectionPool(isa, initialSize, maxSize);
     for(int i = 0; i < initialSize; i++) {
       pool.createConnection();
-      /*
-      new Thread(new Runnable(){
-        public void run(){
-          pool.createConnection();
-        }
-        }).start();*/
     }
     return pool;
   }
   
   public synchronized Connection getConnection () {
-    System.out.println("getConnection1: used:" + used 
+    LOG.debug("getConnection1: used:" + used 
       + " size:" + connections.size() + " maxsize:" +maxSize  + " initialSize:" + initialSize);
     
     if(connections.size() == 0 && used >= initialSize && used < maxSize) {
@@ -56,7 +50,7 @@ public class ConnectionPool {
       return connections.remove(0);
     }
     
-    System.out.println("getConnection2: return null: used:" + used 
+    LOG.debug("getConnection2: return null: used:" + used 
       + " size:" + connections.size() + " maxsize:" +maxSize  + " initialSize:" + initialSize);
     return null;
   }

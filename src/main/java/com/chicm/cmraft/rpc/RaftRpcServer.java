@@ -26,7 +26,7 @@ import com.google.protobuf.Message.Builder;
 public class RaftRpcServer {
   static final Log LOG = LogFactory.getLog(RaftRpcServer.class);
   public final static int SERVER_PORT = 12888;
-  private final static int DEFAULT_RPC_LISTEN_THREADS = 5;
+  private final static int DEFAULT_RPC_LISTEN_THREADS = 1;
   private final static int DEFAULT_BYTEBUFFER_SIZE = 1000;
   private SocketListener socketListener = null;
   private int rpcListenThreads = DEFAULT_RPC_LISTEN_THREADS;
@@ -34,11 +34,12 @@ public class RaftRpcServer {
   
   public static void main(String[] args) throws Exception {
     RaftRpcServer server = new RaftRpcServer(5);
+    LOG.info("starting server");
     server.startRpcServer();
     
     final RaftRpcClient client = new RaftRpcClient();
     
-    for(int i = 0; i < 2; i++) {
+    for(int i = 0; i < 1; i++) {
       new Thread(new Runnable() {
         public void run() {
           client.sendRequest();
@@ -99,22 +100,23 @@ public class RaftRpcServer {
           .bind(new InetSocketAddress(SERVER_PORT));
       serverChannel.accept(serverChannel, new SocketHandler());
       
-      System.out.println("Server started");
+      LOG.info("Server started");
     }
   }
   
   private void processRequest2(AsynchronousSocketChannel channel) 
       throws InterruptedException, ExecutionException {
     try {
-     
+      RpcUtils.parseRpcFromChannel(channel, getService());
+      /*
+      LOG.debug("entering process2...");
       ByteBuffer buf = ByteBuffer.allocate(DEFAULT_BYTEBUFFER_SIZE);
       int len = channel.read(buf).get();
       if(len <= 0) {
-        System.out.println("server: connection closed by client");
+        LOG.error("server: connection closed by client");
         return;
       }
-      LOG.info("SERVER READ LEN:" + len);
-      System.out.println("SERVER READ LEN:" + len);
+      LOG.debug("SERVER READ LEN:" + len);
       buf.flip();
       byte[] data = new byte[len];
       buf.get(data);
@@ -137,12 +139,13 @@ public class RaftRpcServer {
         buf2.get(data2, len, nRemaining);
         data = data2;
       }
-      int offset = sizesize;
+      int offset = sizesize; */
       //RequestHeader header = RequestHeader. newBuilder().mergeFrom(data, offset, headerSize ).build();
       //System.out.println("server: header parsed:" + header.toString());
       
       
     } catch (InterruptedException | ExecutionException e) {
+      e.printStackTrace(System.out);
       throw e;
     } catch(Exception e) {
       e.printStackTrace(System.out);
@@ -158,12 +161,12 @@ public class RaftRpcServer {
       
     
       if(len <= 0) {
-        System.out.println("server: connection closed by client");
+        LOG.debug("server: connection closed by client");
         return;
       }
       
       int offset = 0;
-      System.out.println("server received request, len:" + len);
+      LOG.debug("server received request, len:" + len);
       
       buf.flip();
       byte[] data = new byte[len];
@@ -173,7 +176,7 @@ public class RaftRpcServer {
       int headerSize = cis.readRawVarint32();
       offset = cis.getTotalBytesRead();
       
-      System.out.println("server: headersize:" + headerSize);
+      LOG.debug("server: headersize:" + headerSize);
       
       if(len <= offset) {
         buf.clear();
@@ -185,7 +188,7 @@ public class RaftRpcServer {
       }  
       
       RequestHeader header = RequestHeader. newBuilder().mergeFrom(data, offset, headerSize ).build();
-      System.out.println("server: header parsed:" + header.toString());
+      LOG.debug("server: header parsed:" + header.toString());
       
       offset += headerSize;
       if(len <= headerSize) {
@@ -202,14 +205,14 @@ public class RaftRpcServer {
       Message request = null;
       if (builder != null) {
         request = builder.mergeFrom(data, offset, len-offset).build();
-        System.out.println("server : request parsed:" + request.toString());
+        LOG.debug("server : request parsed:" + request.toString());
         Message response = getService().callBlockingMethod(md, null, request);
-        System.out.println("server method called:" + header.getRequestName());
+        LOG.debug("server method called:" + header.getRequestName());
         
         //System.out.println("Map:" + handle.getMap());
       }
  
-      System.out.println("server: add done");
+      LOG.debug("RPC call done:" + request);
       
       } catch (InterruptedException | ExecutionException e) {
         // TODO Auto-generated catch block
