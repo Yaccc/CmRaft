@@ -33,13 +33,13 @@ public class RaftRpcServer {
   private RaftRpcService service = null;
   
   public static void main(String[] args) throws Exception {
-    RaftRpcServer server = new RaftRpcServer(5);
+    RaftRpcServer server = new RaftRpcServer(15);
     LOG.info("starting server");
     server.startRpcServer();
     
     final RaftRpcClient client = new RaftRpcClient();
     
-    for(int i = 0; i < 1; i++) {
+    for(int i = 0; i < 10; i++) {
       new Thread(new Runnable() {
         public void run() {
           client.sendRequest();
@@ -73,7 +73,7 @@ public class RaftRpcServer {
     public void completed(AsynchronousSocketChannel channel, AsynchronousServerSocketChannel serverChannel) {
       
       serverChannel.accept(serverChannel, this);
-      System.out.println(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
+      LOG.info(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
 
       for(;;) {
         try {
@@ -81,7 +81,7 @@ public class RaftRpcServer {
         } catch(Exception e) {
           e.printStackTrace(System.out);
         }
-        LOG.info("SERVER PROCESS FINISHED: " + channel);
+        LOG.debug("SERVER PROCESS FINISHED: " + channel);
       }
       //serverChannel.accept(serverChannel, this);
  
@@ -107,7 +107,10 @@ public class RaftRpcServer {
   private void processRequest2(AsynchronousSocketChannel channel) 
       throws InterruptedException, ExecutionException {
     try {
+      long curtime1 = System.currentTimeMillis();
       RpcUtils.parseRpcFromChannel(channel, getService());
+      long curtime2 = System.currentTimeMillis();
+      LOG.info("Parsing request takes: " + (curtime2-curtime1) + " ms");
       /*
       LOG.debug("entering process2...");
       ByteBuffer buf = ByteBuffer.allocate(DEFAULT_BYTEBUFFER_SIZE);

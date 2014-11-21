@@ -1,5 +1,7 @@
 package com.chicm.cmraft.rpc;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,6 +29,7 @@ public class RpcUtils {
   static final int DEFAULT_BYTEBUFFER_SIZE = 1000;
   static final int MESSAGE_LENGHT_FIELD_SIZE = 4;
   static final int DEFAULT_CHANNEL_READ_RETRIES = 5;
+  static final int TEST_PADDING_LEN = 1024*1024;
   
   public static byte[] int2Bytes(int n) {
     byte[] bytes = new byte[4];
@@ -80,18 +83,46 @@ public class RpcUtils {
       int totalSize) throws IOException {
     // writing total size so that server can read all request data in one read
     LOG.debug("total size:" + totalSize);
-    OutputStream os = Channels.newOutputStream(channel);
-    /*
-    CodedOutputStream cos = CodedOutputStream.newInstance(os);
-    cos.writeRawVarint32(totalSize); 
-    */
-    writeIntToStream(totalSize, os);
+    long t = System.currentTimeMillis();
+    byte btest[];
+    if(TEST_PADDING_LEN > 0)  {
+      btest = new byte[TEST_PADDING_LEN];
+      totalSize += btest.length;
+    }
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    writeIntToStream(totalSize, bos);
 
+    header.writeDelimitedTo(bos);
+    if (body != null) 
+      body.writeDelimitedTo(bos);
+    
+    bos.flush();
+    byte[] b = bos.toByteArray();
+    ByteBuffer buf = ByteBuffer.allocateDirect(totalSize + 4);
+    buf.put(b);
+    
+    if(TEST_PADDING_LEN > 0)  {
+        buf.put(btest);
+    }
+    buf.flip();
+    channel.write(buf);
+    LOG.debug("2222: " + (System.currentTimeMillis() -t) + " ms");
+    LOG.debug("flushed:" + totalSize);
+    return totalSize;
+  }
+  
+  private static int writeRpc_backup(SocketChannel channel, Message header, Message body, 
+      int totalSize) throws IOException {
+    // writing total size so that server can read all request data in one read
+    LOG.debug("total size:" + totalSize);
+    long t = System.currentTimeMillis();
+    OutputStream os = Channels.newOutputStream(channel);
+    writeIntToStream(totalSize, os);
     header.writeDelimitedTo(os);
     if (body != null) 
       body.writeDelimitedTo(os);
-    
     os.flush();
+    LOG.debug("2222: " + (System.currentTimeMillis() -t) + " ms");
     LOG.debug("flushed:" + totalSize);
     return totalSize;
   }
@@ -100,34 +131,25 @@ public class RpcUtils {
     throws InterruptedException, ExecutionException {
     RpcCall call = null;
     try {  
-      
+      long t = System.currentTimeMillis();
       InputStream in = Channels.newInputStream(channel);
+      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       byte[] datasize = new byte[MESSAGE_LENGHT_FIELD_SIZE];
       in.read(datasize);
+      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       int nDataSize = bytes2Int(datasize);
+      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       
       LOG.debug("message size: " + nDataSize);
-      /*
-      ByteBuffer buf4Size = ByteBuffer.allocate(1000);
+      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       
-      int len = channel.read(buf4Size).get();
-      if(len != MESSAGE_LENGHT_FIELD_SIZE) {
-        LOG.error("server: connection closed by client, len:" + len);
-        //return call;
-      }   
-      LOG.debug("SERVER READ LEN:" + len);
-      buf4Size.flip();
-      byte[] data4Size = new byte[len];
-      buf4Size.get(data4Size);
-      int messageLen = bytes2Int(data4Size);
-      LOG.debug("message size: " + messageLen);
-      */
       int len = 0;
       ByteBuffer buf = ByteBuffer.allocateDirect(nDataSize);
-      for ( int i = 0; i < DEFAULT_CHANNEL_READ_RETRIES; i++) {
-        len += channel.read(buf).get(3, TimeUnit.SECONDS);
+      for ( ;len < nDataSize; ) {
+        len += channel.read(buf).get();
       }
       LOG.debug("len:" + len);
+      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       if(len < nDataSize) {
         LOG.error("SOCKET READ FAILED, len:" + len);
         return call;
@@ -136,12 +158,12 @@ public class RpcUtils {
       byte[] data = new byte[nDataSize];
       buf.flip();
       buf.get(data);
-      
+      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       int offset = 0;
       CodedInputStream cis = CodedInputStream.newInstance(data, offset, nDataSize - offset);
       int headerSize =  cis.readRawVarint32();
       offset += cis.getTotalBytesRead();
-      
+      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       RequestHeader header = RequestHeader.newBuilder().mergeFrom(data, offset, headerSize ).build();
       
       offset += headerSize;
@@ -149,7 +171,7 @@ public class RpcUtils {
       cis.resetSizeCounter();
       int bodySize = cis.readRawVarint32();
       offset += cis.getTotalBytesRead();
-      
+      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       LOG.debug("header parsed:" + header.toString());
       
       MethodDescriptor md = service.getDescriptorForType().findMethodByName(header.getRequestName());
@@ -162,8 +184,9 @@ public class RpcUtils {
         LOG.debug("server method called:" + header.getRequestName());
         //System.out.println("Map:" + handle.getMap());
       }
-      
+      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       call = new RpcCall(header, body);
+      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
     
   } catch (InterruptedException | ExecutionException e) {
     throw e;
@@ -174,6 +197,89 @@ public class RpcUtils {
   } 
     return call;
   }
+  
+  public static RpcCall parseRpcFromChannel2 (AsynchronousSocketChannel channel, BlockingService service) 
+      throws InterruptedException, ExecutionException {
+      RpcCall call = null;
+      try {  
+        long t = System.currentTimeMillis();
+        /*
+        InputStream in = Channels.newInputStream(channel);
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        byte[] datasize = new byte[MESSAGE_LENGHT_FIELD_SIZE];
+        in.read(datasize);
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        int nDataSize = bytes2Int(datasize);
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        
+        LOG.debug("message size: " + nDataSize);
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");*/
+        
+        int len = 0;
+        ByteBuffer buf = ByteBuffer.allocateDirect(DEFAULT_BYTEBUFFER_SIZE);
+        
+        len = channel.read(buf).get();
+        buf.flip();
+        byte[] datasize = new byte[MESSAGE_LENGHT_FIELD_SIZE];
+        buf.get(datasize);
+        int nDataSize = bytes2Int(datasize);
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        LOG.debug("message size: " + nDataSize);
+        return call;
+        /*
+        buf = ByteBuffer.allocateDirect(nDataSize);
+        for ( int i = 0; i < DEFAULT_CHANNEL_READ_RETRIES; i++) {
+          len += channel.read(buf).get(3, TimeUnit.SECONDS);
+        }
+        LOG.debug("len:" + len);
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        if(len < nDataSize) {
+          LOG.error("SOCKET READ FAILED, len:" + len);
+          return call;
+        }
+        //byte[] data = buf.array();
+        byte[] data = new byte[nDataSize];
+        buf.flip();
+        buf.get(data);
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        int offset = 0;
+        CodedInputStream cis = CodedInputStream.newInstance(data, offset, nDataSize - offset);
+        int headerSize =  cis.readRawVarint32();
+        offset += cis.getTotalBytesRead();
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        RequestHeader header = RequestHeader.newBuilder().mergeFrom(data, offset, headerSize ).build();
+        
+        offset += headerSize;
+        cis.skipRawBytes(headerSize);
+        cis.resetSizeCounter();
+        int bodySize = cis.readRawVarint32();
+        offset += cis.getTotalBytesRead();
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        LOG.debug("header parsed:" + header.toString());
+        
+        MethodDescriptor md = service.getDescriptorForType().findMethodByName(header.getRequestName());
+        Builder builder = service.getRequestPrototype(md).newBuilderForType();
+        Message body = null;
+        if (builder != null) {
+          body = builder.mergeFrom(data, offset, bodySize).build();
+          LOG.debug("server : request parsed:" + body.toString());
+          //Message response = getService().callBlockingMethod(md, null, request);
+          LOG.debug("server method called:" + header.getRequestName());
+          //System.out.println("Map:" + handle.getMap());
+        }
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        call = new RpcCall(header, body);
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+      */
+    } catch (InterruptedException | ExecutionException e) {
+      throw e;
+    } /*catch (ReadPendingException e) {
+      System.out.println(e);
+    } */catch(Exception e) {
+      e.printStackTrace(System.out);
+    } 
+      return call;
+    }
   
   /*
   public static int writeRpc(SocketChannel channel, Message header, Message body)

@@ -40,6 +40,8 @@ public class RaftRpcClient {
     //System.out.println("client: after call service");
   }
   
+  //public re
+  
   public void sendRequest() {
     ServerId.Builder sbuilder = ServerId.newBuilder();
     sbuilder.setHostName("localhost");
@@ -52,9 +54,16 @@ public class RaftRpcClient {
     
     //System.out.println("client: before call service");
     try {
-      con.getService().beatHeart(null, builder.build());
-      
-      System.out.println("LL");
+      long tm = System.currentTimeMillis();
+      for(;;) {
+        con.getService().beatHeart(null, builder.build());
+        int n = getCallId();
+        if(n %100 == 0 ) {
+          long ms = System.currentTimeMillis() - tm;
+          LOG.info("RPC CALLS FINISHED: " + n + ", TIME: " + ms/1000 + " s, TPS: " + (n*1000/ms));
+        }
+      }
+      //System.out.println("LL");
       //con.getService().beatHeart(null, builder.build());
     } catch (Exception e) {
       e.printStackTrace(System.out);
@@ -75,10 +84,13 @@ public class RaftRpcClient {
     return connections.getConnection();
   }
   
-  public static int getCallId() {
+  public static int generateCallId() {
     return client_call_id.incrementAndGet();
   }
   
+  public static int getCallId() {
+    return client_call_id.get();
+  }
  
   
   public static BlockingRpcChannel createBlockingRpcChannel(SocketChannel channel) {
@@ -129,7 +141,7 @@ public class RaftRpcClient {
       Message respond = null;
       try {
         RequestHeader.Builder builder = RequestHeader.newBuilder();
-        builder.setId(getCallId()); 
+        builder.setId(generateCallId()); 
         builder.setRequestName(md.getName());
         
         RequestHeader header = builder.build();

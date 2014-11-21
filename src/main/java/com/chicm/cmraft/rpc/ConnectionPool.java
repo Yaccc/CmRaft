@@ -41,7 +41,7 @@ public class ConnectionPool {
     
     if(connections.size() == 0 && used >= initialSize && used < maxSize) {
           if(createConnection() == null) {
-            System.out.println("create connection failed");
+            LOG.error("create connection failed");
             return null;
           }
     }
@@ -68,16 +68,15 @@ public class ConnectionPool {
   private Connection createConnection() {
     Connection conn = null;
     try  {
-      System.out.println("creating conn:");
+      LOG.debug("creating conn:");
       SocketChannel channel = SocketChannel.open();
       boolean connected = channel.connect(isa);
-      System.out.println("client connected:" + connected + " " + channel);
+      LOG.debug("client connected:" + connected + " " + channel);
       
       BlockingRpcChannel c = RaftRpcClient.createBlockingRpcChannel(channel);
       BlockingInterface service =  RaftService.newBlockingStub(c);
       
       conn = new ConnectionImpl(channel, service, this);
-      System.out.println("conn:" + conn);
       connections.add(conn);
     
     } catch(Exception e) {
