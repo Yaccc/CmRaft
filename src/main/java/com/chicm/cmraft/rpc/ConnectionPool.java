@@ -1,6 +1,7 @@
 package com.chicm.cmraft.rpc;
 
 import java.net.InetSocketAddress;
+import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class ConnectionPool {
       used--;
     }
   }
-  
+  /*
   private Connection createConnection() {
     Connection conn = null;
     try  {
@@ -84,13 +85,37 @@ public class ConnectionPool {
     }
     return conn;
   }
+  */
+  private Connection createConnection() {
+    Connection conn = null;
+    try  {
+      LOG.debug("creating conn:");
+      //SocketChannel channel = SocketChannel.open();
+      //boolean connected = channel.connect(isa);
+      
+      AsynchronousSocketChannel channel = AsynchronousSocketChannel.open();
+      channel.connect(isa).get();
+      
+      LOG.debug("client connected:" + channel);
+      
+      BlockingRpcChannel c = RaftRpcClient.createBlockingRpcChannel(channel);
+      BlockingInterface service =  RaftService.newBlockingStub(c);
+      
+      conn = new ConnectionImpl(channel, service, this);
+      connections.add(conn);
+    
+    } catch(Exception e) {
+      e.printStackTrace(System.out);
+    }
+    return conn;
+  }
   
   class ConnectionImpl implements Connection {
-    private SocketChannel channel = null;
+    private AsynchronousSocketChannel channel = null;
     private BlockingInterface service = null;
     private ConnectionPool pool = null;
     
-    public ConnectionImpl(SocketChannel channel, BlockingInterface service, ConnectionPool pool) {
+    public ConnectionImpl(AsynchronousSocketChannel channel, BlockingInterface service, ConnectionPool pool) {
       this.channel = channel;
       this.service = service;
       this.pool = pool;
@@ -102,7 +127,7 @@ public class ConnectionPool {
     }
     
     @Override
-    public SocketChannel getChannel() {
+    public AsynchronousSocketChannel getChannel() {
       return channel;
     }
     

@@ -40,7 +40,7 @@ public class RaftRpcServer {
     
     final RaftRpcClient client = new RaftRpcClient();
     
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 5; i++) {
       new Thread(new Runnable() {
         public void run() {
           client.sendRequest();
@@ -116,6 +116,7 @@ public class RaftRpcServer {
       //MethodDescriptor md = getService().getDescriptorForType().findMethodByName(call.getHeader().);
       Message response = getService().callBlockingMethod(call.getMd(), null, call.getRequest());
       
+      sendResponse(channel, call, response);
       
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace(System.out);
@@ -130,7 +131,11 @@ public class RaftRpcServer {
     builder.setId(call.getCallId()); 
     ResponseHeader header = builder.build();
     
-    RpcUtils.writeRpc(channel, header, response);
+    try {
+        RpcUtils.writeRpc(channel, header, response);
+    } catch(Exception e) {
+      e.printStackTrace(System.out);
+    }
     
   }
   

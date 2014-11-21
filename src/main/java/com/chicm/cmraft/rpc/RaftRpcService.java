@@ -17,6 +17,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   
   public HeartBeatResponse beatHeart(RpcController controller, HeartBeatRequest request)
       throws ServiceException {
+    LOG.debug("beatHeart called");
     return null;
   }
 

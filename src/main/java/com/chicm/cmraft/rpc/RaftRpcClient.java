@@ -2,6 +2,7 @@ package com.chicm.cmraft.rpc;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -93,7 +94,7 @@ public class RaftRpcClient {
   }
  
   
-  public static BlockingRpcChannel createBlockingRpcChannel(SocketChannel channel) {
+  public static BlockingRpcChannel createBlockingRpcChannel(AsynchronousSocketChannel channel) {
     return new RaftRpcClient.BlockingRpcChannelImplementation(channel);
   }
   /*
@@ -128,9 +129,9 @@ public class RaftRpcClient {
   }
 */
   public static class BlockingRpcChannelImplementation implements BlockingRpcChannel {
-    private SocketChannel channel = null;
+    private AsynchronousSocketChannel channel = null;
 
-    protected BlockingRpcChannelImplementation(SocketChannel channel) {
+    protected BlockingRpcChannelImplementation(AsynchronousSocketChannel channel) {
       this.channel = channel;
     }
 
@@ -146,6 +147,7 @@ public class RaftRpcClient {
         
         RequestHeader header = builder.build();
         int len = RpcUtils.writeRpc(channel, header, request);
+        RpcUtils.parseRpcFromChannel2(channel, null);
         
         /*
         ByteBuffer buf = ByteBuffer.allocate(1000);

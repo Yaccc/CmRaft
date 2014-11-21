@@ -64,10 +64,10 @@ public class ClientServicePool {
       } else
         LOG.debug("client: connection failed");
       
-      BlockingRpcChannel c = RaftRpcClient.createBlockingRpcChannel(channel);
-      service =  RaftService.newBlockingStub(c);
+      //BlockingRpcChannel c = RaftRpcClient.createBlockingRpcChannel(channel);
+      //service =  RaftService.newBlockingStub(c);
       
-      services.add(service);
+      //services.add(service);
     
     } catch(Exception e) {
       e.printStackTrace(System.out);

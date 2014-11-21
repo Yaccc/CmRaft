@@ -3,7 +3,7 @@
  */
 package com.chicm.cmraft.rpc;
 
-import java.nio.channels.SocketChannel;
+import java.nio.channels.AsynchronousSocketChannel;
 
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService.BlockingInterface;
 
@@ -13,6 +13,6 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService.BlockingInterf
  */
 public interface Connection {
   BlockingInterface getService();
-  SocketChannel getChannel();
+  AsynchronousSocketChannel getChannel();
   void close();
 }

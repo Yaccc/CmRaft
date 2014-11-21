@@ -29,7 +29,7 @@ public class RpcUtils {
   static final int DEFAULT_BYTEBUFFER_SIZE = 1000;
   static final int MESSAGE_LENGHT_FIELD_SIZE = 4;
   static final int DEFAULT_CHANNEL_READ_RETRIES = 5;
-  static final int TEST_PADDING_LEN = 1024*1024;
+  static final int TEST_PADDING_LEN = 0;
   
   public static byte[] int2Bytes(int n) {
     byte[] bytes = new byte[4];
@@ -73,14 +73,14 @@ public class RpcUtils {
     return totalSize;
   }
   
-  public static int writeRpc(SocketChannel channel, Message header, Message body) 
-    throws IOException {
+  public static int writeRpc(AsynchronousSocketChannel channel, Message header, Message body) 
+    throws IOException, InterruptedException, ExecutionException {
     int totalSize = getTotalSizeofMessages(header, body);
     return writeRpc(channel, header, body, totalSize);
   }
   
-  private static int writeRpc(SocketChannel channel, Message header, Message body, 
-      int totalSize) throws IOException {
+  private static int writeRpc(AsynchronousSocketChannel channel, Message header, Message body, 
+      int totalSize) throws IOException, InterruptedException, ExecutionException {
     // writing total size so that server can read all request data in one read
     LOG.debug("total size:" + totalSize);
     long t = System.currentTimeMillis();
@@ -105,7 +105,7 @@ public class RpcUtils {
         buf.put(btest);
     }
     buf.flip();
-    channel.write(buf);
+    channel.write(buf).get();
     LOG.debug("2222: " + (System.currentTimeMillis() -t) + " ms");
     LOG.debug("flushed:" + totalSize);
     return totalSize;
