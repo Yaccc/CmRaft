@@ -34,13 +34,13 @@ public class RaftRpcServer {
   private RaftRpcService service = null;
   
   public static void main(String[] args) throws Exception {
-    RaftRpcServer server = new RaftRpcServer(15);
+    RaftRpcServer server = new RaftRpcServer(1);
     LOG.info("starting server");
     server.startRpcServer();
     
     final RaftRpcClient client = new RaftRpcClient();
     
-    for(int i = 0; i < 5; i++) {
+    for(int i = 0; i < 1; i++) {
       new Thread(new Runnable() {
         public void run() {
           client.sendRequest();

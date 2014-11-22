@@ -29,7 +29,7 @@ public class RpcUtils {
   static final int DEFAULT_BYTEBUFFER_SIZE = 1000;
   static final int MESSAGE_LENGHT_FIELD_SIZE = 4;
   static final int DEFAULT_CHANNEL_READ_RETRIES = 5;
-  static final int TEST_PADDING_LEN = 0;
+  static final int TEST_PADDING_LEN = 1024;
   
   public static byte[] int2Bytes(int n) {
     byte[] bytes = new byte[4];
