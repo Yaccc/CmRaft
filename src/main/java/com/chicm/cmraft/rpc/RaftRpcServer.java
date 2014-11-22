@@ -28,7 +28,6 @@ public class RaftRpcServer {
   static final Log LOG = LogFactory.getLog(RaftRpcServer.class);
   public static int SERVER_PORT = 12888;
   private final static int DEFAULT_RPC_LISTEN_THREADS = 1;
-  private final static int DEFAULT_BYTEBUFFER_SIZE = 1000;
   private SocketListener socketListener = null;
   private int rpcListenThreads = DEFAULT_RPC_LISTEN_THREADS;
   private RaftRpcService service = null;
@@ -91,7 +90,7 @@ public class RaftRpcServer {
 
       for(;;) {
         try {
-          processRequest2(channel);
+          processRequest(channel);
         } catch(Exception e) {
           e.printStackTrace(System.out);
           try {
@@ -100,10 +99,8 @@ public class RaftRpcServer {
           }
           break;
         } 
-        LOG.debug("SERVER PROCESS FINISHED: " + channel);
+        LOG.debug("request processed");
       }
-      //serverChannel.accept(serverChannel, this);
- 
     }
     @Override
     public void failed(Throwable throwable, AsynchronousServerSocketChannel attachment) {
@@ -123,16 +120,15 @@ public class RaftRpcServer {
     }
   }
   
-  private void processRequest2(AsynchronousSocketChannel channel) 
+  private void processRequest(AsynchronousSocketChannel channel) 
       throws InterruptedException, ExecutionException {
     try {
       long curtime1 = System.currentTimeMillis();
       RpcCall call = RpcUtils.parseRpcRequestFromChannel(channel, getService());
       long curtime2 = System.currentTimeMillis();
       LOG.debug("Parsing request takes: " + (curtime2-curtime1) + " ms");
-      
       LOG.debug("server recieved: call id: " + call.getCallId());
-      //MethodDescriptor md = getService().getDescriptorForType().findMethodByName(call.getHeader().);
+
       Message response = getService().callBlockingMethod(call.getMd(), null, call.getMessage());
       
       sendResponse(channel, call, response);
@@ -156,79 +152,6 @@ public class RaftRpcServer {
     } catch(Exception e) {
       e.printStackTrace(System.out);
     }
-    
   }
   
-  private void processRequest(AsynchronousSocketChannel channel)
-    throws InterruptedException, ExecutionException {
-    try {
-      ByteBuffer buf = ByteBuffer.allocate(DEFAULT_BYTEBUFFER_SIZE);
-      int len;
-        len = channel.read(buf).get();
-      
-    
-      if(len <= 0) {
-        LOG.debug("server: connection closed by client");
-        return;
-      }
-      
-      int offset = 0;
-      LOG.debug("server received request, len:" + len);
-      
-      buf.flip();
-      byte[] data = new byte[len];
-      buf.get(data);
-      
-      CodedInputStream cis = CodedInputStream .newInstance(data, offset, len );
-      int headerSize = cis.readRawVarint32();
-      offset = cis.getTotalBytesRead();
-      
-      LOG.debug("server: headersize:" + headerSize);
-      
-      if(len <= offset) {
-        buf.clear();
-        len = channel.read(buf).get();
-        data = new byte[len];
-        buf.flip();
-        buf.get(data);
-        offset=0;
-      }  
-      
-      RequestHeader header = RequestHeader. newBuilder().mergeFrom(data, offset, headerSize ).build();
-      LOG.debug("server: header parsed:" + header.toString());
-      
-      offset += headerSize;
-      if(len <= headerSize) {
-        buf.clear();
-        len = channel.read(buf).get();
-        buf.flip();
-        data = new byte[len];
-        buf.get(data);
-        offset=0;
-      }
-
-      MethodDescriptor md = getService().getDescriptorForType().findMethodByName(header.getRequestName());
-      Builder builder = getService().getRequestPrototype(md).newBuilderForType();
-      Message request = null;
-      if (builder != null) {
-        request = builder.mergeFrom(data, offset, len-offset).build();
-        LOG.debug("server : request parsed:" + request.toString());
-        Message response = getService().callBlockingMethod(md, null, request);
-        LOG.debug("server method called:" + header.getRequestName());
-        
-        //System.out.println("Map:" + handle.getMap());
-      }
- 
-      LOG.debug("RPC call done:" + request);
-      
-      } catch (InterruptedException | ExecutionException e) {
-        // TODO Auto-generated catch block
-          throw e;
-      
-      } catch(Exception e) {
-      e.printStackTrace(System.out);
-      }
- 
-  
-  }
 }
