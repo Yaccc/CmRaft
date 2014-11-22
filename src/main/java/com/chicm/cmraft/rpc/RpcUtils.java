@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.CodedOutputStream;
@@ -29,7 +30,7 @@ public class RpcUtils {
   static final int DEFAULT_BYTEBUFFER_SIZE = 1000;
   static final int MESSAGE_LENGHT_FIELD_SIZE = 4;
   static final int DEFAULT_CHANNEL_READ_RETRIES = 5;
-  static final int TEST_PADDING_LEN = 1024;
+  public static int TEST_PADDING_LEN = 0;
   
   public static byte[] int2Bytes(int n) {
     byte[] bytes = new byte[4];
@@ -84,7 +85,7 @@ public class RpcUtils {
     // writing total size so that server can read all request data in one read
     LOG.debug("total size:" + totalSize);
     long t = System.currentTimeMillis();
-    byte btest[];
+    byte btest[] = null;
     if(TEST_PADDING_LEN > 0)  {
       btest = new byte[TEST_PADDING_LEN];
       totalSize += btest.length;
@@ -127,7 +128,7 @@ public class RpcUtils {
     return totalSize;
   }
 
-  public static RpcCall parseRpcFromChannel (AsynchronousSocketChannel channel, BlockingService service) 
+  public static RpcCall parseRpcRequestFromChannel (AsynchronousSocketChannel channel, BlockingService service) 
     throws InterruptedException, ExecutionException {
     RpcCall call = null;
     try {  
@@ -197,6 +198,66 @@ public class RpcUtils {
   } 
     return call;
   }
+  
+  public static RpcCall parseRpcResponseFromChannel (AsynchronousSocketChannel channel, BlockingService service) 
+      throws InterruptedException, ExecutionException {
+      RpcCall call = null;
+      try {  
+        long t = System.currentTimeMillis();
+        InputStream in = Channels.newInputStream(channel);
+        byte[] datasize = new byte[MESSAGE_LENGHT_FIELD_SIZE];
+        in.read(datasize);
+        int nDataSize = bytes2Int(datasize);
+        
+        LOG.debug("message size: " + nDataSize);
+        
+        int len = 0;
+        ByteBuffer buf = ByteBuffer.allocateDirect(nDataSize);
+        for ( ;len < nDataSize; ) {
+          len += channel.read(buf).get();
+        }
+        LOG.debug("len:" + len);
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        if(len < nDataSize) {
+          LOG.error("SOCKET READ FAILED, len:" + len);
+          return call;
+        }
+        byte[] data = new byte[nDataSize];
+        buf.flip();
+        buf.get(data);
+        int offset = 0;
+        CodedInputStream cis = CodedInputStream.newInstance(data, offset, nDataSize - offset);
+        int headerSize =  cis.readRawVarint32();
+        offset += cis.getTotalBytesRead();
+        ResponseHeader header = ResponseHeader.newBuilder().mergeFrom(data, offset, headerSize ).build();
+        
+        offset += headerSize;
+        cis.skipRawBytes(headerSize);
+        cis.resetSizeCounter();
+        int bodySize = cis.readRawVarint32();
+        offset += cis.getTotalBytesRead();
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        LOG.debug("header parsed:" + header.toString());
+        
+        MethodDescriptor md = service.getDescriptorForType().findMethodByName(header.getResponseName());
+        Builder builder = service.getResponsePrototype(md).newBuilderForType();
+        Message body = null;
+        if (builder != null) {
+          body = builder.mergeFrom(data, offset, bodySize).build();
+        }
+        call = new RpcCall(header.getId(), header, body, md);
+        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+      
+    } catch (InterruptedException | ExecutionException e) {
+      throw e;
+    } /*catch (ReadPendingException e) {
+      System.out.println(e);
+    } */catch(Exception e) {
+      e.printStackTrace(System.out);
+    } 
+      return call;
+    }
+   
   
   public static RpcCall parseRpcFromChannel2 (AsynchronousSocketChannel channel, BlockingService service) 
       throws InterruptedException, ExecutionException {

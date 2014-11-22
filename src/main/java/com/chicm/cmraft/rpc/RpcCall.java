@@ -6,7 +6,7 @@ import com.google.protobuf.Message;
 public class RpcCall {
   private int callId;
   private Message header;
-  private Message request;
+  private Message message;
   private MethodDescriptor md;
   
   public MethodDescriptor getMd() {
@@ -17,8 +17,8 @@ public class RpcCall {
     this.md = md;
   }
 
-  public RpcCall(int callId, Message header, Message request, MethodDescriptor md) {
-    this.request = request;
+  public RpcCall(int callId, Message header, Message msg, MethodDescriptor md) {
+    this.message = msg;
     this.header = header;
     this.md = md;
     this.callId = callId;
@@ -45,14 +45,14 @@ public class RpcCall {
   /**
    * @return the request
    */
-  public Message getRequest() {
-    return request;
+  public Message getMessage() {
+    return message;
   }
   /**
    * @param request the request to set
    */
-  public void setRequest(Message request) {
-    this.request = request;
+  public void setMessage(Message msg) {
+    this.message = msg;
   }
   
 }

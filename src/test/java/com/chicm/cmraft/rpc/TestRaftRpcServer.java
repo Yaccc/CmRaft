@@ -11,9 +11,18 @@ import java.util.concurrent.TimeUnit;
 public class TestRaftRpcServer {
 
   public static void main(String[] args) {
-    RaftRpcServer server = new RaftRpcServer(100);
+    RaftRpcServer server = new RaftRpcServer(20);
     server.startRpcServer();
-    TestClient.sendData();
+    final RaftRpcClient client = new RaftRpcClient("localhost", RaftRpcServer.SERVER_PORT);
+    
+    for(int i = 0; i < 10; i++) {
+    new Thread(new Runnable() {
+      public void run() {
+        client.sendRequest();
+        
+      }
+    }).start();
+    }
   }
 
 }

@@ -1316,6 +1316,21 @@ public final class RaftProtos {
      * <code>optional uint32 id = 1;</code>
      */
     int getId();
+
+    // optional string response_name = 2;
+    /**
+     * <code>optional string response_name = 2;</code>
+     */
+    boolean hasResponseName();
+    /**
+     * <code>optional string response_name = 2;</code>
+     */
+    java.lang.String getResponseName();
+    /**
+     * <code>optional string response_name = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getResponseNameBytes();
   }
   /**
    * Protobuf type {@code ResponseHeader}
@@ -1371,6 +1386,11 @@ public final class RaftProtos {
             case 8: {
               bitField0_ |= 0x00000001;
               id_ = input.readUInt32();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              responseName_ = input.readBytes();
               break;
             }
           }
@@ -1429,8 +1449,52 @@ public final class RaftProtos {
       return id_;
     }
 
+    // optional string response_name = 2;
+    public static final int RESPONSE_NAME_FIELD_NUMBER = 2;
+    private java.lang.Object responseName_;
+    /**
+     * <code>optional string response_name = 2;</code>
+     */
+    public boolean hasResponseName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string response_name = 2;</code>
+     */
+    public java.lang.String getResponseName() {
+      java.lang.Object ref = responseName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          responseName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string response_name = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getResponseNameBytes() {
+      java.lang.Object ref = responseName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        responseName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       id_ = 0;
+      responseName_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -1447,6 +1511,9 @@ public final class RaftProtos {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, id_);
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getResponseNameBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -1459,6 +1526,10 @@ public final class RaftProtos {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getResponseNameBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1488,6 +1559,11 @@ public final class RaftProtos {
         result = result && (getId()
             == other.getId());
       }
+      result = result && (hasResponseName() == other.hasResponseName());
+      if (hasResponseName()) {
+        result = result && getResponseName()
+            .equals(other.getResponseName());
+      }
       result = result &&
           getUnknownFields().equals(other.getUnknownFields());
       return result;
@@ -1504,6 +1580,10 @@ public final class RaftProtos {
       if (hasId()) {
         hash = (37 * hash) + ID_FIELD_NUMBER;
         hash = (53 * hash) + getId();
+      }
+      if (hasResponseName()) {
+        hash = (37 * hash) + RESPONSE_NAME_FIELD_NUMBER;
+        hash = (53 * hash) + getResponseName().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -1616,6 +1696,8 @@ public final class RaftProtos {
         super.clear();
         id_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
+        responseName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -1648,6 +1730,10 @@ public final class RaftProtos {
           to_bitField0_ |= 0x00000001;
         }
         result.id_ = id_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.responseName_ = responseName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1666,6 +1752,11 @@ public final class RaftProtos {
         if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader.getDefaultInstance()) return this;
         if (other.hasId()) {
           setId(other.getId());
+        }
+        if (other.hasResponseName()) {
+          bitField0_ |= 0x00000002;
+          responseName_ = other.responseName_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1723,6 +1814,80 @@ public final class RaftProtos {
       public Builder clearId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         id_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional string response_name = 2;
+      private java.lang.Object responseName_ = "";
+      /**
+       * <code>optional string response_name = 2;</code>
+       */
+      public boolean hasResponseName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string response_name = 2;</code>
+       */
+      public java.lang.String getResponseName() {
+        java.lang.Object ref = responseName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          responseName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string response_name = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getResponseNameBytes() {
+        java.lang.Object ref = responseName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          responseName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string response_name = 2;</code>
+       */
+      public Builder setResponseName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        responseName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string response_name = 2;</code>
+       */
+      public Builder clearResponseName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        responseName_ = getDefaultInstance().getResponseName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string response_name = 2;</code>
+       */
+      public Builder setResponseNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        responseName_ = value;
         onChanged();
         return this;
       }
@@ -5043,18 +5208,18 @@ public final class RaftProtos {
       "\n\nRaft.proto\">\n\010ServerId\022\021\n\thost_name\030\001 " +
       "\002(\t\022\014\n\004port\030\002 \001(\r\022\021\n\tthread_id\030\003 \001(\004\"1\n\r" +
       "RequestHeader\022\n\n\002id\030\001 \001(\r\022\024\n\014request_nam" +
-      "e\030\002 \001(\t\"\034\n\016ResponseHeader\022\n\n\002id\030\001 \001(\r\"-\n" +
-      "\020HeartBeatRequest\022\031\n\006server\030\001 \001(\0132\t.Serv" +
-      "erId\"\023\n\021HeartBeatResponse\"\023\n\021ServerListR" +
-      "equest\"/\n\022ServerListResponse\022\031\n\006server\030\001" +
-      " \003(\0132\t.ServerId\".\n\021LeaderVoteRequest\022\031\n\006" +
-      "leader\030\001 \001(\0132\t.ServerId\"&\n\022LeaderVoteRes" +
-      "ponse\022\020\n\010approved\030\001 \001(\0102x\n\013RaftService\0222",
-      "\n\tbeatHeart\022\021.HeartBeatRequest\032\022.HeartBe" +
-      "atResponse\0225\n\nlistServer\022\022.ServerListReq" +
-      "uest\032\023.ServerListResponseB9\n#com.chicm.c" +
-      "mraft.protobuf.generatedB\nRaftProtosH\001\210\001" +
-      "\001\240\001\001"
+      "e\030\002 \001(\t\"3\n\016ResponseHeader\022\n\n\002id\030\001 \001(\r\022\025\n" +
+      "\rresponse_name\030\002 \001(\t\"-\n\020HeartBeatRequest" +
+      "\022\031\n\006server\030\001 \001(\0132\t.ServerId\"\023\n\021HeartBeat" +
+      "Response\"\023\n\021ServerListRequest\"/\n\022ServerL" +
+      "istResponse\022\031\n\006server\030\001 \003(\0132\t.ServerId\"." +
+      "\n\021LeaderVoteRequest\022\031\n\006leader\030\001 \001(\0132\t.Se" +
+      "rverId\"&\n\022LeaderVoteResponse\022\020\n\010approved",
+      "\030\001 \001(\0102x\n\013RaftService\0222\n\tbeatHeart\022\021.Hea" +
+      "rtBeatRequest\032\022.HeartBeatResponse\0225\n\nlis" +
+      "tServer\022\022.ServerListRequest\032\023.ServerList" +
+      "ResponseB9\n#com.chicm.cmraft.protobuf.ge" +
+      "neratedB\nRaftProtosH\001\210\001\001\240\001\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5078,7 +5243,7 @@ public final class RaftProtos {
           internal_static_ResponseHeader_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ResponseHeader_descriptor,
-              new java.lang.String[] { "Id", });
+              new java.lang.String[] { "Id", "ResponseName", });
           internal_static_HeartBeatRequest_descriptor =
             getDescriptor().getMessageTypes().get(3);
           internal_static_HeartBeatRequest_fieldAccessorTable = new

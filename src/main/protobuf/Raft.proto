@@ -17,6 +17,7 @@ message RequestHeader {
 
 message ResponseHeader {
   optional uint32 id = 1;
+  optional string response_name =2;
 }
 
 message HeartBeatRequest {

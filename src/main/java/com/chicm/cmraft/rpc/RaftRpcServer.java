@@ -26,7 +26,7 @@ import com.google.protobuf.Message.Builder;
 
 public class RaftRpcServer {
   static final Log LOG = LogFactory.getLog(RaftRpcServer.class);
-  public final static int SERVER_PORT = 12888;
+  public static int SERVER_PORT = 12888;
   private final static int DEFAULT_RPC_LISTEN_THREADS = 1;
   private final static int DEFAULT_BYTEBUFFER_SIZE = 1000;
   private SocketListener socketListener = null;
@@ -34,19 +34,32 @@ public class RaftRpcServer {
   private RaftRpcService service = null;
   
   public static void main(String[] args) throws Exception {
-    RaftRpcServer server = new RaftRpcServer(1);
+    
+    if(args.length < 2) {
+      System.out.println("usage: RaftRpcServer <listening port> <listen threads number> [padding length]");
+      return;
+    }
+    SERVER_PORT = Integer.parseInt(args[0]);
+    int nListenThreads = Integer.parseInt(args[1]);
+    
+    if(args.length == 3) {
+      RpcUtils.TEST_PADDING_LEN = Integer.parseInt(args[2]);
+    }
+    
+    RaftRpcServer server = new RaftRpcServer(nListenThreads);
     LOG.info("starting server");
     server.startRpcServer();
     
+    /*
     final RaftRpcClient client = new RaftRpcClient();
     
-    for(int i = 0; i < 1; i++) {
+    for(int i = 0; i < 5; i++) {
       new Thread(new Runnable() {
         public void run() {
           client.sendRequest();
         }
       }).start();
-     }
+     }*/
   }
   
   RaftRpcServer (int nListenThreads) {
@@ -74,14 +87,19 @@ public class RaftRpcServer {
     public void completed(AsynchronousSocketChannel channel, AsynchronousServerSocketChannel serverChannel) {
       
       serverChannel.accept(serverChannel, this);
-      LOG.info(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
+      LOG.debug(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
 
       for(;;) {
         try {
           processRequest2(channel);
         } catch(Exception e) {
           e.printStackTrace(System.out);
-        }
+          try {
+            channel.close();
+          } catch(Exception e2) {
+          }
+          break;
+        } 
         LOG.debug("SERVER PROCESS FINISHED: " + channel);
       }
       //serverChannel.accept(serverChannel, this);
@@ -109,12 +127,13 @@ public class RaftRpcServer {
       throws InterruptedException, ExecutionException {
     try {
       long curtime1 = System.currentTimeMillis();
-      RpcCall call = RpcUtils.parseRpcFromChannel(channel, getService());
+      RpcCall call = RpcUtils.parseRpcRequestFromChannel(channel, getService());
       long curtime2 = System.currentTimeMillis();
-      LOG.info("Parsing request takes: " + (curtime2-curtime1) + " ms");
+      LOG.debug("Parsing request takes: " + (curtime2-curtime1) + " ms");
       
+      LOG.debug("server recieved: call id: " + call.getCallId());
       //MethodDescriptor md = getService().getDescriptorForType().findMethodByName(call.getHeader().);
-      Message response = getService().callBlockingMethod(call.getMd(), null, call.getRequest());
+      Message response = getService().callBlockingMethod(call.getMd(), null, call.getMessage());
       
       sendResponse(channel, call, response);
       
@@ -129,6 +148,7 @@ public class RaftRpcServer {
   private void sendResponse(AsynchronousSocketChannel channel, RpcCall call, Message response) {
     ResponseHeader.Builder builder = ResponseHeader.newBuilder();
     builder.setId(call.getCallId()); 
+    builder.setResponseName(call.getMd().getName());
     ResponseHeader header = builder.build();
     
     try {

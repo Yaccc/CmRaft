@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse;
 import com.google.protobuf.BlockingService;
@@ -18,7 +19,10 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   public HeartBeatResponse beatHeart(RpcController controller, HeartBeatRequest request)
       throws ServiceException {
     LOG.debug("beatHeart called");
-    return null;
+    
+    HeartBeatResponse.Builder builder = HeartBeatResponse.newBuilder();
+    
+    return builder.build();
   }
 
   public ServerListResponse listServer(RpcController controller, ServerListRequest request)
