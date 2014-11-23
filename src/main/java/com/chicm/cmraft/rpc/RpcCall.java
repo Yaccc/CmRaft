@@ -3,12 +3,27 @@ package com.chicm.cmraft.rpc;
 import com.google.protobuf.Descriptors.MethodDescriptor;
 import com.google.protobuf.Message;
 
-public class RpcCall {
+public class RpcCall implements Comparable<RpcCall>{
   private int callId;
   private Message header;
   private Message message;
   private MethodDescriptor md;
+  private int priority = 10;
   
+  /**
+   * @return the priority
+   */
+  public int getPriority() {
+    return priority;
+  }
+
+  /**
+   * @param priority the priority to set
+   */
+  public void setPriority(int priority) {
+    this.priority = priority;
+  }
+
   public MethodDescriptor getMd() {
     return md;
   }
@@ -55,4 +70,20 @@ public class RpcCall {
     this.message = msg;
   }
   
+  @Override
+  public int compareTo(RpcCall otherCall) {
+    if(this.priority < otherCall.getPriority())
+      return -1;
+    if(this.priority > otherCall.getPriority())
+      return 1;
+    
+    // priority must equal
+    if(this.getCallId() < otherCall.getCallId())
+      return -1;
+    else if(this.callId > otherCall.getCallId())
+      return 1;
+    else 
+        return 0;
+    
+  }
 }
