@@ -35,12 +35,12 @@ public class BlockingHashMap <K,V> {
     return ret;
   }
   
-  public V remove(K key) {
+  private V remove(K key) {
     locks.remove(key);
     return map.remove(key);
   }
   
-  public V get(K key) {
+  public V take(K key) {
     V ret = null;
     KeyLock lock = locks.get(key);
     if(lock == null) {
@@ -50,8 +50,10 @@ public class BlockingHashMap <K,V> {
     try {
       lock.lock();
       ret = map.get(key);
-      if(ret != null)
+      if(ret != null) {
+        remove(key);
         return ret;
+      }
       
       while(ret == null) {
         lock.await();
@@ -67,6 +69,7 @@ public class BlockingHashMap <K,V> {
     finally {
         lock.unlock();
     }
+    remove(key);
     return ret;
   }
   
