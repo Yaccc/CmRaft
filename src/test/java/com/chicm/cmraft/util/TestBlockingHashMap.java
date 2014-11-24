@@ -8,16 +8,23 @@ public class TestBlockingHashMap {
     Thread t = new Thread(new Runnable() {
       @Override
       public void run() {
-       for(int i = 0; i < 1000; i++) {
+       for(int i = 0; i < 1000000; i++) {
          map.put(i, String.format("VALUE%04d", i));
+         /*
+         try {
+           Thread.currentThread().sleep(1);
+         } catch(Exception e) {
+           e.printStackTrace(System.out);
+         }*/
        }
       }
     });
     t.setDaemon(true);
     t.start();
     
-    for(int i = 0; i < 1000; i++) {
+    for(int i = 0; i < 1000000; i++) {
       String s = map.get(i);
+      
       System.out.println("get:" + s);
     }
   }

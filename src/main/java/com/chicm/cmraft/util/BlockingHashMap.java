@@ -3,7 +3,6 @@ package com.chicm.cmraft.util;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -42,21 +41,23 @@ public class BlockingHashMap <K,V> {
   }
   
   public V get(K key) {
-    V ret = map.get(key);
-    if(ret != null)
-      return ret;
+    V ret = null;
     KeyLock lock = locks.get(key);
     if(lock == null) {
       lock = new KeyLock();
       locks.put(key, lock);
     }
-    
     try {
       lock.lock();
+      ret = map.get(key);
+      if(ret != null)
+        return ret;
       
       while(ret == null) {
-        lock.await(500, TimeUnit.MILLISECONDS);
+        lock.await();
         ret = map.get(key);
+        if(ret == null)
+          LOG.error("SHOULD NOT BE HERE");
       }
       LOG.debug("wait done: " + key + ": " + ret);
     } catch (InterruptedException ex) {
@@ -109,8 +110,8 @@ public class BlockingHashMap <K,V> {
       condition.signal();
     }
     
-    public void await(long time, TimeUnit unit) throws InterruptedException {
-      condition.await(time, unit);
+    public void await() throws InterruptedException {
+      condition.await();
     }
   }
 
