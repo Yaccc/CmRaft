@@ -8,7 +8,9 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,6 +33,10 @@ public class RaftRpcServer {
   private SocketListener socketListener = null;
   private int rpcListenThreads = DEFAULT_RPC_LISTEN_THREADS;
   private RaftRpcService service = null;
+  private static PriorityBlockingQueue<RpcCall> requestQueue = new PriorityBlockingQueue<RpcCall>();
+  private static PriorityBlockingQueue<RpcCall> responseQueue = new PriorityBlockingQueue<RpcCall>();
+  private ExecutorService requestExecutor = null;
+  private ExecutorService responseExecutor = null;
   
   public static void main(String[] args) throws Exception {
     
@@ -97,10 +103,12 @@ public class RaftRpcServer {
             channel.close();
           } catch(Exception e2) {
           }
+          LOG.info("BREAK");
           break;
         } 
         LOG.debug("request processed");
       }
+      LOG.info("BREAK OUT");
     }
     @Override
     public void failed(Throwable throwable, AsynchronousServerSocketChannel attachment) {
@@ -127,6 +135,8 @@ public class RaftRpcServer {
       RpcCall call = RpcUtils.parseRpcRequestFromChannel(channel, getService());
       long curtime2 = System.currentTimeMillis();
       LOG.debug("Parsing request takes: " + (curtime2-curtime1) + " ms");
+      if(call == null)
+        return;
       LOG.debug("server recieved: call id: " + call.getCallId());
 
       Message response = getService().callBlockingMethod(call.getMd(), null, call.getMessage());
@@ -138,6 +148,7 @@ public class RaftRpcServer {
       throw e;
     } catch(Exception e) {
       e.printStackTrace(System.out);
+      LOG.info("EXCEPTION");
     } 
   }
   
@@ -151,6 +162,55 @@ public class RaftRpcServer {
         RpcUtils.writeRpc(channel, header, response);
     } catch(Exception e) {
       e.printStackTrace(System.out);
+    }
+  }
+  
+  class RequestWorker implements Runnable {
+    @Override
+    public void run() {
+      while(true) {
+        try {
+          RpcCall call = requestQueue.take();
+          if(call != null) {
+            Message response = getService().callBlockingMethod(call.getMd(), null, call.getMessage());
+            if(response != null) {
+              ResponseHeader.Builder builder = ResponseHeader.newBuilder();
+              builder.setId(call.getCallId()); 
+              builder.setResponseName(call.getMd().getName());
+              ResponseHeader header = builder.build();
+              call.setHeader(header);
+              call.setMessage(response);
+              
+              responseQueue.put(call);
+            }
+          }
+        } catch(Exception e) {
+          e.printStackTrace(System.out);
+          LOG.error("exception", e);
+        }
+      }
+    }
+  }
+  
+  class ResponseWorker implements Runnable {
+    private AsynchronousSocketChannel channel;
+    
+    public ResponseWorker(AsynchronousSocketChannel channel) {
+      this.channel = channel;
+    }
+    @Override
+    public void run() {
+      
+      while(true) {
+        try {
+          RpcCall call = responseQueue.take();
+          RpcUtils.writeRpc(channel, call.getHeader(), call.getMessage());
+        } catch(Exception e) {
+          e.printStackTrace(System.out);
+          LOG.error("exception", e);
+        }
+      }
+      
     }
   }
   
