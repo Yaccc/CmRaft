@@ -4,8 +4,8 @@ public class TestRpcSendQueue {
 
   public static void main(String[] args) {
     RpcSendQueue q = RpcSendQueue.getInstance(null);
-    
-    for(int i = 0;i < 1000; i++) {
+    long tm = System.currentTimeMillis();
+    for(int i = 0;i < 1000000; i++) {
       RpcCall call = new RpcCall(RaftRpcClient.generateCallId(), null, null, null);
       call.setPriority(10);
       if (i % 2 == 0) {
@@ -18,7 +18,9 @@ public class TestRpcSendQueue {
       }
       
     }
-    System.out.println("PUT done");
+    System.out.println("PUT done****************");
+    long t = System.currentTimeMillis() - tm;
+    System.out.println("" + t/1000);
   }
 
 }

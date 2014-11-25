@@ -12,12 +12,12 @@ import com.chicm.cmraft.util.CappedPriorityBlockingQueue;
 
 public class RpcSendQueue {
   static final Log LOG = LogFactory.getLog(RpcSendQueue.class);
-  private static int DEFAULT_WORKERS = 10;
+  private static int DEFAULT_WORKERS = 1;
   private AsynchronousSocketChannel channel;
   private CappedPriorityBlockingQueue<RpcCall> callQueue; 
   private ExecutorService executor;
   
-  private static int MAX_SEND_CALL_QUEUE_SIZE = 50;
+  private static int MAX_SEND_CALL_QUEUE_SIZE = 100*1024;
    
   private static volatile RpcSendQueue instance = null;
   
@@ -66,8 +66,9 @@ public class RpcSendQueue {
             return;
           }
           LOG.debug(String.format("Thread[%s], take: call id: %d", name, call.getCallId()));
+          LOG.debug("send queue size:" + callQueue.size());
           try {
-            //RpcUtils.writeRpc(channel, call.getHeader(), call.getMessage());
+            RpcUtils.writeRpc(channel, call.getHeader(), call.getMessage());
           } catch (Exception e) {
             LOG.error("Thread: " + name, e);
           }

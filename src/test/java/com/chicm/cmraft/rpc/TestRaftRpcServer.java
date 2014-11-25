@@ -15,7 +15,7 @@ public class TestRaftRpcServer {
     server.startRpcServer();
     final RaftRpcClient client = new RaftRpcClient("localhost", RaftRpcServer.SERVER_PORT);
     
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 20; i++) {
     new Thread(new Runnable() {
       public void run() {
         client.sendRequest();
