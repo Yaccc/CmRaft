@@ -8,6 +8,8 @@ public class RpcCall implements Comparable<RpcCall>{
   private Message header;
   private Message message;
   private MethodDescriptor md;
+  
+  /** smaller priority number has higher priority */
   private int priority = 10;
   
   /**
