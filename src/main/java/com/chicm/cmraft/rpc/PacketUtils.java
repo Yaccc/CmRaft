@@ -22,8 +22,8 @@ import com.google.protobuf.Message;
 import com.google.protobuf.Descriptors.MethodDescriptor;
 import com.google.protobuf.Message.Builder;
 
-public class RpcUtils {
-  static final Log LOG = LogFactory.getLog(RpcUtils.class);
+public class PacketUtils {
+  static final Log LOG = LogFactory.getLog(PacketUtils.class);
   static final int DEFAULT_BYTEBUFFER_SIZE = 1000;
   static final int MESSAGE_LENGHT_FIELD_SIZE = 4;
   static final int DEFAULT_CHANNEL_READ_RETRIES = 5;
@@ -127,19 +127,13 @@ public class RpcUtils {
 
   public static RpcCall parseRpcRequestFromChannel (AsynchronousSocketChannel channel, BlockingService service) 
     throws InterruptedException, ExecutionException, IOException {
+    
     RpcCall call = null;
-    try {  
       long t = System.currentTimeMillis();
       InputStream in = Channels.newInputStream(channel);
-      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       byte[] datasize = new byte[MESSAGE_LENGHT_FIELD_SIZE];
       in.read(datasize);
-      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       int nDataSize = bytes2Int(datasize);
-      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
-      
-      LOG.debug("message size: " + nDataSize);
-      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       
       int len = 0;
       ByteBuffer buf = ByteBuffer.allocateDirect(nDataSize);
@@ -147,21 +141,17 @@ public class RpcUtils {
         len += channel.read(buf).get();
       }
       LOG.debug("len:" + len);
-      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       if(len < nDataSize) {
         LOG.error("SOCKET READ FAILED, len:" + len);
         return call;
       }
-      //byte[] data = buf.array();
       byte[] data = new byte[nDataSize];
       buf.flip();
       buf.get(data);
-      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       int offset = 0;
       CodedInputStream cis = CodedInputStream.newInstance(data, offset, nDataSize - offset);
       int headerSize =  cis.readRawVarint32();
       offset += cis.getTotalBytesRead();
-      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       RequestHeader header = RequestHeader.newBuilder().mergeFrom(data, offset, headerSize ).build();
       
       offset += headerSize;
@@ -169,7 +159,6 @@ public class RpcUtils {
       cis.resetSizeCounter();
       int bodySize = cis.readRawVarint32();
       offset += cis.getTotalBytesRead();
-      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       LOG.debug("header parsed:" + header.toString());
       
       MethodDescriptor md = service.getDescriptorForType().findMethodByName(header.getRequestName());
@@ -178,29 +167,16 @@ public class RpcUtils {
       if (builder != null) {
         body = builder.mergeFrom(data, offset, bodySize).build();
         LOG.debug("server : request parsed:" + body.toString());
-        //Message response = getService().callBlockingMethod(md, null, request);
-        LOG.debug("server method called:" + header.getRequestName());
-        //System.out.println("Map:" + handle.getMap());
       }
-      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
       call = new RpcCall(header.getId(), header, body, md);
       LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
-    
-  } catch (InterruptedException | ExecutionException e) {
-    throw e;
-  } /*catch (ReadPendingException e) {
-    System.out.println(e);
-  } *///catch(Exception e) {
-    //e.printStackTrace(System.out);
-    //LOG.info("exception");
-  //} 
+
     return call;
   }
   
   public static RpcCall parseRpcResponseFromChannel (AsynchronousSocketChannel channel, BlockingService service) 
-      throws InterruptedException, ExecutionException {
+      throws InterruptedException, ExecutionException, IOException {
       RpcCall call = null;
-      try {  
         long t = System.currentTimeMillis();
         InputStream in = Channels.newInputStream(channel);
         byte[] datasize = new byte[MESSAGE_LENGHT_FIELD_SIZE];
@@ -245,14 +221,7 @@ public class RpcUtils {
         }
         call = new RpcCall(header.getId(), header, body, md);
         LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
-      
-    } catch (InterruptedException | ExecutionException e) {
-      throw e;
-    } /*catch (ReadPendingException e) {
-      System.out.println(e);
-    } */catch(Exception e) {
-      e.printStackTrace(System.out);
-    } 
+
       return call;
     }
    

@@ -3,10 +3,10 @@ package com.chicm.cmraft.rpc;
 public class TestRpcSendQueue {
 
   public static void main(String[] args) {
-    RpcSendQueue q = RpcSendQueue.getInstance(null);
+    RpcSendQueue q = new RpcSendQueue(null);
     long tm = System.currentTimeMillis();
     for(int i = 0;i < 1000000; i++) {
-      RpcCall call = new RpcCall(RaftRpcClient.generateCallId(), null, null, null);
+      RpcCall call = new RpcCall(RpcClient.generateCallId(), null, null, null);
       call.setPriority(10);
       if (i % 2 == 0) {
         call.setPriority(20);

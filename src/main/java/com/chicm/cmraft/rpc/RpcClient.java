@@ -1,5 +1,6 @@
 package com.chicm.cmraft.rpc;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.concurrent.ExecutionException;
@@ -24,23 +25,23 @@ import com.google.protobuf.RpcController;
 import com.google.protobuf.ServiceException;
 import com.google.protobuf.Descriptors.MethodDescriptor;
 
-public class RaftRpcClient {
-  static final Log LOG = LogFactory.getLog(RaftRpcClient.class);
+public class RpcClient {
+  static final Log LOG = LogFactory.getLog(RpcClient.class);
   //private ConnectionPool connections = null;
   private static final int DEFAULT_SOCKET_READ_WORKS = 1;
   private static BlockingService service = null;
   private static volatile AtomicInteger client_call_id = new AtomicInteger(0);
-  private static RpcSendQueue sendQueue = null;
+  private RpcSendQueue sendQueue = null;
   private BlockingInterface stub = null;
   private AsynchronousSocketChannel socketChannel = null;
-  private static BlockingHashMap<Integer, RpcCall> responsesMap = new BlockingHashMap<>();
+  private BlockingHashMap<Integer, RpcCall> responsesMap = new BlockingHashMap<>();
   private ExecutorService socketExecutor = null;
   
   public static void main(String[] args) throws Exception {
-    //RaftRpcServer server = new RaftRpcServer(20);
+    //RpcServer server = new RpcServer(20);
     //server.startRpcServer();
     if(args.length < 3) {
-      System.out.println("usage: RaftRpcServer <server host> <server port> <clients number> <threads number> [padding length]");
+      System.out.println("usage: RpcServer <server host> <server port> <clients number> <threads number> [padding length]");
       return;
     }
     String host = args[0];
@@ -50,24 +51,23 @@ public class RaftRpcClient {
     
 
     if(args.length >= 5) {
-      RpcUtils.TEST_PADDING_LEN = Integer.parseInt(args[4]);
+      PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[4]);
     }
     for(int j =0; j < nclients; j++ ) {
-    final RaftRpcClient client = new RaftRpcClient(host, port);
-    
-    for(int i = 0; i < nThreads; i++) {
-    new Thread(new Runnable() {
-      public void run() {
-        client.sendRequest();
-        
+      final RpcClient client = new RpcClient(host, port);
+      
+      for(int i = 0; i < nThreads; i++) {
+        new Thread(new Runnable() {
+          public void run() {
+            client.sendRequest();
+            
+          }
+        }).start();
       }
-    }).start();
     }
-    }
-    //System.out.println("client: after call service");
   }
   
-  //public re
+  private ThreadLocal<Long> startTime = new ThreadLocal<>();
   
   public void sendRequest() {
     ServerId.Builder sbuilder = ServerId.newBuilder();
@@ -79,15 +79,14 @@ public class RaftRpcClient {
     
     LOG.info("client thread started");
     try {
-      long tm = System.currentTimeMillis();
       for(int i = 0; i < 5000000 ;i++) {
+        startTime.set(System.currentTimeMillis());
         HeartBeatResponse r = stub.beatHeart(null, builder.build());
-        /*
-        int n = getCallId();
-        if(n %100 == 0 ) {
-          long ms = System.currentTimeMillis() - tm;
-          LOG.info("RPC CALLS FINISHED: " + n + ", TIME: " + ms/1000 + " s, TPS: " + (n*1000/ms));
-        }*/
+        
+        if(i != 0 && i %1000 == 0 ) {
+          long ms = System.currentTimeMillis() - startTime.get();
+          LOG.info("RPC CALL[ " + i + "] round trip time: " + ms);
+        }
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
@@ -95,13 +94,16 @@ public class RaftRpcClient {
   }
   
   
-  public RaftRpcClient(String host, int port) {
+  public RpcClient(String host, int port) {
     
     InetSocketAddress isa = new InetSocketAddress(host, port);
     //connections = ConnectionPool.createConnectionPool(isa, 1, 500);
     service = (new RaftRpcService()).getService();
     socketChannel = openConnection(isa);
-    sendQueue = RpcSendQueue.getInstance(socketChannel);
+    sendQueue = new RpcSendQueue(socketChannel); //RpcSendQueue.getInstance(socketChannel);
+    
+    BlockingRpcChannel c = RpcClient.createBlockingRpcChannel(sendQueue, responsesMap);
+    stub =  RaftService.newBlockingStub(c);
     
     socketExecutor = Executors.newFixedThreadPool(DEFAULT_SOCKET_READ_WORKS);
     for(int i = 0; i < DEFAULT_SOCKET_READ_WORKS; i++ ) {
@@ -115,17 +117,12 @@ public class RaftRpcClient {
   private AsynchronousSocketChannel openConnection(InetSocketAddress isa) {
     AsynchronousSocketChannel channel = null;
     try  {
-      LOG.debug("opening connection to:" + isa);
+      LOG.info("opening connection to:" + isa);
       
       channel = AsynchronousSocketChannel.open();
       channel.connect(isa).get();
       
-      LOG.debug("client connected:" + isa);
-      
-      BlockingRpcChannel c = RaftRpcClient.createBlockingRpcChannel(channel);
-      stub =  RaftService.newBlockingStub(c);
-      
-    
+      LOG.info("client connected:" + isa);
     } catch(Exception e) {
       e.printStackTrace(System.out);
     }
@@ -142,15 +139,19 @@ public class RaftRpcClient {
   }
  
   
-  public static BlockingRpcChannel createBlockingRpcChannel(AsynchronousSocketChannel channel) {
-    return new RaftRpcClient.BlockingRpcChannelImplementation(channel);
+  public static BlockingRpcChannel createBlockingRpcChannel(RpcSendQueue sendQueue, 
+      BlockingHashMap<Integer, RpcCall> responseMap) {
+    return new RpcClient.BlockingRpcChannelImplementation(sendQueue, responseMap);
   }
 
   public static class BlockingRpcChannelImplementation implements BlockingRpcChannel {
-    private AsynchronousSocketChannel channel = null;
+    private RpcSendQueue sendQueue = null;
+    private BlockingHashMap<Integer, RpcCall> responseMap = null;
 
-    protected BlockingRpcChannelImplementation(AsynchronousSocketChannel channel) {
-      this.channel = channel;
+    protected BlockingRpcChannelImplementation(RpcSendQueue sendQueue, 
+        BlockingHashMap<Integer, RpcCall> responseMap) {
+      this.sendQueue = sendQueue;
+      this.responseMap = responseMap;
     }
 
     @Override
@@ -167,20 +168,14 @@ public class RaftRpcClient {
         LOG.debug("sending, callid:" + header.getId());
         RpcCall call = new RpcCall(callId, header, request, md);
         long tm = System.currentTimeMillis();
-//        if(sendQueue.size() % 1000 == 0) {
-//          LOG.info("SEND Q size: " + sendQueue.size());
-//        }
-        sendQueue.put(call);
-        response = responsesMap.take(callId).getMessage();
+        this.sendQueue.put(call);
+        response = this.responseMap.take(callId).getMessage();
         LOG.debug("response taken: " + callId + " :" + response);
-        
         LOG.debug(String.format("RPC[%d] round trip takes %d ms", header.getId(), (System.currentTimeMillis() - tm)));
-        
-    } catch(Exception e) {
-      e.printStackTrace(System.out);
-    }
-    
-    return response;
+      } catch(Exception e) {
+        e.printStackTrace(System.out);
+      }
+      return response;
     }
   }
   
@@ -199,9 +194,8 @@ public class RaftRpcClient {
       long starttime = System.currentTimeMillis();
       while(true) {
         try {
-          RpcCall call = RpcUtils.parseRpcResponseFromChannel(channel, service);
+          RpcCall call = PacketUtils.parseRpcResponseFromChannel(channel, service);
           results.put(call.getCallId(), call);
-          
           
           int id = call.getCallId();
           if(id % 1000 == 0) {
@@ -214,7 +208,7 @@ public class RaftRpcClient {
             LOG.info("response id: " + id + " time: " + elipsetm + " TPS: " + tps);
           }
           LOG.debug("put response, call id: " + call.getCallId() + " result map size: " + results.size());
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException |IOException e) {
           LOG.error("exception", e);
           e.printStackTrace(System.out);
         }

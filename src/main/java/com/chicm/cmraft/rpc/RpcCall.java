@@ -1,5 +1,7 @@
 package com.chicm.cmraft.rpc;
 
+import java.nio.channels.AsynchronousSocketChannel;
+
 import com.google.protobuf.Descriptors.MethodDescriptor;
 import com.google.protobuf.Message;
 
@@ -8,7 +10,25 @@ public class RpcCall implements Comparable<RpcCall>{
   private Message header;
   private Message message;
   private MethodDescriptor md;
+  private AsynchronousSocketChannel channel;
+  private long timestamp;
   
+  public long getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(long timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  public AsynchronousSocketChannel getChannel() {
+    return channel;
+  }
+
+  public void setChannel(AsynchronousSocketChannel channel) {
+    this.channel = channel;
+  }
+
   /** smaller priority number has higher priority */
   private int priority = 10;
   

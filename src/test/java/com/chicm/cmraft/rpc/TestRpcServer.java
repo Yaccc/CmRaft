@@ -8,20 +8,23 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class TestRaftRpcServer {
+public class TestRpcServer {
 
   public static void main(String[] args) {
-    RaftRpcServer server = new RaftRpcServer(20);
+    RpcServer server = new RpcServer(20);
     server.startRpcServer();
-    final RaftRpcClient client = new RaftRpcClient("localhost", RaftRpcServer.SERVER_PORT);
     
-    for(int i = 0; i < 20; i++) {
-    new Thread(new Runnable() {
-      public void run() {
-        client.sendRequest();
-        
+    for (int i =0; i < 2; i++) {
+      final RpcClient client = new RpcClient("localhost", RpcServer.SERVER_PORT);
+    
+      for(int j = 0; j < 20; j++) {
+        new Thread(new Runnable() {
+          public void run() {
+            client.sendRequest();
+            
+          }
+        }).start();
       }
-    }).start();
     }
   }
 
@@ -48,7 +51,7 @@ class TestClient implements Runnable {
   
   public void run() {
     try (SocketChannel channel = SocketChannel.open()) {
-      SocketAddress adr = new InetSocketAddress("localhost", RaftRpcServer.SERVER_PORT);
+      SocketAddress adr = new InetSocketAddress("localhost", RpcServer.SERVER_PORT);
       channel.connect(adr);
       
       for(int i =0; i< 1; i++) {

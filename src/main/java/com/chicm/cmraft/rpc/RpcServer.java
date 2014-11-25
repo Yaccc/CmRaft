@@ -2,16 +2,20 @@ package com.chicm.cmraft.rpc;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
+import java.nio.channels.WritePendingException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,39 +25,39 @@ import com.google.protobuf.BlockingService;
 import com.google.protobuf.Message;
 import com.google.protobuf.ServiceException;
 
-public class RaftRpcServer {
-  static final Log LOG = LogFactory.getLog(RaftRpcServer.class);
+public class RpcServer {
+  static final Log LOG = LogFactory.getLog(RpcServer.class);
   public static int SERVER_PORT = 12888;
-  private final static int DEFAULT_RPC_LISTEN_THREADS = 1;
+  private final static int DEFAULT_RPC_LISTEN_THREADS = 10;
+  private final static int DEFAULT_REQUEST_WORKER = 10;
+  private final static int DEFAULT_RESPONSE_WOKER = 10;
   private SocketListener socketListener = null;
   private int rpcListenThreads = DEFAULT_RPC_LISTEN_THREADS;
   private RaftRpcService service = null;
   private static PriorityBlockingQueue<RpcCall> requestQueue = new PriorityBlockingQueue<RpcCall>();
   private static PriorityBlockingQueue<RpcCall> responseQueue = new PriorityBlockingQueue<RpcCall>();
-  private ExecutorService requestExecutor = null;
-  private ExecutorService responseExecutor = null;
   private final static AtomicLong callCounter = new AtomicLong(0);
   private static boolean tpsReportStarted = false;
   
   public static void main(String[] args) throws Exception {
     
     if(args.length < 2) {
-      System.out.println("usage: RaftRpcServer <listening port> <listen threads number> [padding length]");
+      System.out.println("usage: RpcServer <listening port> <listen threads number> [padding length]");
       return;
     }
     SERVER_PORT = Integer.parseInt(args[0]);
     int nListenThreads = Integer.parseInt(args[1]);
     
     if(args.length == 3) {
-      RpcUtils.TEST_PADDING_LEN = Integer.parseInt(args[2]);
+      PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[2]);
     }
     
-    RaftRpcServer server = new RaftRpcServer(nListenThreads);
+    RpcServer server = new RpcServer(nListenThreads);
     LOG.info("starting server");
     server.startRpcServer();
     
     /*
-    final RaftRpcClient client = new RaftRpcClient();
+    final RpcClient client = new RpcClient();
     
     for(int i = 0; i < 5; i++) {
       new Thread(new Runnable() {
@@ -64,7 +68,7 @@ public class RaftRpcServer {
      }*/
   }
   
-  RaftRpcServer (int nListenThreads) {
+  RpcServer (int nListenThreads) {
     socketListener = new SocketListener();
     rpcListenThreads = nListenThreads;
     service = new RaftRpcService();
@@ -77,6 +81,8 @@ public class RaftRpcServer {
   public boolean startRpcServer() {
     try {
       socketListener.start();
+      startRequestWorker(DEFAULT_REQUEST_WORKER);
+      startResponseWorker(DEFAULT_RESPONSE_WOKER);
     } catch(IOException e) {
       e.printStackTrace(System.out);
       return false;
@@ -119,9 +125,18 @@ public class RaftRpcServer {
   class SocketListener {
     public void start() throws IOException {
       AsynchronousChannelGroup group = AsynchronousChannelGroup.withFixedThreadPool(rpcListenThreads, 
-          Executors.defaultThreadFactory());
+          new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+              Thread t = new Thread(r);
+              t.setName("Socket-Listener-" + System.currentTimeMillis());
+              return t;
+            }
+          });
+      
       final AsynchronousServerSocketChannel serverChannel = AsynchronousServerSocketChannel.open(group)
           .bind(new InetSocketAddress(SERVER_PORT));
+      
       serverChannel.accept(serverChannel, new SocketHandler());
       
       LOG.info("Server started");
@@ -132,25 +147,29 @@ public class RaftRpcServer {
       throws InterruptedException, ExecutionException, IOException, ServiceException {
     try {
       long curtime1 = System.currentTimeMillis();
-      RpcCall call = RpcUtils.parseRpcRequestFromChannel(channel, getService());
+      RpcCall call = PacketUtils.parseRpcRequestFromChannel(channel, getService());
       long curtime2 = System.currentTimeMillis();
       LOG.debug("Parsing request takes: " + (curtime2-curtime1) + " ms");
       if(call == null)
         return;
       LOG.debug("server recieved: call id: " + call.getCallId());
-
-      Message response = getService().callBlockingMethod(call.getMd(), null, call.getMessage());
       
-      sendResponse(channel, call, response);
+      //use queue
+      call.setChannel(channel);
+      call.setTimestamp(System.currentTimeMillis());
+      requestQueue.put(call);
+      
+      //Message response = getService().callBlockingMethod(call.getMd(), null, call.getMessage());
+      //sendResponse(channel, call, response);
       
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace(System.out);
       throw e;
-    } catch(ServiceException e2) {
+    } /*catch(ServiceException e2) {
       e2.printStackTrace(System.out);
       LOG.info("EXCEPTION");
       throw e2;
-    } 
+    } */
   }
   
   private void sendResponse(AsynchronousSocketChannel channel, RpcCall call, Message response) {
@@ -160,7 +179,7 @@ public class RaftRpcServer {
     ResponseHeader header = builder.build();
     
     try {
-        RpcUtils.writeRpc(channel, header, response);
+        PacketUtils.writeRpc(channel, header, response);
         
     } catch(Exception e) {
       e.printStackTrace(System.out);
@@ -187,6 +206,7 @@ public class RaftRpcServer {
             sec =1;
           long n = callCounter.get() - calls;
           LOG.info("TPS: " + (n/sec));
+          LOG.info("request queue: " + requestQueue.size() + " response queue: " + responseQueue.size());
         }
       }
     });
@@ -195,6 +215,40 @@ public class RaftRpcServer {
     thread.start();
     tpsReportStarted = true;
     LOG.info("TPS report started");
+  }
+  
+  private void startRequestWorker (int workers) {
+    ExecutorService executor = Executors.newFixedThreadPool(workers,
+        new ThreadFactory() {
+          @Override
+          public Thread newThread(Runnable r) {
+            Thread t = new Thread(r);
+            t.setName("Request-Worker-" + System.currentTimeMillis());
+            return t;
+          }
+      });
+      for(int i = 0; i < workers; i++) {
+        Thread t = new Thread(new RequestWorker());
+        t.setDaemon(true);
+        executor.execute(t);
+      }
+  }
+  
+  private void startResponseWorker (int workers) {
+    ExecutorService executor = Executors.newFixedThreadPool(workers,
+        new ThreadFactory() {
+          @Override
+          public Thread newThread(Runnable r) {
+            Thread t = new Thread(r);
+            t.setName("Response-Worker-" + System.currentTimeMillis());
+            return t;
+          }
+      });
+      for(int i = 0; i < workers; i++) {
+        Thread t = new Thread(new ResponseWorker());
+        t.setDaemon(true);
+        executor.execute(t);
+      }
   }
   
   class RequestWorker implements Runnable {
@@ -224,22 +278,40 @@ public class RaftRpcServer {
     }
   }
   
-  class ResponseWorker implements Runnable {
-    private AsynchronousSocketChannel channel;
+  static class ResponseWorker implements Runnable {
+    private static final ConcurrentHashMap<AsynchronousSocketChannel, Lock> locks = new ConcurrentHashMap<>();
+    private static final ReentrantLock channelLock = new ReentrantLock();
     
-    public ResponseWorker(AsynchronousSocketChannel channel) {
-      this.channel = channel;
-    }
     @Override
     public void run() {
-      
       while(true) {
         try {
           RpcCall call = responseQueue.take();
-          RpcUtils.writeRpc(channel, call.getHeader(), call.getMessage());
+          AsynchronousSocketChannel channel = call.getChannel();
+          Lock lock = locks.get(channel);
+          if(lock == null) {
+            lock = new ReentrantLock();
+            locks.put(channel, lock);
+          }
+          lock = locks.get(channel);
+          try {
+            lock.lock();
+            //LOG.info("round trip in queue: " + (System.currentTimeMillis() - call.getTimestamp()));
+            PacketUtils.writeRpc(call.getChannel(), call.getHeader(), call.getMessage());
+          } finally {
+            lock.unlock();
+          }
+        } catch(WritePendingException e) {
+          LOG.error("retry", e);
+          try {
+            Thread.sleep(1);
+          } catch(Exception e2) {
+            
+          }
         } catch(Exception e) {
           e.printStackTrace(System.out);
           LOG.error("exception", e);
+          break;
         }
       }
       

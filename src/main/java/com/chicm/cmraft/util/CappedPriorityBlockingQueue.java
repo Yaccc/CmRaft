@@ -25,11 +25,9 @@ public class CappedPriorityBlockingQueue<E> extends PriorityBlockingQueue<E>{
   /** Wait queue for waiting puts */
   private final Condition notFull = putLock.newCondition();
   
-  
   public CappedPriorityBlockingQueue(int maxCapacity) {
     this.maxCapacity = maxCapacity;
   }
-  
   
   /**
    * Signals a waiting put. Called only from take/poll.

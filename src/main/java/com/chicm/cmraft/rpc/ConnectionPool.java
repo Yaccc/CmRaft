@@ -74,7 +74,7 @@ public class ConnectionPool {
       boolean connected = channel.connect(isa);
       LOG.debug("client connected:" + connected + " " + channel);
       
-      BlockingRpcChannel c = RaftRpcClient.createBlockingRpcChannel(channel);
+      BlockingRpcChannel c = RpcClient.createBlockingRpcChannel(channel);
       BlockingInterface service =  RaftService.newBlockingStub(c);
       
       conn = new ConnectionImpl(channel, service, this);
@@ -98,11 +98,11 @@ public class ConnectionPool {
       
       LOG.debug("client connected:" + channel);
       
-      BlockingRpcChannel c = RaftRpcClient.createBlockingRpcChannel(channel);
-      BlockingInterface service =  RaftService.newBlockingStub(c);
+      //BlockingRpcChannel c = RpcClient.createBlockingRpcChannel(channel);
+      //BlockingInterface service =  RaftService.newBlockingStub(c);
       
-      conn = new ConnectionImpl(channel, service, this);
-      connections.add(conn);
+      //conn = new ConnectionImpl(channel, service, this);
+      //connections.add(conn);
     
     } catch(Exception e) {
       e.printStackTrace(System.out);
