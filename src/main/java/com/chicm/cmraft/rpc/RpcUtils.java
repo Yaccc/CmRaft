@@ -27,7 +27,7 @@ public class RpcUtils {
   static final int DEFAULT_BYTEBUFFER_SIZE = 1000;
   static final int MESSAGE_LENGHT_FIELD_SIZE = 4;
   static final int DEFAULT_CHANNEL_READ_RETRIES = 5;
-  public static int TEST_PADDING_LEN = 1024;
+  public static int TEST_PADDING_LEN = 0;
   
   public static byte[] int2Bytes(int n) {
     byte[] bytes = new byte[4];
@@ -126,7 +126,7 @@ public class RpcUtils {
   }
 
   public static RpcCall parseRpcRequestFromChannel (AsynchronousSocketChannel channel, BlockingService service) 
-    throws InterruptedException, ExecutionException {
+    throws InterruptedException, ExecutionException, IOException {
     RpcCall call = null;
     try {  
       long t = System.currentTimeMillis();
@@ -190,9 +190,10 @@ public class RpcUtils {
     throw e;
   } /*catch (ReadPendingException e) {
     System.out.println(e);
-  } */catch(Exception e) {
-    e.printStackTrace(System.out);
-  } 
+  } *///catch(Exception e) {
+    //e.printStackTrace(System.out);
+    //LOG.info("exception");
+  //} 
     return call;
   }
   

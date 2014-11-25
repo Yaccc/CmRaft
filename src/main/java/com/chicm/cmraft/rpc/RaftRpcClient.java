@@ -40,18 +40,19 @@ public class RaftRpcClient {
     //RaftRpcServer server = new RaftRpcServer(20);
     //server.startRpcServer();
     if(args.length < 3) {
-      System.out.println("usage: RaftRpcServer <server host> <server port> <threads number> [padding length]");
+      System.out.println("usage: RaftRpcServer <server host> <server port> <clients number> <threads number> [padding length]");
       return;
     }
     String host = args[0];
     int port = Integer.parseInt(args[1]);
-    int nThreads = Integer.parseInt(args[2]);
+    int nclients = Integer.parseInt(args[2]);
+    int nThreads = Integer.parseInt(args[3]);
     
 
-    if(args.length >= 4) {
-      RpcUtils.TEST_PADDING_LEN = Integer.parseInt(args[3]);
+    if(args.length >= 5) {
+      RpcUtils.TEST_PADDING_LEN = Integer.parseInt(args[4]);
     }
-    
+    for(int j =0; j < nclients; j++ ) {
     final RaftRpcClient client = new RaftRpcClient(host, port);
     
     for(int i = 0; i < nThreads; i++) {
@@ -62,7 +63,7 @@ public class RaftRpcClient {
       }
     }).start();
     }
-    
+    }
     //System.out.println("client: after call service");
   }
   
@@ -76,21 +77,18 @@ public class RaftRpcClient {
     HeartBeatRequest.Builder builder = HeartBeatRequest.newBuilder();
     builder.setServer(sbuilder.build());
     
-    //Connection con = getConnection();
-    
     LOG.info("client thread started");
     try {
       long tm = System.currentTimeMillis();
       for(int i = 0; i < 5000000 ;i++) {
         HeartBeatResponse r = stub.beatHeart(null, builder.build());
+        /*
         int n = getCallId();
         if(n %100 == 0 ) {
           long ms = System.currentTimeMillis() - tm;
           LOG.info("RPC CALLS FINISHED: " + n + ", TIME: " + ms/1000 + " s, TPS: " + (n*1000/ms));
-        }
+        }*/
       }
-      //System.out.println("LL");
-      //con.getService().beatHeart(null, builder.build());
     } catch (Exception e) {
       e.printStackTrace(System.out);
     } 
@@ -169,12 +167,13 @@ public class RaftRpcClient {
         LOG.debug("sending, callid:" + header.getId());
         RpcCall call = new RpcCall(callId, header, request, md);
         long tm = System.currentTimeMillis();
+//        if(sendQueue.size() % 1000 == 0) {
+//          LOG.info("SEND Q size: " + sendQueue.size());
+//        }
         sendQueue.put(call);
         response = responsesMap.take(callId).getMessage();
         LOG.debug("response taken: " + callId + " :" + response);
-        //RpcUtils.writeRpc(channel, header, request);
-        //response = RpcUtils.parseRpcResponseFromChannel(channel, service).getMessage();
-
+        
         LOG.debug(String.format("RPC[%d] round trip takes %d ms", header.getId(), (System.currentTimeMillis() - tm)));
         
     } catch(Exception e) {
@@ -197,10 +196,23 @@ public class RaftRpcClient {
     }
     @Override
     public void run() {
+      long starttime = System.currentTimeMillis();
       while(true) {
         try {
           RpcCall call = RpcUtils.parseRpcResponseFromChannel(channel, service);
           results.put(call.getCallId(), call);
+          
+          
+          int id = call.getCallId();
+          if(id % 1000 == 0) {
+            long curtm = System.currentTimeMillis();
+            long elipsetm = (curtm - starttime) /1000;
+            if(elipsetm == 0)
+              elipsetm =1;
+            long tps = id / elipsetm;
+            
+            LOG.info("response id: " + id + " time: " + elipsetm + " TPS: " + tps);
+          }
           LOG.debug("put response, call id: " + call.getCallId() + " result map size: " + results.size());
         } catch (InterruptedException | ExecutionException e) {
           LOG.error("exception", e);

@@ -11,20 +11,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService.BlockingInterface;
 import com.google.protobuf.BlockingService;
-import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.Message;
-import com.google.protobuf.Descriptors.MethodDescriptor;
-import com.google.protobuf.Message.Builder;
+import com.google.protobuf.ServiceException;
 
 public class RaftRpcServer {
   static final Log LOG = LogFactory.getLog(RaftRpcServer.class);
@@ -37,6 +32,8 @@ public class RaftRpcServer {
   private static PriorityBlockingQueue<RpcCall> responseQueue = new PriorityBlockingQueue<RpcCall>();
   private ExecutorService requestExecutor = null;
   private ExecutorService responseExecutor = null;
+  private final static AtomicLong callCounter = new AtomicLong(0);
+  private static boolean tpsReportStarted = false;
   
   public static void main(String[] args) throws Exception {
     
@@ -92,7 +89,8 @@ public class RaftRpcServer {
     public void completed(AsynchronousSocketChannel channel, AsynchronousServerSocketChannel serverChannel) {
       
       serverChannel.accept(serverChannel, this);
-      LOG.debug(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
+      LOG.info(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
+      startTPSReport();
 
       for(;;) {
         try {
@@ -106,13 +104,15 @@ public class RaftRpcServer {
           LOG.info("BREAK");
           break;
         } 
+        callCounter.incrementAndGet();
         LOG.debug("request processed");
       }
       LOG.info("BREAK OUT");
     }
     @Override
     public void failed(Throwable throwable, AsynchronousServerSocketChannel attachment) {
-      throwable.printStackTrace(System.out);
+      //throwable.printStackTrace(System.out);
+      LOG.error("Exception");
     }
   }
   
@@ -129,7 +129,7 @@ public class RaftRpcServer {
   }
   
   private void processRequest(AsynchronousSocketChannel channel) 
-      throws InterruptedException, ExecutionException {
+      throws InterruptedException, ExecutionException, IOException, ServiceException {
     try {
       long curtime1 = System.currentTimeMillis();
       RpcCall call = RpcUtils.parseRpcRequestFromChannel(channel, getService());
@@ -146,9 +146,10 @@ public class RaftRpcServer {
     } catch (InterruptedException | ExecutionException e) {
       e.printStackTrace(System.out);
       throw e;
-    } catch(Exception e) {
-      e.printStackTrace(System.out);
+    } catch(ServiceException e2) {
+      e2.printStackTrace(System.out);
       LOG.info("EXCEPTION");
+      throw e2;
     } 
   }
   
@@ -160,9 +161,40 @@ public class RaftRpcServer {
     
     try {
         RpcUtils.writeRpc(channel, header, response);
+        
     } catch(Exception e) {
       e.printStackTrace(System.out);
     }
+  }
+  
+  public void startTPSReport() {
+    if (tpsReportStarted )
+      return;
+    
+    Thread thread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while(true) {
+          long calls = callCounter.get();
+          long starttm = System.currentTimeMillis();
+          try {
+            Thread.sleep(5000);
+          } catch(Exception e) {
+            LOG.error("exception", e);
+          }
+          long sec = (System.currentTimeMillis() - starttm)/1000;
+          if(sec == 0)
+            sec =1;
+          long n = callCounter.get() - calls;
+          LOG.info("TPS: " + (n/sec));
+        }
+      }
+    });
+    thread.setDaemon(true);
+    thread.setName("TPS report");
+    thread.start();
+    tpsReportStarted = true;
+    LOG.info("TPS report started");
   }
   
   class RequestWorker implements Runnable {

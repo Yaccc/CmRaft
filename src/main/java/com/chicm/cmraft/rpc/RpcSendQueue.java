@@ -54,6 +54,10 @@ public class RpcSendQueue {
     callQueue.put(call);
   }
   
+  public int size() {
+    return callQueue.size();
+  }
+  
   class WorkerThread implements Runnable {
     @Override
     public void run() {
