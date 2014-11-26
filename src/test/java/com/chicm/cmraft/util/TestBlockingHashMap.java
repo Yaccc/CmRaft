@@ -1,4 +1,4 @@
-/*
+/**
 * Copyright 2014 The Apache Software Foundation
 *
 * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -60,16 +61,12 @@ public class TestBlockingHashMap {
     for (int i =0; i < 10*testnumber; i++) {
       String expected = String.format("VALUE%04d", i);
       String str = result.get(i);
-      if(!expected.equals(str)) {
-        System.out.printf("ERROR %d: expected: %s: resut: %s\n", i, expected, str);
-      }
-     }
-    System.out.println("validate done");
+      assertTrue(expected.equals(str));
+    }
   }
   
-  public static void main(String[] args) {
-    // TODO Auto-generated method stub
-    //ExecutorService es1 = Executors.newFixedThreadPool(10);
+  @Test
+  public void testMultiThreaded() {
     
     long tm = System.currentTimeMillis();
     
@@ -94,33 +91,27 @@ public class TestBlockingHashMap {
     System.out.println("done: " + (System.currentTimeMillis()-tm)/1000);
     
     validateResult();
-    /*
-    //for(int i = 0; i < 10; i++) {
+  }
+  
+  @Test
+  public void testSingleThread() {
+    
       Thread t = new Thread(new Runnable() {
         @Override
         public void run() {
-         for(int j = 0; j < 1000000; j++) {
+         for(int j = 0; j < 100000; j++) {
            map.put(j, String.format("VALUE%04d", j));
          }
         }
       });
       t.setDaemon(true);
       t.start();
-    //}
     
-    //ExecutorService es1 = Executors.newFixedThreadPool(10);
-    for(int i = 0; i < 1000000; i++) {
+    for(int i = 0; i < 100000; i++) {
       String s = map.take(i);
-      
-     // System.out.println("get:" + s);
-    }*/
+      assertTrue(s.equals(String.format("VALUE%04d", i)));
+    }
     
-    //System.out.println("done: " + (System.currentTimeMillis()-tm)/1000);
   }
   
-  @Test 
-  public void test() {
-    
-  }
-
 }

@@ -1,4 +1,4 @@
-/*
+/**
 * Copyright 2014 The Apache Software Foundation
 *
 * Licensed to the Apache Software Foundation (ASF) under one
@@ -47,7 +47,6 @@ import com.google.protobuf.Descriptors.MethodDescriptor;
 
 public class RpcClient {
   static final Log LOG = LogFactory.getLog(RpcClient.class);
-  //private ConnectionPool connections = null;
   private static final int DEFAULT_SOCKET_READ_WORKS = 1;
   private static BlockingService service = null;
   private static volatile AtomicInteger client_call_id = new AtomicInteger(0);
@@ -58,8 +57,6 @@ public class RpcClient {
   private ExecutorService socketExecutor = null;
   
   public static void main(String[] args) throws Exception {
-    //RpcServer server = new RpcServer(20);
-    //server.startRpcServer();
     if(args.length < 3) {
       System.out.println("usage: RpcServer <server host> <server port> <clients number> <threads number> [padding length]");
       return;

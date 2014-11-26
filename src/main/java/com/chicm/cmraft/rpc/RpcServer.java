@@ -1,4 +1,4 @@
-/*
+/**
 * Copyright 2014 The Apache Software Foundation
 *
 * Licensed to the Apache Software Foundation (ASF) under one
@@ -88,7 +88,7 @@ public class RpcServer {
      }*/
   }
   
-  RpcServer (int nListenThreads) {
+  public RpcServer (int nListenThreads) {
     socketListener = new SocketListener();
     rpcListenThreads = nListenThreads;
     service = new RaftRpcService();

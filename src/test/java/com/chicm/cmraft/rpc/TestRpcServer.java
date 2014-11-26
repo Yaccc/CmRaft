@@ -1,4 +1,4 @@
-/*
+/**
 * Copyright 2014 The Apache Software Foundation
 *
 * Licensed to the Apache Software Foundation (ASF) under one
@@ -75,16 +75,11 @@ class TestClient implements Runnable {
       channel.connect(adr);
       
       for(int i =0; i< 1; i++) {
-      //Thread.currentThread().setName(String.format("CLIENT%02d", i));
       String str = Thread.currentThread().getName() + " Hello";
       byte[] bytes = str.getBytes();
       ByteBuffer buf = ByteBuffer.wrap(bytes);
       channel.write(buf);
-      /*
-      String str2 = Thread.currentThread().getName() + " World";  
-      byte[] bytes2 = str2.getBytes();
-      ByteBuffer buf2 = ByteBuffer.wrap(bytes2);
-      channel.write(buf2);*/
+
       
       channel.close();
       }
