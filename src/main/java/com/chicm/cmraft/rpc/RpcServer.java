@@ -40,6 +40,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.chicm.cmraft.common.CmRaftConfiguration;
+import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.Message;
@@ -54,6 +56,8 @@ import com.google.protobuf.ServiceException;
  */
 public class RpcServer {
   static final Log LOG = LogFactory.getLog(RpcServer.class);
+  
+  private Configuration conf = null;
   public static int SERVER_PORT = 12888;
   private final static int DEFAULT_RPC_LISTEN_THREADS = 10;
   private final static int DEFAULT_REQUEST_WORKER = 10;
@@ -66,9 +70,10 @@ public class RpcServer {
   private final static AtomicLong callCounter = new AtomicLong(0);
   private static boolean tpsReportStarted = false;
   
-  public RpcServer (int nListenThreads) {
+  public RpcServer (Configuration conf) {
+    this.conf = conf;
     socketListener = new SocketListener();
-    rpcListenThreads = nListenThreads;
+    rpcListenThreads = conf.getInt("rpcserver.listen.threads", DEFAULT_RPC_LISTEN_THREADS);
     service = new RaftRpcService();
   }
   
@@ -333,7 +338,7 @@ public class RpcServer {
       PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[2]);
     }
     
-    RpcServer server = new RpcServer(nListenThreads);
+    RpcServer server = new RpcServer(CmRaftConfiguration.create());
     LOG.info("starting server");
     server.startRpcServer();
     

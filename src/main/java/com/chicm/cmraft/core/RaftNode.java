@@ -22,6 +22,7 @@ package com.chicm.cmraft.core;
 
 import java.util.Map;
 
+import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.rpc.RpcServer;
 import com.chicm.cmraft.rpc.RpcClient;
 
@@ -99,13 +100,16 @@ import com.chicm.cmraft.rpc.RpcClient;
  */
 public class RaftNode {
   
+  private CmRaftConfiguration conf = null;
   private StateMachine fsm = new StateMachine();
-  private RpcServer rpcServer = new RpcServer(10);
+  private RpcServer rpcServer = null;
   private Map<String, RpcClient> rpcCients;
   
   private long currentTerm;
 
-  public RaftNode() {
+  public RaftNode(CmRaftConfiguration conf) {
+    this.conf = conf;
+    rpcServer = new RpcServer(conf);
   }
 
 }

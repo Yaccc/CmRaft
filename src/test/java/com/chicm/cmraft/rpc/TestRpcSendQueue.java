@@ -28,7 +28,7 @@ public class TestRpcSendQueue {
   public void testRpcSendQueue() {
     RpcSendQueue q = new RpcSendQueue(null);
     long tm = System.currentTimeMillis();
-    for(int i = 0;i < 1000000; i++) {
+    for(int i = 0;i < 1000; i++) {
       RpcCall call = new RpcCall(RpcClient.generateCallId(), null, null, null);
       call.setPriority(10);
       if (i % 2 == 0) {

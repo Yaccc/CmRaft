@@ -39,8 +39,6 @@ public class RpcSendQueue {
   
   private static int MAX_SEND_CALL_QUEUE_SIZE = 100*1024;
    
-  //private static volatile RpcSendQueue instance = null;
-  
   public RpcSendQueue(AsynchronousSocketChannel channel) {
     this.channel = channel;
     callQueue = new CappedPriorityBlockingQueue<RpcCall>(MAX_SEND_CALL_QUEUE_SIZE);
@@ -59,16 +57,6 @@ public class RpcSendQueue {
       executor.execute(t);
     }
   }
-  /*
-  public static RpcSendQueue getInstance (AsynchronousSocketChannel channel) {
-    if(instance == null) {
-      synchronized(RpcSendQueue.class) {
-        instance = new RpcSendQueue(channel);
-      }
-    }
-    return instance;
-  }*/
-  
   
   public void put(RpcCall call) {
     callQueue.put(call);
@@ -92,7 +80,12 @@ public class RpcSendQueue {
           LOG.debug(String.format("Thread[%s], take: call id: %d", name, call.getCallId()));
           LOG.debug("send queue size:" + callQueue.size());
           try {
-            PacketUtils.writeRpc(channel, call.getHeader(), call.getMessage());
+            if(channel != null) {
+              PacketUtils.writeRpc(channel, call.getHeader(), call.getMessage());
+            } else {
+              LOG.error("channel == null");
+            }
+              
           } catch (Exception e) {
             LOG.error("Thread: " + name, e);
           }
