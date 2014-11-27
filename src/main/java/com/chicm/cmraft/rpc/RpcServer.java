@@ -45,6 +45,13 @@ import com.google.protobuf.BlockingService;
 import com.google.protobuf.Message;
 import com.google.protobuf.ServiceException;
 
+/**
+ * A RpcServer is a socket server listening on specified port, accepting client's connection
+ * and handle RPC requests. In order to prevent slow RPC calls blocking fast ones, It uses 2 
+ * queues to process RPC requests.
+ * @author chicm
+ *
+ */
 public class RpcServer {
   static final Log LOG = LogFactory.getLog(RpcServer.class);
   public static int SERVER_PORT = 12888;
@@ -58,35 +65,6 @@ public class RpcServer {
   private static PriorityBlockingQueue<RpcCall> responseQueue = new PriorityBlockingQueue<RpcCall>();
   private final static AtomicLong callCounter = new AtomicLong(0);
   private static boolean tpsReportStarted = false;
-  
-  public static void main(String[] args) throws Exception {
-    
-    if(args.length < 2) {
-      System.out.println("usage: RpcServer <listening port> <listen threads number> [padding length]");
-      return;
-    }
-    SERVER_PORT = Integer.parseInt(args[0]);
-    int nListenThreads = Integer.parseInt(args[1]);
-    
-    if(args.length == 3) {
-      PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[2]);
-    }
-    
-    RpcServer server = new RpcServer(nListenThreads);
-    LOG.info("starting server");
-    server.startRpcServer();
-    
-    /*
-    final RpcClient client = new RpcClient();
-    
-    for(int i = 0; i < 5; i++) {
-      new Thread(new Runnable() {
-        public void run() {
-          client.sendRequest();
-        }
-      }).start();
-     }*/
-  }
   
   public RpcServer (int nListenThreads) {
     socketListener = new SocketListener();
@@ -137,8 +115,7 @@ public class RpcServer {
     }
     @Override
     public void failed(Throwable throwable, AsynchronousServerSocketChannel attachment) {
-      //throwable.printStackTrace(System.out);
-      LOG.error("Exception");
+      LOG.error("Exception", throwable);
     }
   }
   
@@ -338,4 +315,27 @@ public class RpcServer {
     }
   }
   
+  /**
+   * For test purpose
+   * @param args
+   * @throws Exception
+   */
+  public static void main(String[] args) throws Exception {
+    
+    if(args.length < 2) {
+      System.out.println("usage: RpcServer <listening port> <listen threads number> [padding length]");
+      return;
+    }
+    SERVER_PORT = Integer.parseInt(args[0]);
+    int nListenThreads = Integer.parseInt(args[1]);
+    
+    if(args.length == 3) {
+      PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[2]);
+    }
+    
+    RpcServer server = new RpcServer(nListenThreads);
+    LOG.info("starting server");
+    server.startRpcServer();
+    
+  }
 }

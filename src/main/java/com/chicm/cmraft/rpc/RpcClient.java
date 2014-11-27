@@ -45,6 +45,13 @@ import com.google.protobuf.RpcController;
 import com.google.protobuf.ServiceException;
 import com.google.protobuf.Descriptors.MethodDescriptor;
 
+/**
+ * RpcClient implements the BlockingRpcChannel interface. It translate RPC method calls to 
+ * RPC request packets and send them to RPC server. Then translate RPC response packets from
+ * RPC server to returned objects for RPC method calls.
+ * @author chicm
+ *
+ */
 public class RpcClient {
   static final Log LOG = LogFactory.getLog(RpcClient.class);
   private static final int DEFAULT_SOCKET_READ_WORKS = 1;
@@ -56,68 +63,13 @@ public class RpcClient {
   private BlockingHashMap<Integer, RpcCall> responsesMap = new BlockingHashMap<>();
   private ExecutorService socketExecutor = null;
   
-  public static void main(String[] args) throws Exception {
-    if(args.length < 3) {
-      System.out.println("usage: RpcServer <server host> <server port> <clients number> <threads number> [padding length]");
-      return;
-    }
-    String host = args[0];
-    int port = Integer.parseInt(args[1]);
-    int nclients = Integer.parseInt(args[2]);
-    int nThreads = Integer.parseInt(args[3]);
-    
-
-    if(args.length >= 5) {
-      PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[4]);
-    }
-    for(int j =0; j < nclients; j++ ) {
-      final RpcClient client = new RpcClient(host, port);
-      
-      for(int i = 0; i < nThreads; i++) {
-        new Thread(new Runnable() {
-          public void run() {
-            client.sendRequest();
-            
-          }
-        }).start();
-      }
-    }
-  }
-  
-  private ThreadLocal<Long> startTime = new ThreadLocal<>();
-  
-  public void sendRequest() {
-    ServerId.Builder sbuilder = ServerId.newBuilder();
-    sbuilder.setHostName("localhost");
-    sbuilder.setPort(11111);
-    
-    HeartBeatRequest.Builder builder = HeartBeatRequest.newBuilder();
-    builder.setServer(sbuilder.build());
-    
-    LOG.info("client thread started");
-    try {
-      for(int i = 0; i < 5000000 ;i++) {
-        startTime.set(System.currentTimeMillis());
-        HeartBeatResponse r = stub.beatHeart(null, builder.build());
-        
-        if(i != 0 && i %1000 == 0 ) {
-          long ms = System.currentTimeMillis() - startTime.get();
-          LOG.info("RPC CALL[ " + i + "] round trip time: " + ms);
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace(System.out);
-    } 
-  }
-  
   
   public RpcClient(String host, int port) {
     
     InetSocketAddress isa = new InetSocketAddress(host, port);
-    //connections = ConnectionPool.createConnectionPool(isa, 1, 500);
     service = (new RaftRpcService()).getService();
     socketChannel = openConnection(isa);
-    sendQueue = new RpcSendQueue(socketChannel); //RpcSendQueue.getInstance(socketChannel);
+    sendQueue = new RpcSendQueue(socketChannel); 
     
     BlockingRpcChannel c = RpcClient.createBlockingRpcChannel(sendQueue, responsesMap);
     stub =  RaftService.newBlockingStub(c);
@@ -128,7 +80,6 @@ public class RpcClient {
       thread.setDaemon(true);
       socketExecutor.execute(thread);
     }
-    
   }
   
   private AsynchronousSocketChannel openConnection(InetSocketAddress isa) {
@@ -155,7 +106,6 @@ public class RpcClient {
     return client_call_id.get();
   }
  
-  
   public static BlockingRpcChannel createBlockingRpcChannel(RpcSendQueue sendQueue, 
       BlockingHashMap<Integer, RpcCall> responseMap) {
     return new RpcClient.BlockingRpcChannelImplementation(sendQueue, responseMap);
@@ -231,5 +181,67 @@ public class RpcClient {
         }
       }
     }
+  }
+  
+  /*
+   * For testing purpose
+   * @param args
+   * @throws Exception
+   */
+  public static void main(String[] args) throws Exception {
+    if(args.length < 3) {
+      System.out.println("usage: RpcServer <server host> <server port> <clients number> <threads number> [padding length]");
+      return;
+    }
+    String host = args[0];
+    int port = Integer.parseInt(args[1]);
+    int nclients = Integer.parseInt(args[2]);
+    int nThreads = Integer.parseInt(args[3]);
+    
+
+    if(args.length >= 5) {
+      PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[4]);
+    }
+    for(int j =0; j < nclients; j++ ) {
+      final RpcClient client = new RpcClient(host, port);
+      
+      for(int i = 0; i < nThreads; i++) {
+        new Thread(new Runnable() {
+          public void run() {
+            client.sendRequest();
+            
+          }
+        }).start();
+      }
+    }
+  }
+  
+  private ThreadLocal<Long> startTime = new ThreadLocal<>();
+  
+  /*
+   * For testing purpose
+   */
+  public void sendRequest() {
+    ServerId.Builder sbuilder = ServerId.newBuilder();
+    sbuilder.setHostName("localhost");
+    sbuilder.setPort(11111);
+    
+    HeartBeatRequest.Builder builder = HeartBeatRequest.newBuilder();
+    builder.setServer(sbuilder.build());
+    
+    LOG.info("client thread started");
+    try {
+      for(int i = 0; i < 5000000 ;i++) {
+        startTime.set(System.currentTimeMillis());
+        HeartBeatResponse r = stub.beatHeart(null, builder.build());
+        
+        if(i != 0 && i %1000 == 0 ) {
+          long ms = System.currentTimeMillis() - startTime.get();
+          LOG.info("RPC CALL[ " + i + "] round trip time: " + ms);
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+    } 
   }
 }

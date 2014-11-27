@@ -20,9 +20,12 @@
 
 package com.chicm.cmraft.rpc;
 
+import org.junit.Test;
+
 public class TestRpcSendQueue {
 
-  public static void main(String[] args) {
+  @Test
+  public void testRpcSendQueue() {
     RpcSendQueue q = new RpcSendQueue(null);
     long tm = System.currentTimeMillis();
     for(int i = 0;i < 1000000; i++) {

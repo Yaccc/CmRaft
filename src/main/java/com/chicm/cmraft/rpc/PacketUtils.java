@@ -42,6 +42,11 @@ import com.google.protobuf.Message;
 import com.google.protobuf.Descriptors.MethodDescriptor;
 import com.google.protobuf.Message.Builder;
 
+/**
+ * Static utility methods dealing with protobuf RPC packets. 
+ * @author chicm
+ *
+ */
 public class PacketUtils {
   static final Log LOG = LogFactory.getLog(PacketUtils.class);
   static final int DEFAULT_BYTEBUFFER_SIZE = 1000;
@@ -49,18 +54,22 @@ public class PacketUtils {
   static final int DEFAULT_CHANNEL_READ_RETRIES = 5;
   public static int TEST_PADDING_LEN = 0;
   
-  public static byte[] int2Bytes(int n) {
-    byte[] bytes = new byte[4];
-    for (int i = 0; i < 4; i++) {
-        bytes[i] = (byte)(n >>> (i * 8));
+    
+  public static byte[] int2Bytes(int val) {
+    byte [] b = new byte[4];
+    for(int i = 3; i > 0; i--) {
+      b[i] = (byte) val;
+      val >>>= 8;
     }
-    return bytes;
+    b[0] = (byte) val;
+    return b;
   }
-  
-  public static int bytes2Int(byte[] b) {
+   
+  public static int bytes2Int(byte[] bytes) {
     int n = 0;
-    for (int i = 0; i < 4; i++) {
-      n |= ((int)b[i]) << (i*8);
+    for(int i = 0; i < 4; i++) {
+      n <<= 8;
+      n ^= bytes[i] & 0xFF;
     }
     return n;
   }
@@ -70,16 +79,6 @@ public class PacketUtils {
     byte[] b = int2Bytes(n);
     os.write(b);
   }
-  
-  //public static int readInt()
-  
-  public static void main (String[] args) {
-    int n = 12345;
-    byte[] b = int2Bytes(n);
-    int n2 = bytes2Int(b);
-    System.out.println(""+ n2);
-  }
-  
   
   public static int getTotalSizeofMessages(Message ... messages) {
     int totalSize = 0;
@@ -140,7 +139,7 @@ public class PacketUtils {
     if (body != null) 
       body.writeDelimitedTo(os);
     os.flush();
-    LOG.debug("2222: " + (System.currentTimeMillis() -t) + " ms");
+    LOG.debug("" + (System.currentTimeMillis() -t) + " ms");
     LOG.debug("flushed:" + totalSize);
     return totalSize;
   }
