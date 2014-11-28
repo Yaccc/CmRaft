@@ -7,6 +7,11 @@ import com.chicm.cmraft.common.Configuration;
 
 public class TestRaftNode {
   
+  public static void main(String[] args) {
+    TestRaftNode t = new TestRaftNode();
+    t.testRaftNode();
+  }
+  
   @Test
   public void testRaftNode() {
     
@@ -23,7 +28,7 @@ public class TestRaftNode {
     RaftNode node1 = new RaftNode(conf1);
     RaftNode node2 = new RaftNode(conf2);
     
-    for(int i =0; i< 10000; i++) { 
+    for(int i =0; i< 1000; i++) { 
     node1.testHearBeat();
     node2.testHearBeat();
     }

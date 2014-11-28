@@ -28,6 +28,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Test;
+
 import com.chicm.cmraft.common.CmRaftConfiguration;
 
 public class TestRpcServer {
@@ -50,7 +52,14 @@ public class TestRpcServer {
     }
   }
 
+  @Test
+  public void testStartServer() {
+    RpcServer server = new RpcServer(CmRaftConfiguration.create());
+    server.startRpcServer();
+  }
 }
+
+
 /*
 class TestClient implements Runnable {
   private static final int NTHREADS = 100;
