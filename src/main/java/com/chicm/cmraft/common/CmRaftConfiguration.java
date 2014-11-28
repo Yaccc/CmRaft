@@ -47,13 +47,33 @@ public class CmRaftConfiguration implements Configuration {
   }
   
   @Override
+  public Iterable<String> getKeys(String prefix) {
+    return this.new ConfigurationIterableImplForPrefix(prefix);
+  }
+  
+  @Override
   public void set(String key, String value) {
     conf.setProperty(key, value);
+  }
+  
+  @Override
+  public void clear() {
+    conf.clear();
   }
   
   private class ConfigurationIterableImpl implements Iterable<String> {
     public Iterator<String> iterator() {
       return conf.getKeys();
+    }
+  }
+  
+  private class ConfigurationIterableImplForPrefix implements Iterable<String> {
+    private String prefix ;
+    ConfigurationIterableImplForPrefix(String prefix) {
+      this.prefix = prefix;
+    }
+    public Iterator<String> iterator() {
+      return conf.getKeys(prefix);
     }
   }
 }

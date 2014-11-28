@@ -12,5 +12,9 @@ public interface Configuration {
   
   void set(String key, String value);
   
+  void clear();
+  
   Iterable<String> getKeys();
+  
+  Iterable<String> getKeys(String prefix);
 }

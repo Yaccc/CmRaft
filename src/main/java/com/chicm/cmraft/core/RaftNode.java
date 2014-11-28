@@ -20,9 +20,15 @@
 
 package com.chicm.cmraft.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import com.chicm.cmraft.common.CmRaftConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.chicm.cmraft.common.Configuration;
+import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.rpc.RpcServer;
 import com.chicm.cmraft.rpc.RpcClient;
 
@@ -99,17 +105,31 @@ import com.chicm.cmraft.rpc.RpcClient;
  *
  */
 public class RaftNode {
-  
-  private CmRaftConfiguration conf = null;
+  static final Log LOG = LogFactory.getLog(RaftNode.class);
+  private Configuration conf = null;
   private StateMachine fsm = new StateMachine();
   private RpcServer rpcServer = null;
-  private Map<String, RpcClient> rpcCients;
+  private RpcClientManager rpcClientManager = null;
   
   private long currentTerm;
 
-  public RaftNode(CmRaftConfiguration conf) {
+  public RaftNode(Configuration conf) {
     this.conf = conf;
     rpcServer = new RpcServer(conf);
+    rpcClientManager = new RpcClientManager(conf);
+    rpcServer.startRpcServer();
   }
+  
+  public void testHearBeat() {
+    rpcClientManager.beatHeart();
+  }
+  /*
+  private boolean initRaftNode() {
+    rpcServer = new RpcServer(conf);
+    
+    return true;
+  }*/
+  
+  
 
 }

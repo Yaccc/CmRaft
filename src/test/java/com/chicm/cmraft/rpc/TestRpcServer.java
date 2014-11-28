@@ -37,9 +37,9 @@ public class TestRpcServer {
     server.startRpcServer();
     
     for (int i =0; i < 2; i++) {
-      final RpcClient client = new RpcClient("localhost", RpcServer.SERVER_PORT);
+      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), "localhost", server.getServerPort());
     
-      for(int j = 0; j < 20; j++) {
+      for(int j = 0; j < 10; j++) {
         new Thread(new Runnable() {
           public void run() {
             client.sendRequest();
@@ -51,7 +51,7 @@ public class TestRpcServer {
   }
 
 }
-
+/*
 class TestClient implements Runnable {
   private static final int NTHREADS = 100;
   
@@ -73,7 +73,7 @@ class TestClient implements Runnable {
   
   public void run() {
     try (SocketChannel channel = SocketChannel.open()) {
-      SocketAddress adr = new InetSocketAddress("localhost", RpcServer.SERVER_PORT);
+      SocketAddress adr = new InetSocketAddress("localhost", RpcServer.DEFAULT_SERVER_PORT);
       channel.connect(adr);
       
       for(int i =0; i< 1; i++) {
@@ -89,4 +89,4 @@ class TestClient implements Runnable {
       e.printStackTrace(System.out);
     }
   }
-}
+}*/

@@ -42,6 +42,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
+import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.Message;
@@ -58,7 +59,7 @@ public class RpcServer {
   static final Log LOG = LogFactory.getLog(RpcServer.class);
   
   private Configuration conf = null;
-  public static int SERVER_PORT = 12888;
+  private static int DEFAULT_SERVER_PORT = 12888;
   private final static int DEFAULT_RPC_LISTEN_THREADS = 10;
   private final static int DEFAULT_REQUEST_WORKER = 10;
   private final static int DEFAULT_RESPONSE_WOKER = 10;
@@ -79,6 +80,17 @@ public class RpcServer {
   
   public BlockingService getService() {
     return service.getService();
+  }
+  
+  public int getServerPort() {
+    int port = 0;
+    try {
+      port = ServerInfo.parseFromString(conf.getString("raft.server.local")).getPort();
+    } catch (Exception e) {
+      LOG.error("get port from config", e);
+      port = DEFAULT_SERVER_PORT;
+    }
+    return port;
   }
   
   public boolean startRpcServer() {
@@ -135,9 +147,9 @@ public class RpcServer {
               return t;
             }
           });
-      
+      LOG.info("Server binding to:" + getServerPort());
       final AsynchronousServerSocketChannel serverChannel = AsynchronousServerSocketChannel.open(group)
-          .bind(new InetSocketAddress(SERVER_PORT));
+          .bind(new InetSocketAddress(getServerPort()));
       
       serverChannel.accept(serverChannel, new SocketHandler());
       
@@ -331,7 +343,7 @@ public class RpcServer {
       System.out.println("usage: RpcServer <listening port> <listen threads number> [padding length]");
       return;
     }
-    SERVER_PORT = Integer.parseInt(args[0]);
+    DEFAULT_SERVER_PORT = Integer.parseInt(args[0]);
     int nListenThreads = Integer.parseInt(args[1]);
     
     if(args.length == 3) {

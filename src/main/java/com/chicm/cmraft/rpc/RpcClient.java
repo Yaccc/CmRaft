@@ -23,14 +23,20 @@ package com.chicm.cmraft.rpc;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.ReadPendingException;
+import java.nio.channels.WritePendingException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.chicm.cmraft.common.CmRaftConfiguration;
+import com.chicm.cmraft.common.Configuration;
+import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
@@ -54,6 +60,7 @@ import com.google.protobuf.Descriptors.MethodDescriptor;
  */
 public class RpcClient {
   static final Log LOG = LogFactory.getLog(RpcClient.class);
+  private Configuration conf = null;
   private static final int DEFAULT_SOCKET_READ_WORKS = 1;
   private static BlockingService service = null;
   private static volatile AtomicInteger client_call_id = new AtomicInteger(0);
@@ -62,24 +69,65 @@ public class RpcClient {
   private AsynchronousSocketChannel socketChannel = null;
   private BlockingHashMap<Integer, RpcCall> responsesMap = new BlockingHashMap<>();
   private ExecutorService socketExecutor = null;
+  private InetSocketAddress serverIsa = null;
+  private volatile boolean initialized = false;
   
   
-  public RpcClient(String host, int port) {
+  public RpcClient(Configuration conf, String serverHost, int serverPort) {
+    this.conf = conf;
+    this.serverIsa = new InetSocketAddress(serverHost, serverPort);
+  }
+  
+  public BlockingInterface getStub() {
+    if(!isInitialized())
+      init();
+    return stub;
+  }
+  
+  public void heartBeat(ServerInfo server) throws ServiceException {
+    ServerId.Builder sbuilder = ServerId.newBuilder();
+    sbuilder.setHostName(server.getHost());
+    sbuilder.setPort(server.getPort());
+    sbuilder.setThreadId(server.getStartCode());
     
-    InetSocketAddress isa = new InetSocketAddress(host, port);
+    HeartBeatRequest.Builder builder = HeartBeatRequest.newBuilder();
+    builder.setServer(sbuilder.build());
+    
+    getStub().beatHeart(null, builder.build());
+  }
+  
+  private boolean isInitialized() {
+    return initialized;
+  }
+  
+  private synchronized boolean init() {
+    if(isInitialized())
+      return true;
+    
     service = (new RaftRpcService()).getService();
-    socketChannel = openConnection(isa);
+    socketChannel = openConnection(serverIsa);
     sendQueue = new RpcSendQueue(socketChannel); 
     
     BlockingRpcChannel c = RpcClient.createBlockingRpcChannel(sendQueue, responsesMap);
     stub =  RaftService.newBlockingStub(c);
     
-    socketExecutor = Executors.newFixedThreadPool(DEFAULT_SOCKET_READ_WORKS);
+    socketExecutor = Executors.newFixedThreadPool(DEFAULT_SOCKET_READ_WORKS,
+      new ThreadFactory() {
+      @Override
+      public Thread newThread(Runnable r) {
+        Thread t = new Thread(r);
+        t.setName("RPCClient-Socket-Worker-" + System.currentTimeMillis());
+        return t;
+      }
+    });
+    
     for(int i = 0; i < DEFAULT_SOCKET_READ_WORKS; i++ ) {
       Thread thread = new Thread(new SocketReader(socketChannel, service, responsesMap));
       thread.setDaemon(true);
       socketExecutor.execute(thread);
     }
+    initialized = true;
+    return initialized;
   }
   
   private AsynchronousSocketChannel openConnection(InetSocketAddress isa) {
@@ -106,12 +154,12 @@ public class RpcClient {
     return client_call_id.get();
   }
  
-  public static BlockingRpcChannel createBlockingRpcChannel(RpcSendQueue sendQueue, 
+  private static BlockingRpcChannel createBlockingRpcChannel(RpcSendQueue sendQueue, 
       BlockingHashMap<Integer, RpcCall> responseMap) {
     return new RpcClient.BlockingRpcChannelImplementation(sendQueue, responseMap);
   }
 
-  public static class BlockingRpcChannelImplementation implements BlockingRpcChannel {
+  private static class BlockingRpcChannelImplementation implements BlockingRpcChannel {
     private RpcSendQueue sendQueue = null;
     private BlockingHashMap<Integer, RpcCall> responseMap = null;
 
@@ -178,6 +226,14 @@ public class RpcClient {
         } catch (InterruptedException | ExecutionException |IOException e) {
           LOG.error("exception", e);
           e.printStackTrace(System.out);
+          break;
+        } catch(ReadPendingException e) {
+          LOG.error("retry", e);
+          try {
+            Thread.sleep(1);
+          } catch(Exception e2) {
+            
+          }
         }
       }
     }
@@ -203,7 +259,7 @@ public class RpcClient {
       PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[4]);
     }
     for(int j =0; j < nclients; j++ ) {
-      final RpcClient client = new RpcClient(host, port);
+      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), host, port);
       
       for(int i = 0; i < nThreads; i++) {
         new Thread(new Runnable() {
@@ -222,6 +278,11 @@ public class RpcClient {
    * For testing purpose
    */
   public void sendRequest() {
+    
+    if(!this.isInitialized()) {
+      init();
+    }
+    
     ServerId.Builder sbuilder = ServerId.newBuilder();
     sbuilder.setHostName("localhost");
     sbuilder.setPort(11111);

@@ -47,12 +47,12 @@ public final class RaftProtos {
     long getThreadId();
   }
   /**
-   * Protobuf type {@code ServerId}
+   * Protobuf type {@code ServerInfo}
    */
   public static final class ServerId extends
       com.google.protobuf.GeneratedMessage
       implements ServerIdOrBuilder {
-    // Use ServerId.newBuilder() to construct.
+    // Use ServerInfo.newBuilder() to construct.
     private ServerId(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
@@ -413,7 +413,7 @@ public final class RaftProtos {
       return builder;
     }
     /**
-     * Protobuf type {@code ServerId}
+     * Protobuf type {@code ServerInfo}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -694,7 +694,7 @@ public final class RaftProtos {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:ServerId)
+      // @@protoc_insertion_point(builder_scope:ServerInfo)
     }
 
     static {
@@ -702,7 +702,7 @@ public final class RaftProtos {
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:ServerId)
+    // @@protoc_insertion_point(class_scope:ServerInfo)
   }
 
   public interface RequestHeaderOrBuilder
