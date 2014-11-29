@@ -18,16 +18,16 @@
 * under the License.
 */
 
-package com.chicm.cmraft.common;
+package com.chicm.cmraft.core;
 
-public class HeartBeat extends Thread{
+public class NodeTimeoutThread extends Thread{
   private int period = 0;
   private long starttime = 0;
   private final Object sleepLock = new Object();
   private boolean reset = false;
   private volatile boolean isStopped = false;
   
-  HeartBeat(String name, int period) {
+  NodeTimeoutThread(String name, int period) {
     this.period = period;
   }
     
@@ -108,7 +108,7 @@ public class HeartBeat extends Thread{
   }
   
   public static void main(String[] args) throws Exception {
-    HeartBeat p = new HeartBeat("P1", 5000);
+    NodeTimeoutThread p = new NodeTimeoutThread("P1", 5000);
     p.start();
     Thread.sleep(1000);
     for(int i = 0; ; i++) {
