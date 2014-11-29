@@ -22,10 +22,12 @@ public class RpcClientManager {
   private Map<ServerInfo, RpcClient> rpcClients;
   private ServerInfo thisServer;
   private RaftNode raftNode;
+  private RaftEventListener eventListener;
   
-  public RpcClientManager(Configuration conf, RaftNode node) {
+  public RpcClientManager(Configuration conf, RaftNode node, RaftEventListener listener) {
     this.conf = conf;
     this.raftNode = node;
+    this.eventListener = listener;
     initServerList(conf);
   }
   
@@ -77,7 +79,8 @@ public class RpcClientManager {
       CollectVoteResponse res = collectVoteFromMyself(thisServer, term, 0, 0);
       if(res != null && res.getGranted()) {
         voted++;
-        getRaftNode().addEvent(new StateEvent(StateEventType.VOTE_RECEIVED_ONE, thisServer, res.getTerm() ));
+        //getRaftNode().addEvent(new StateEvent(StateEventType.VOTE_RECEIVED_ONE, thisServer, res.getTerm() ));
+        eventListener.voteReceived(thisServer, res.getTerm());
       }
     } catch(Exception exp) {
       LOG.error("collect vote from myself", exp);
@@ -89,7 +92,8 @@ public class RpcClientManager {
         CollectVoteResponse response = client.collectVote(thisServer, term, 0, 0);
         if(response != null && response.getGranted()) {
           voted++;
-          getRaftNode().addEvent(new StateEvent(StateEventType.VOTE_RECEIVED_ONE, server, response.getTerm() ));
+          //getRaftNode().addEvent(new StateEvent(StateEventType.VOTE_RECEIVED_ONE, server, response.getTerm() ));
+          eventListener.voteReceived(server, response.getTerm());
         }
       } catch(ServiceException e) {
         LOG.error("RPC: beatHeart failed:" + server.getHost() + ":" + server.getPort(), e);

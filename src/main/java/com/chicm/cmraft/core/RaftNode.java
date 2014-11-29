@@ -126,7 +126,7 @@ public class RaftNode {
     raftService = RaftRpcService.create(this);
     fsm = new StateMachine(stateChangeListener);
     rpcServer = new RpcServer(conf, raftService);
-    rpcClientManager = new RpcClientManager(conf, this);
+    rpcClientManager = new RpcClientManager(conf, this, listener);
     rpcServer.startRpcServer();
     timeoutThread.start(getElectionTimeout(), listener);
     eventQueue = new LinkedBlockingQueue<StateEvent>();
@@ -190,7 +190,7 @@ public class RaftNode {
     
   }
   
-  public void addEvent(StateEvent event) {
+  private void addEvent(StateEvent event) {
     try {
       eventQueue.put(event);
     } catch(InterruptedException e) {
