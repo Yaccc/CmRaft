@@ -31,11 +31,12 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 import com.chicm.cmraft.common.CmRaftConfiguration;
+import com.chicm.cmraft.core.RaftRpcService;
 
 public class TestRpcServer {
 
   public static void main(String[] args) {
-    RpcServer server = new RpcServer(CmRaftConfiguration.create());
+    RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create());
     server.startRpcServer();
     
     for (int i =0; i < 2; i++) {
@@ -54,7 +55,7 @@ public class TestRpcServer {
 
   @Test
   public void testStartServer() {
-    RpcServer server = new RpcServer(CmRaftConfiguration.create());
+    RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create());
     server.startRpcServer();
   }
 }

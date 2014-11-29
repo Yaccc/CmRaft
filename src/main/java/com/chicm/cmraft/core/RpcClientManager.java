@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
 import com.chicm.cmraft.rpc.RpcClient;
 import com.google.protobuf.ServiceException;
 
@@ -22,6 +23,10 @@ public class RpcClientManager {
   public RpcClientManager(Configuration conf) {
     this.conf = conf;
     initServerList(conf);
+  }
+  
+  public ServerInfo getThisServer() {
+    return thisServer;
   }
   
   private void initServerList(Configuration conf) {
@@ -55,6 +60,21 @@ public class RpcClientManager {
         LOG.error("RPC: beatHeart failed:" + server.getHost() + ":" + server.getPort(), e);
       }
     }
+  }
+  
+  public int collectVote(long term) {
+    int voted = 0;
+    for(ServerInfo server: getOtherServers()) {
+      RpcClient client = rpcClients.get(server);
+      try {
+        if(client.collectVote(server, term).getGranted())
+          voted++;
+      } catch(ServiceException e) {
+        LOG.error("RPC: beatHeart failed:" + server.getHost() + ":" + server.getPort(), e);
+        return voted;
+      }
+    }
+    return voted;
   }
   
 }

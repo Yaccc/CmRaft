@@ -37,6 +37,9 @@ import org.apache.commons.logging.LogFactory;
 import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.core.RaftRpcService;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
@@ -88,13 +91,29 @@ public class RpcClient {
     ServerId.Builder sbuilder = ServerId.newBuilder();
     sbuilder.setHostName(server.getHost());
     sbuilder.setPort(server.getPort());
-    sbuilder.setThreadId(server.getStartCode());
+    sbuilder.setStartCode(server.getStartCode());
     
     HeartBeatRequest.Builder builder = HeartBeatRequest.newBuilder();
     builder.setServer(sbuilder.build());
     
     getStub().beatHeart(null, builder.build());
   }
+  
+  public CollectVoteResponse collectVote(ServerInfo candidate, long term) throws ServiceException  {
+    ServerId.Builder sbuilder = ServerId.newBuilder();
+    sbuilder.setHostName(candidate.getHost());
+    sbuilder.setPort(candidate.getPort());
+    sbuilder.setStartCode(candidate.getStartCode());
+    
+    CollectVoteRequest.Builder builder = CollectVoteRequest.newBuilder();
+    builder.setCandidateId(sbuilder.build());
+    builder.setTerm(term);
+    
+    return (CollectVoteResponse)(getStub().collectVote(null, builder.build()));
+
+  }
+  
+ // public 
   
   private boolean isInitialized() {
     return initialized;
@@ -104,7 +123,7 @@ public class RpcClient {
     if(isInitialized())
       return true;
     
-    service = (new RaftRpcService()).getService();
+    service = (RaftRpcService.create()).getService();
     socketChannel = openConnection(serverIsa);
     sendQueue = new RpcSendQueue(socketChannel); 
     

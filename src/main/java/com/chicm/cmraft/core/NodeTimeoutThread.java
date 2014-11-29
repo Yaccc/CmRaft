@@ -20,45 +20,58 @@
 
 package com.chicm.cmraft.core;
 
-public class NodeTimeoutThread extends Thread{
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+public class NodeTimeoutThread implements Runnable {
+  static final Log LOG = LogFactory.getLog(NodeTimeoutThread.class);
+  private RaftEventListener listener = null;
   private int period = 0;
   private long starttime = 0;
   private final Object sleepLock = new Object();
   private boolean reset = false;
   private volatile boolean isStopped = false;
+  private Thread thread = null;
   
-  NodeTimeoutThread(String name, int period) {
-    this.period = period;
+  public NodeTimeoutThread() {
+  }
+  
+  public void start(int timeout, RaftEventListener listener) {
+    this.period = timeout;
+    this.listener = listener;
+    
+    //Thread object can not be reused, need to create new object every time
+    this.thread = new Thread(this);
+    this.thread.setName("RaftNode-TimeOut-" + System.currentTimeMillis());
+    isStopped = false;
+    this.thread.start();
   }
     
-  public void beat() {
-    reset();
-  }
-  
-  private void reset() {
+  public void reset() {
     synchronized (sleepLock) {
       reset = true;
-      System.out.println("reset:" + (System.currentTimeMillis()-starttime));
+      LOG.debug("reset:" + (System.currentTimeMillis()-starttime));
       sleepLock.notifyAll();
-      System.out.println("reset done:" + (System.currentTimeMillis()-starttime));
+      LOG.debug("reset done:" + (System.currentTimeMillis()-starttime));
     }   
   }
 
   private void sleep() {
+    LOG.debug("entering sleep");
     try {
       while(!isStopped()) {
         reset = false;
         synchronized (sleepLock) {
-          System.out.println("sleep:" + (System.currentTimeMillis() - starttime));
+          LOG.debug("sleep:" + (System.currentTimeMillis() - starttime));
           sleepLock.wait(this.period);
-          System.out.println("sleep done:"  + (System.currentTimeMillis() -starttime) );
+          LOG.debug("sleep done:"  + (System.currentTimeMillis() -starttime) );
         }
         if(reset)
           continue;
         break;
       }
     } catch(InterruptedException iex) {
-      System.out.println("interrupted");
+      LOG.debug("interrupted");
     }
   }
 
@@ -68,6 +81,7 @@ public class NodeTimeoutThread extends Thread{
   
   @Override
   public void run() {
+    LOG.info(Thread.currentThread().getName() + " started, timeout=" + this.period);
     try {
       init();
       while (!isStopped()) {
@@ -82,44 +96,68 @@ public class NodeTimeoutThread extends Thread{
           }
         }        
       }
-      System.out.println("stopped");
+      //LOG.info(Thread.currentThread().getName() + " stopped");
     } catch (Throwable t) {
     } finally {
+      LOG.info(Thread.currentThread().getName() + " stopped");
       cleanup();
     }
   }
   protected void cleanup () {
+    LOG.info("***cleanup");
   }
   protected boolean init() {
+    LOG.debug("init");
     starttime = System.currentTimeMillis();
     return true;
   }
   protected void doTimeOut() {
-    System.out.println("doTimeOut");
+    LOG.debug(Thread.currentThread().getName() + " timeout");
+    if(listener != null) {
+      listener.timeout();
+      LOG.debug(Thread.currentThread().getName() + " listener timeout is called");
+    } else {
+      LOG.debug(Thread.currentThread().getName() + " listener is null");
+    }
   }
 
   public boolean isStopped() {
     return isStopped;
   }
 
-  public void cancel() {
+  public void stop() {
+    LOG.debug("stop");
     this.isStopped = true;
     reset();
+    //join();
   }
   
+  public void join() {
+    try {
+      this.thread.join();
+    } catch(Exception e) {
+      LOG.error("Join exception!", e);
+    }
+  }
+  
+  
   public static void main(String[] args) throws Exception {
-    NodeTimeoutThread p = new NodeTimeoutThread("P1", 5000);
-    p.start();
-    Thread.sleep(1000);
-    for(int i = 0; ; i++) {
+    NodeTimeoutThread p = new NodeTimeoutThread();
+    p.start(5000, null);
+    Thread.sleep(6000);
+    
+    for(int i = 0; i<7 ; i++) {
       
-      p.beat();
+      p.reset();
       Thread.sleep(3000);
       if(i == 5) {
-        p.cancel();
+        p.stop();
         break;
       }
     }
+    //p.join();
+    
+    System.exit(0);
     
   }
 }

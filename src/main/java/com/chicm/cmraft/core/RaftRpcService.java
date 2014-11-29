@@ -18,15 +18,16 @@
 * under the License.
 */
 
-package com.chicm.cmraft.rpc;
+package com.chicm.cmraft.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse;
 import com.google.protobuf.BlockingService;
@@ -36,6 +37,21 @@ import com.google.protobuf.ServiceException;
 public class RaftRpcService implements RaftService.BlockingInterface{
   static final Log LOG = LogFactory.getLog(RaftRpcService.class);
   
+  private RaftNode node = null;
+  
+  public static RaftRpcService create() {
+    return new RaftRpcService(null);
+  }
+  
+  public static RaftRpcService create(RaftNode node) {
+    return new RaftRpcService(node);
+  }
+  
+  private RaftRpcService(RaftNode node) {
+    this.node = node;
+  }
+  
+  @Override
   public HeartBeatResponse beatHeart(RpcController controller, HeartBeatRequest request)
       throws ServiceException {
     LOG.debug("beatHeart called");
@@ -45,6 +61,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     return builder.build();
   }
 
+  @Override
   public ServerListResponse listServer(RpcController controller, ServerListRequest request)
       throws ServiceException {
     return null;
@@ -52,5 +69,15 @@ public class RaftRpcService implements RaftService.BlockingInterface{
 
   public BlockingService getService() {
     return RaftService.newReflectiveBlockingService(this);
+  }
+
+  @Override
+  public CollectVoteResponse collectVote(RpcController controller, CollectVoteRequest request)
+      throws ServiceException {
+    CollectVoteResponse.Builder builder = CollectVoteResponse.newBuilder();
+    builder.setGranted(true);
+    builder.setTerm(0);
+    
+    return builder.build();
   }
 }

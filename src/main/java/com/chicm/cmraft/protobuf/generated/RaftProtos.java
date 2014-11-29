@@ -36,23 +36,23 @@ public final class RaftProtos {
      */
     int getPort();
 
-    // optional uint64 thread_id = 3;
+    // optional uint64 start_code = 3;
     /**
-     * <code>optional uint64 thread_id = 3;</code>
+     * <code>optional uint64 start_code = 3;</code>
      */
-    boolean hasThreadId();
+    boolean hasStartCode();
     /**
-     * <code>optional uint64 thread_id = 3;</code>
+     * <code>optional uint64 start_code = 3;</code>
      */
-    long getThreadId();
+    long getStartCode();
   }
   /**
-   * Protobuf type {@code ServerInfo}
+   * Protobuf type {@code ServerId}
    */
   public static final class ServerId extends
       com.google.protobuf.GeneratedMessage
       implements ServerIdOrBuilder {
-    // Use ServerInfo.newBuilder() to construct.
+    // Use ServerId.newBuilder() to construct.
     private ServerId(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
@@ -109,7 +109,7 @@ public final class RaftProtos {
             }
             case 24: {
               bitField0_ |= 0x00000004;
-              threadId_ = input.readUInt64();
+              startCode_ = input.readUInt64();
               break;
             }
           }
@@ -211,26 +211,26 @@ public final class RaftProtos {
       return port_;
     }
 
-    // optional uint64 thread_id = 3;
-    public static final int THREAD_ID_FIELD_NUMBER = 3;
-    private long threadId_;
+    // optional uint64 start_code = 3;
+    public static final int START_CODE_FIELD_NUMBER = 3;
+    private long startCode_;
     /**
-     * <code>optional uint64 thread_id = 3;</code>
+     * <code>optional uint64 start_code = 3;</code>
      */
-    public boolean hasThreadId() {
+    public boolean hasStartCode() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional uint64 thread_id = 3;</code>
+     * <code>optional uint64 start_code = 3;</code>
      */
-    public long getThreadId() {
-      return threadId_;
+    public long getStartCode() {
+      return startCode_;
     }
 
     private void initFields() {
       hostName_ = "";
       port_ = 0;
-      threadId_ = 0L;
+      startCode_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -255,7 +255,7 @@ public final class RaftProtos {
         output.writeUInt32(2, port_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeUInt64(3, threadId_);
+        output.writeUInt64(3, startCode_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -276,7 +276,7 @@ public final class RaftProtos {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(3, threadId_);
+          .computeUInt64Size(3, startCode_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -311,10 +311,10 @@ public final class RaftProtos {
         result = result && (getPort()
             == other.getPort());
       }
-      result = result && (hasThreadId() == other.hasThreadId());
-      if (hasThreadId()) {
-        result = result && (getThreadId()
-            == other.getThreadId());
+      result = result && (hasStartCode() == other.hasStartCode());
+      if (hasStartCode()) {
+        result = result && (getStartCode()
+            == other.getStartCode());
       }
       result = result &&
           getUnknownFields().equals(other.getUnknownFields());
@@ -337,9 +337,9 @@ public final class RaftProtos {
         hash = (37 * hash) + PORT_FIELD_NUMBER;
         hash = (53 * hash) + getPort();
       }
-      if (hasThreadId()) {
-        hash = (37 * hash) + THREAD_ID_FIELD_NUMBER;
-        hash = (53 * hash) + (int)getThreadId();
+      if (hasStartCode()) {
+        hash = (37 * hash) + START_CODE_FIELD_NUMBER;
+        hash = (53 * hash) + (int)getStartCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -413,7 +413,7 @@ public final class RaftProtos {
       return builder;
     }
     /**
-     * Protobuf type {@code ServerInfo}
+     * Protobuf type {@code ServerId}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -454,7 +454,7 @@ public final class RaftProtos {
         bitField0_ = (bitField0_ & ~0x00000001);
         port_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
-        threadId_ = 0L;
+        startCode_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
@@ -495,7 +495,7 @@ public final class RaftProtos {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.threadId_ = threadId_;
+        result.startCode_ = startCode_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -520,8 +520,8 @@ public final class RaftProtos {
         if (other.hasPort()) {
           setPort(other.getPort());
         }
-        if (other.hasThreadId()) {
-          setThreadId(other.getThreadId());
+        if (other.hasStartCode()) {
+          setStartCode(other.getStartCode());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -661,40 +661,40 @@ public final class RaftProtos {
         return this;
       }
 
-      // optional uint64 thread_id = 3;
-      private long threadId_ ;
+      // optional uint64 start_code = 3;
+      private long startCode_ ;
       /**
-       * <code>optional uint64 thread_id = 3;</code>
+       * <code>optional uint64 start_code = 3;</code>
        */
-      public boolean hasThreadId() {
+      public boolean hasStartCode() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional uint64 thread_id = 3;</code>
+       * <code>optional uint64 start_code = 3;</code>
        */
-      public long getThreadId() {
-        return threadId_;
+      public long getStartCode() {
+        return startCode_;
       }
       /**
-       * <code>optional uint64 thread_id = 3;</code>
+       * <code>optional uint64 start_code = 3;</code>
        */
-      public Builder setThreadId(long value) {
+      public Builder setStartCode(long value) {
         bitField0_ |= 0x00000004;
-        threadId_ = value;
+        startCode_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional uint64 thread_id = 3;</code>
+       * <code>optional uint64 start_code = 3;</code>
        */
-      public Builder clearThreadId() {
+      public Builder clearStartCode() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        threadId_ = 0L;
+        startCode_ = 0L;
         onChanged();
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:ServerInfo)
+      // @@protoc_insertion_point(builder_scope:ServerId)
     }
 
     static {
@@ -702,7 +702,7 @@ public final class RaftProtos {
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:ServerInfo)
+    // @@protoc_insertion_point(class_scope:ServerId)
   }
 
   public interface RequestHeaderOrBuilder
@@ -3857,42 +3857,52 @@ public final class RaftProtos {
     // @@protoc_insertion_point(class_scope:ServerListResponse)
   }
 
-  public interface LeaderVoteRequestOrBuilder
+  public interface CollectVoteRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional .ServerId leader = 1;
+    // optional .ServerId candidateId = 1;
     /**
-     * <code>optional .ServerId leader = 1;</code>
+     * <code>optional .ServerId candidateId = 1;</code>
      */
-    boolean hasLeader();
+    boolean hasCandidateId();
     /**
-     * <code>optional .ServerId leader = 1;</code>
+     * <code>optional .ServerId candidateId = 1;</code>
      */
-    com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getLeader();
+    com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getCandidateId();
     /**
-     * <code>optional .ServerId leader = 1;</code>
+     * <code>optional .ServerId candidateId = 1;</code>
      */
-    com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getLeaderOrBuilder();
+    com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getCandidateIdOrBuilder();
+
+    // optional uint64 term = 2;
+    /**
+     * <code>optional uint64 term = 2;</code>
+     */
+    boolean hasTerm();
+    /**
+     * <code>optional uint64 term = 2;</code>
+     */
+    long getTerm();
   }
   /**
-   * Protobuf type {@code LeaderVoteRequest}
+   * Protobuf type {@code CollectVoteRequest}
    */
-  public static final class LeaderVoteRequest extends
+  public static final class CollectVoteRequest extends
       com.google.protobuf.GeneratedMessage
-      implements LeaderVoteRequestOrBuilder {
-    // Use LeaderVoteRequest.newBuilder() to construct.
-    private LeaderVoteRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements CollectVoteRequestOrBuilder {
+    // Use CollectVoteRequest.newBuilder() to construct.
+    private CollectVoteRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private LeaderVoteRequest(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private CollectVoteRequest(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final LeaderVoteRequest defaultInstance;
-    public static LeaderVoteRequest getDefaultInstance() {
+    private static final CollectVoteRequest defaultInstance;
+    public static CollectVoteRequest getDefaultInstance() {
       return defaultInstance;
     }
 
-    public LeaderVoteRequest getDefaultInstanceForType() {
+    public CollectVoteRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -3902,7 +3912,7 @@ public final class RaftProtos {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private LeaderVoteRequest(
+    private CollectVoteRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -3928,14 +3938,19 @@ public final class RaftProtos {
             case 10: {
               com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder subBuilder = null;
               if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                subBuilder = leader_.toBuilder();
+                subBuilder = candidateId_.toBuilder();
               }
-              leader_ = input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.PARSER, extensionRegistry);
+              candidateId_ = input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.PARSER, extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(leader_);
-                leader_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(candidateId_);
+                candidateId_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000001;
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              term_ = input.readUInt64();
               break;
             }
           }
@@ -3952,64 +3967,81 @@ public final class RaftProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LeaderVoteRequest_descriptor;
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_CollectVoteRequest_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LeaderVoteRequest_fieldAccessorTable
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_CollectVoteRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest.Builder.class);
+              com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<LeaderVoteRequest> PARSER =
-        new com.google.protobuf.AbstractParser<LeaderVoteRequest>() {
-      public LeaderVoteRequest parsePartialFrom(
+    public static com.google.protobuf.Parser<CollectVoteRequest> PARSER =
+        new com.google.protobuf.AbstractParser<CollectVoteRequest>() {
+      public CollectVoteRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new LeaderVoteRequest(input, extensionRegistry);
+        return new CollectVoteRequest(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<LeaderVoteRequest> getParserForType() {
+    public com.google.protobuf.Parser<CollectVoteRequest> getParserForType() {
       return PARSER;
     }
 
     private int bitField0_;
-    // optional .ServerId leader = 1;
-    public static final int LEADER_FIELD_NUMBER = 1;
-    private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId leader_;
+    // optional .ServerId candidateId = 1;
+    public static final int CANDIDATEID_FIELD_NUMBER = 1;
+    private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId candidateId_;
     /**
-     * <code>optional .ServerId leader = 1;</code>
+     * <code>optional .ServerId candidateId = 1;</code>
      */
-    public boolean hasLeader() {
+    public boolean hasCandidateId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .ServerId leader = 1;</code>
+     * <code>optional .ServerId candidateId = 1;</code>
      */
-    public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getLeader() {
-      return leader_;
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getCandidateId() {
+      return candidateId_;
     }
     /**
-     * <code>optional .ServerId leader = 1;</code>
+     * <code>optional .ServerId candidateId = 1;</code>
      */
-    public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getLeaderOrBuilder() {
-      return leader_;
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getCandidateIdOrBuilder() {
+      return candidateId_;
+    }
+
+    // optional uint64 term = 2;
+    public static final int TERM_FIELD_NUMBER = 2;
+    private long term_;
+    /**
+     * <code>optional uint64 term = 2;</code>
+     */
+    public boolean hasTerm() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional uint64 term = 2;</code>
+     */
+    public long getTerm() {
+      return term_;
     }
 
     private void initFields() {
-      leader_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+      candidateId_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+      term_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (hasLeader()) {
-        if (!getLeader().isInitialized()) {
+      if (hasCandidateId()) {
+        if (!getCandidateId().isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -4022,7 +4054,10 @@ public final class RaftProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, leader_);
+        output.writeMessage(1, candidateId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeUInt64(2, term_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -4035,7 +4070,11 @@ public final class RaftProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, leader_);
+          .computeMessageSize(1, candidateId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(2, term_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4054,16 +4093,21 @@ public final class RaftProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest)) {
+      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest)) {
         return super.equals(obj);
       }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest other = (com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest) obj;
+      com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest other = (com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest) obj;
 
       boolean result = true;
-      result = result && (hasLeader() == other.hasLeader());
-      if (hasLeader()) {
-        result = result && getLeader()
-            .equals(other.getLeader());
+      result = result && (hasCandidateId() == other.hasCandidateId());
+      if (hasCandidateId()) {
+        result = result && getCandidateId()
+            .equals(other.getCandidateId());
+      }
+      result = result && (hasTerm() == other.hasTerm());
+      if (hasTerm()) {
+        result = result && (getTerm()
+            == other.getTerm());
       }
       result = result &&
           getUnknownFields().equals(other.getUnknownFields());
@@ -4078,62 +4122,66 @@ public final class RaftProtos {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasLeader()) {
-        hash = (37 * hash) + LEADER_FIELD_NUMBER;
-        hash = (53 * hash) + getLeader().hashCode();
+      if (hasCandidateId()) {
+        hash = (37 * hash) + CANDIDATEID_FIELD_NUMBER;
+        hash = (53 * hash) + getCandidateId().hashCode();
+      }
+      if (hasTerm()) {
+        hash = (37 * hash) + TERM_FIELD_NUMBER;
+        hash = (53 * hash) + (int)getTerm();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parseFrom(byte[] data)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parseFrom(java.io.InputStream input)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parseDelimitedFrom(java.io.InputStream input)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parseDelimitedFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -4142,7 +4190,7 @@ public final class RaftProtos {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest prototype) {
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -4154,24 +4202,24 @@ public final class RaftProtos {
       return builder;
     }
     /**
-     * Protobuf type {@code LeaderVoteRequest}
+     * Protobuf type {@code CollectVoteRequest}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequestOrBuilder {
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequestOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LeaderVoteRequest_descriptor;
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_CollectVoteRequest_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LeaderVoteRequest_fieldAccessorTable
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_CollectVoteRequest_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest.Builder.class);
+                com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest.Builder.class);
       }
 
-      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest.newBuilder()
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4183,7 +4231,7 @@ public final class RaftProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getLeaderFieldBuilder();
+          getCandidateIdFieldBuilder();
         }
       }
       private static Builder create() {
@@ -4192,12 +4240,14 @@ public final class RaftProtos {
 
       public Builder clear() {
         super.clear();
-        if (leaderBuilder_ == null) {
-          leader_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+        if (candidateIdBuilder_ == null) {
+          candidateId_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
         } else {
-          leaderBuilder_.clear();
+          candidateIdBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
+        term_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -4207,59 +4257,66 @@ public final class RaftProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LeaderVoteRequest_descriptor;
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_CollectVoteRequest_descriptor;
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest getDefaultInstanceForType() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest.getDefaultInstance();
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest.getDefaultInstance();
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest build() {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest result = buildPartial();
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest buildPartial() {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest result = new com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest(this);
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest result = new com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        if (leaderBuilder_ == null) {
-          result.leader_ = leader_;
+        if (candidateIdBuilder_ == null) {
+          result.candidateId_ = candidateId_;
         } else {
-          result.leader_ = leaderBuilder_.build();
+          result.candidateId_ = candidateIdBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.term_ = term_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest) {
-          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest)other);
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest other) {
-        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest.getDefaultInstance()) return this;
-        if (other.hasLeader()) {
-          mergeLeader(other.getLeader());
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest.getDefaultInstance()) return this;
+        if (other.hasCandidateId()) {
+          mergeCandidateId(other.getCandidateId());
+        }
+        if (other.hasTerm()) {
+          setTerm(other.getTerm());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        if (hasLeader()) {
-          if (!getLeader().isInitialized()) {
+        if (hasCandidateId()) {
+          if (!getCandidateId().isInitialized()) {
             
             return false;
           }
@@ -4271,11 +4328,11 @@ public final class RaftProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest parsedMessage = null;
+        com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteRequest) e.getUnfinishedMessage();
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4286,166 +4343,223 @@ public final class RaftProtos {
       }
       private int bitField0_;
 
-      // optional .ServerId leader = 1;
-      private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId leader_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+      // optional .ServerId candidateId = 1;
+      private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId candidateId_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> leaderBuilder_;
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> candidateIdBuilder_;
       /**
-       * <code>optional .ServerId leader = 1;</code>
+       * <code>optional .ServerId candidateId = 1;</code>
        */
-      public boolean hasLeader() {
+      public boolean hasCandidateId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional .ServerId leader = 1;</code>
+       * <code>optional .ServerId candidateId = 1;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getLeader() {
-        if (leaderBuilder_ == null) {
-          return leader_;
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getCandidateId() {
+        if (candidateIdBuilder_ == null) {
+          return candidateId_;
         } else {
-          return leaderBuilder_.getMessage();
+          return candidateIdBuilder_.getMessage();
         }
       }
       /**
-       * <code>optional .ServerId leader = 1;</code>
+       * <code>optional .ServerId candidateId = 1;</code>
        */
-      public Builder setLeader(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
-        if (leaderBuilder_ == null) {
+      public Builder setCandidateId(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
+        if (candidateIdBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          leader_ = value;
+          candidateId_ = value;
           onChanged();
         } else {
-          leaderBuilder_.setMessage(value);
+          candidateIdBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>optional .ServerId leader = 1;</code>
+       * <code>optional .ServerId candidateId = 1;</code>
        */
-      public Builder setLeader(
+      public Builder setCandidateId(
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder builderForValue) {
-        if (leaderBuilder_ == null) {
-          leader_ = builderForValue.build();
+        if (candidateIdBuilder_ == null) {
+          candidateId_ = builderForValue.build();
           onChanged();
         } else {
-          leaderBuilder_.setMessage(builderForValue.build());
+          candidateIdBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>optional .ServerId leader = 1;</code>
+       * <code>optional .ServerId candidateId = 1;</code>
        */
-      public Builder mergeLeader(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
-        if (leaderBuilder_ == null) {
+      public Builder mergeCandidateId(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
+        if (candidateIdBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              leader_ != com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance()) {
-            leader_ =
-              com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.newBuilder(leader_).mergeFrom(value).buildPartial();
+              candidateId_ != com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance()) {
+            candidateId_ =
+              com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.newBuilder(candidateId_).mergeFrom(value).buildPartial();
           } else {
-            leader_ = value;
+            candidateId_ = value;
           }
           onChanged();
         } else {
-          leaderBuilder_.mergeFrom(value);
+          candidateIdBuilder_.mergeFrom(value);
         }
         bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>optional .ServerId leader = 1;</code>
+       * <code>optional .ServerId candidateId = 1;</code>
        */
-      public Builder clearLeader() {
-        if (leaderBuilder_ == null) {
-          leader_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+      public Builder clearCandidateId() {
+        if (candidateIdBuilder_ == null) {
+          candidateId_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
           onChanged();
         } else {
-          leaderBuilder_.clear();
+          candidateIdBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
       /**
-       * <code>optional .ServerId leader = 1;</code>
+       * <code>optional .ServerId candidateId = 1;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder getLeaderBuilder() {
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder getCandidateIdBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
-        return getLeaderFieldBuilder().getBuilder();
+        return getCandidateIdFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .ServerId leader = 1;</code>
+       * <code>optional .ServerId candidateId = 1;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getLeaderOrBuilder() {
-        if (leaderBuilder_ != null) {
-          return leaderBuilder_.getMessageOrBuilder();
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getCandidateIdOrBuilder() {
+        if (candidateIdBuilder_ != null) {
+          return candidateIdBuilder_.getMessageOrBuilder();
         } else {
-          return leader_;
+          return candidateId_;
         }
       }
       /**
-       * <code>optional .ServerId leader = 1;</code>
+       * <code>optional .ServerId candidateId = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> 
-          getLeaderFieldBuilder() {
-        if (leaderBuilder_ == null) {
-          leaderBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+          getCandidateIdFieldBuilder() {
+        if (candidateIdBuilder_ == null) {
+          candidateIdBuilder_ = new com.google.protobuf.SingleFieldBuilder<
               com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder>(
-                  leader_,
+                  candidateId_,
                   getParentForChildren(),
                   isClean());
-          leader_ = null;
+          candidateId_ = null;
         }
-        return leaderBuilder_;
+        return candidateIdBuilder_;
       }
 
-      // @@protoc_insertion_point(builder_scope:LeaderVoteRequest)
+      // optional uint64 term = 2;
+      private long term_ ;
+      /**
+       * <code>optional uint64 term = 2;</code>
+       */
+      public boolean hasTerm() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional uint64 term = 2;</code>
+       */
+      public long getTerm() {
+        return term_;
+      }
+      /**
+       * <code>optional uint64 term = 2;</code>
+       */
+      public Builder setTerm(long value) {
+        bitField0_ |= 0x00000002;
+        term_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint64 term = 2;</code>
+       */
+      public Builder clearTerm() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        term_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:CollectVoteRequest)
     }
 
     static {
-      defaultInstance = new LeaderVoteRequest(true);
+      defaultInstance = new CollectVoteRequest(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:LeaderVoteRequest)
+    // @@protoc_insertion_point(class_scope:CollectVoteRequest)
   }
 
-  public interface LeaderVoteResponseOrBuilder
+  public interface CollectVoteResponseOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional bool approved = 1;
+    // optional .ServerId fromHost = 1;
     /**
-     * <code>optional bool approved = 1;</code>
+     * <code>optional .ServerId fromHost = 1;</code>
      */
-    boolean hasApproved();
+    boolean hasFromHost();
     /**
-     * <code>optional bool approved = 1;</code>
+     * <code>optional .ServerId fromHost = 1;</code>
      */
-    boolean getApproved();
+    com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getFromHost();
+    /**
+     * <code>optional .ServerId fromHost = 1;</code>
+     */
+    com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getFromHostOrBuilder();
+
+    // optional uint64 term = 2;
+    /**
+     * <code>optional uint64 term = 2;</code>
+     */
+    boolean hasTerm();
+    /**
+     * <code>optional uint64 term = 2;</code>
+     */
+    long getTerm();
+
+    // optional bool granted = 3;
+    /**
+     * <code>optional bool granted = 3;</code>
+     */
+    boolean hasGranted();
+    /**
+     * <code>optional bool granted = 3;</code>
+     */
+    boolean getGranted();
   }
   /**
-   * Protobuf type {@code LeaderVoteResponse}
+   * Protobuf type {@code CollectVoteResponse}
    */
-  public static final class LeaderVoteResponse extends
+  public static final class CollectVoteResponse extends
       com.google.protobuf.GeneratedMessage
-      implements LeaderVoteResponseOrBuilder {
-    // Use LeaderVoteResponse.newBuilder() to construct.
-    private LeaderVoteResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements CollectVoteResponseOrBuilder {
+    // Use CollectVoteResponse.newBuilder() to construct.
+    private CollectVoteResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private LeaderVoteResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private CollectVoteResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final LeaderVoteResponse defaultInstance;
-    public static LeaderVoteResponse getDefaultInstance() {
+    private static final CollectVoteResponse defaultInstance;
+    public static CollectVoteResponse getDefaultInstance() {
       return defaultInstance;
     }
 
-    public LeaderVoteResponse getDefaultInstanceForType() {
+    public CollectVoteResponse getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -4455,7 +4569,7 @@ public final class RaftProtos {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private LeaderVoteResponse(
+    private CollectVoteResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -4478,9 +4592,27 @@ public final class RaftProtos {
               }
               break;
             }
-            case 8: {
+            case 10: {
+              com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = fromHost_.toBuilder();
+              }
+              fromHost_ = input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(fromHost_);
+                fromHost_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000001;
-              approved_ = input.readBool();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              term_ = input.readUInt64();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              granted_ = input.readBool();
               break;
             }
           }
@@ -4497,56 +4629,102 @@ public final class RaftProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LeaderVoteResponse_descriptor;
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_CollectVoteResponse_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LeaderVoteResponse_fieldAccessorTable
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_CollectVoteResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse.Builder.class);
+              com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<LeaderVoteResponse> PARSER =
-        new com.google.protobuf.AbstractParser<LeaderVoteResponse>() {
-      public LeaderVoteResponse parsePartialFrom(
+    public static com.google.protobuf.Parser<CollectVoteResponse> PARSER =
+        new com.google.protobuf.AbstractParser<CollectVoteResponse>() {
+      public CollectVoteResponse parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new LeaderVoteResponse(input, extensionRegistry);
+        return new CollectVoteResponse(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<LeaderVoteResponse> getParserForType() {
+    public com.google.protobuf.Parser<CollectVoteResponse> getParserForType() {
       return PARSER;
     }
 
     private int bitField0_;
-    // optional bool approved = 1;
-    public static final int APPROVED_FIELD_NUMBER = 1;
-    private boolean approved_;
+    // optional .ServerId fromHost = 1;
+    public static final int FROMHOST_FIELD_NUMBER = 1;
+    private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId fromHost_;
     /**
-     * <code>optional bool approved = 1;</code>
+     * <code>optional .ServerId fromHost = 1;</code>
      */
-    public boolean hasApproved() {
+    public boolean hasFromHost() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional bool approved = 1;</code>
+     * <code>optional .ServerId fromHost = 1;</code>
      */
-    public boolean getApproved() {
-      return approved_;
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getFromHost() {
+      return fromHost_;
+    }
+    /**
+     * <code>optional .ServerId fromHost = 1;</code>
+     */
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getFromHostOrBuilder() {
+      return fromHost_;
+    }
+
+    // optional uint64 term = 2;
+    public static final int TERM_FIELD_NUMBER = 2;
+    private long term_;
+    /**
+     * <code>optional uint64 term = 2;</code>
+     */
+    public boolean hasTerm() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional uint64 term = 2;</code>
+     */
+    public long getTerm() {
+      return term_;
+    }
+
+    // optional bool granted = 3;
+    public static final int GRANTED_FIELD_NUMBER = 3;
+    private boolean granted_;
+    /**
+     * <code>optional bool granted = 3;</code>
+     */
+    public boolean hasGranted() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional bool granted = 3;</code>
+     */
+    public boolean getGranted() {
+      return granted_;
     }
 
     private void initFields() {
-      approved_ = false;
+      fromHost_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+      term_ = 0L;
+      granted_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (hasFromHost()) {
+        if (!getFromHost().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -4555,7 +4733,13 @@ public final class RaftProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBool(1, approved_);
+        output.writeMessage(1, fromHost_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeUInt64(2, term_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBool(3, granted_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -4568,7 +4752,15 @@ public final class RaftProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(1, approved_);
+          .computeMessageSize(1, fromHost_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(2, term_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(3, granted_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4587,16 +4779,26 @@ public final class RaftProtos {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse)) {
+      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse)) {
         return super.equals(obj);
       }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse other = (com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse) obj;
+      com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse other = (com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse) obj;
 
       boolean result = true;
-      result = result && (hasApproved() == other.hasApproved());
-      if (hasApproved()) {
-        result = result && (getApproved()
-            == other.getApproved());
+      result = result && (hasFromHost() == other.hasFromHost());
+      if (hasFromHost()) {
+        result = result && getFromHost()
+            .equals(other.getFromHost());
+      }
+      result = result && (hasTerm() == other.hasTerm());
+      if (hasTerm()) {
+        result = result && (getTerm()
+            == other.getTerm());
+      }
+      result = result && (hasGranted() == other.hasGranted());
+      if (hasGranted()) {
+        result = result && (getGranted()
+            == other.getGranted());
       }
       result = result &&
           getUnknownFields().equals(other.getUnknownFields());
@@ -4611,62 +4813,70 @@ public final class RaftProtos {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasApproved()) {
-        hash = (37 * hash) + APPROVED_FIELD_NUMBER;
-        hash = (53 * hash) + new Boolean(getApproved()).hashCode();
+      if (hasFromHost()) {
+        hash = (37 * hash) + FROMHOST_FIELD_NUMBER;
+        hash = (53 * hash) + getFromHost().hashCode();
+      }
+      if (hasTerm()) {
+        hash = (37 * hash) + TERM_FIELD_NUMBER;
+        hash = (53 * hash) + (int)getTerm();
+      }
+      if (hasGranted()) {
+        hash = (37 * hash) + GRANTED_FIELD_NUMBER;
+        hash = (53 * hash) + new Boolean(getGranted()).hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parseFrom(byte[] data)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parseFrom(java.io.InputStream input)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parseDelimitedFrom(java.io.InputStream input)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parseDelimitedFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -4675,7 +4885,7 @@ public final class RaftProtos {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse prototype) {
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -4687,24 +4897,24 @@ public final class RaftProtos {
       return builder;
     }
     /**
-     * Protobuf type {@code LeaderVoteResponse}
+     * Protobuf type {@code CollectVoteResponse}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponseOrBuilder {
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponseOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LeaderVoteResponse_descriptor;
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_CollectVoteResponse_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LeaderVoteResponse_fieldAccessorTable
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_CollectVoteResponse_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse.Builder.class);
+                com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.Builder.class);
       }
 
-      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse.newBuilder()
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4716,6 +4926,7 @@ public final class RaftProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getFromHostFieldBuilder();
         }
       }
       private static Builder create() {
@@ -4724,8 +4935,16 @@ public final class RaftProtos {
 
       public Builder clear() {
         super.clear();
-        approved_ = false;
+        if (fromHostBuilder_ == null) {
+          fromHost_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+        } else {
+          fromHostBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
+        term_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        granted_ = false;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -4735,53 +4954,77 @@ public final class RaftProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LeaderVoteResponse_descriptor;
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_CollectVoteResponse_descriptor;
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse getDefaultInstanceForType() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse.getDefaultInstance();
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.getDefaultInstance();
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse build() {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse result = buildPartial();
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse buildPartial() {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse result = new com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse(this);
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse result = new com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.approved_ = approved_;
+        if (fromHostBuilder_ == null) {
+          result.fromHost_ = fromHost_;
+        } else {
+          result.fromHost_ = fromHostBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.term_ = term_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.granted_ = granted_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse) {
-          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse)other);
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse other) {
-        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse.getDefaultInstance()) return this;
-        if (other.hasApproved()) {
-          setApproved(other.getApproved());
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.getDefaultInstance()) return this;
+        if (other.hasFromHost()) {
+          mergeFromHost(other.getFromHost());
+        }
+        if (other.hasTerm()) {
+          setTerm(other.getTerm());
+        }
+        if (other.hasGranted()) {
+          setGranted(other.getGranted());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
+        if (hasFromHost()) {
+          if (!getFromHost().isInitialized()) {
+            
+            return false;
+          }
+        }
         return true;
       }
 
@@ -4789,11 +5032,11 @@ public final class RaftProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse parsedMessage = null;
+        com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.LeaderVoteResponse) e.getUnfinishedMessage();
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4804,48 +5047,198 @@ public final class RaftProtos {
       }
       private int bitField0_;
 
-      // optional bool approved = 1;
-      private boolean approved_ ;
+      // optional .ServerId fromHost = 1;
+      private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId fromHost_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> fromHostBuilder_;
       /**
-       * <code>optional bool approved = 1;</code>
+       * <code>optional .ServerId fromHost = 1;</code>
        */
-      public boolean hasApproved() {
+      public boolean hasFromHost() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional bool approved = 1;</code>
+       * <code>optional .ServerId fromHost = 1;</code>
        */
-      public boolean getApproved() {
-        return approved_;
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getFromHost() {
+        if (fromHostBuilder_ == null) {
+          return fromHost_;
+        } else {
+          return fromHostBuilder_.getMessage();
+        }
       }
       /**
-       * <code>optional bool approved = 1;</code>
+       * <code>optional .ServerId fromHost = 1;</code>
        */
-      public Builder setApproved(boolean value) {
+      public Builder setFromHost(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
+        if (fromHostBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          fromHost_ = value;
+          onChanged();
+        } else {
+          fromHostBuilder_.setMessage(value);
+        }
         bitField0_ |= 0x00000001;
-        approved_ = value;
+        return this;
+      }
+      /**
+       * <code>optional .ServerId fromHost = 1;</code>
+       */
+      public Builder setFromHost(
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder builderForValue) {
+        if (fromHostBuilder_ == null) {
+          fromHost_ = builderForValue.build();
+          onChanged();
+        } else {
+          fromHostBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .ServerId fromHost = 1;</code>
+       */
+      public Builder mergeFromHost(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
+        if (fromHostBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              fromHost_ != com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance()) {
+            fromHost_ =
+              com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.newBuilder(fromHost_).mergeFrom(value).buildPartial();
+          } else {
+            fromHost_ = value;
+          }
+          onChanged();
+        } else {
+          fromHostBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .ServerId fromHost = 1;</code>
+       */
+      public Builder clearFromHost() {
+        if (fromHostBuilder_ == null) {
+          fromHost_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+          onChanged();
+        } else {
+          fromHostBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>optional .ServerId fromHost = 1;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder getFromHostBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getFromHostFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .ServerId fromHost = 1;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getFromHostOrBuilder() {
+        if (fromHostBuilder_ != null) {
+          return fromHostBuilder_.getMessageOrBuilder();
+        } else {
+          return fromHost_;
+        }
+      }
+      /**
+       * <code>optional .ServerId fromHost = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> 
+          getFromHostFieldBuilder() {
+        if (fromHostBuilder_ == null) {
+          fromHostBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder>(
+                  fromHost_,
+                  getParentForChildren(),
+                  isClean());
+          fromHost_ = null;
+        }
+        return fromHostBuilder_;
+      }
+
+      // optional uint64 term = 2;
+      private long term_ ;
+      /**
+       * <code>optional uint64 term = 2;</code>
+       */
+      public boolean hasTerm() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional uint64 term = 2;</code>
+       */
+      public long getTerm() {
+        return term_;
+      }
+      /**
+       * <code>optional uint64 term = 2;</code>
+       */
+      public Builder setTerm(long value) {
+        bitField0_ |= 0x00000002;
+        term_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bool approved = 1;</code>
+       * <code>optional uint64 term = 2;</code>
        */
-      public Builder clearApproved() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        approved_ = false;
+      public Builder clearTerm() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        term_ = 0L;
         onChanged();
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:LeaderVoteResponse)
+      // optional bool granted = 3;
+      private boolean granted_ ;
+      /**
+       * <code>optional bool granted = 3;</code>
+       */
+      public boolean hasGranted() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional bool granted = 3;</code>
+       */
+      public boolean getGranted() {
+        return granted_;
+      }
+      /**
+       * <code>optional bool granted = 3;</code>
+       */
+      public Builder setGranted(boolean value) {
+        bitField0_ |= 0x00000004;
+        granted_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool granted = 3;</code>
+       */
+      public Builder clearGranted() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        granted_ = false;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:CollectVoteResponse)
     }
 
     static {
-      defaultInstance = new LeaderVoteResponse(true);
+      defaultInstance = new CollectVoteResponse(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:LeaderVoteResponse)
+    // @@protoc_insertion_point(class_scope:CollectVoteResponse)
   }
 
   /**
@@ -4856,6 +5249,14 @@ public final class RaftProtos {
     protected RaftService() {}
 
     public interface Interface {
+      /**
+       * <code>rpc collectVote(.CollectVoteRequest) returns (.CollectVoteResponse);</code>
+       */
+      public abstract void collectVote(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse> done);
+
       /**
        * <code>rpc beatHeart(.HeartBeatRequest) returns (.HeartBeatResponse);</code>
        */
@@ -4877,6 +5278,14 @@ public final class RaftProtos {
     public static com.google.protobuf.Service newReflectiveService(
         final Interface impl) {
       return new RaftService() {
+        @java.lang.Override
+        public  void collectVote(
+            com.google.protobuf.RpcController controller,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest request,
+            com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse> done) {
+          impl.collectVote(controller, request, done);
+        }
+
         @java.lang.Override
         public  void beatHeart(
             com.google.protobuf.RpcController controller,
@@ -4916,8 +5325,10 @@ public final class RaftProtos {
           }
           switch(method.getIndex()) {
             case 0:
-              return impl.beatHeart(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest)request);
+              return impl.collectVote(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest)request);
             case 1:
+              return impl.beatHeart(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest)request);
+            case 2:
               return impl.listServer(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest)request);
             default:
               throw new java.lang.AssertionError("Can't get here.");
@@ -4934,8 +5345,10 @@ public final class RaftProtos {
           }
           switch(method.getIndex()) {
             case 0:
-              return com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest.getDefaultInstance();
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest.getDefaultInstance();
             case 1:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest.getDefaultInstance();
+            case 2:
               return com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest.getDefaultInstance();
             default:
               throw new java.lang.AssertionError("Can't get here.");
@@ -4952,8 +5365,10 @@ public final class RaftProtos {
           }
           switch(method.getIndex()) {
             case 0:
-              return com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse.getDefaultInstance();
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.getDefaultInstance();
             case 1:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse.getDefaultInstance();
+            case 2:
               return com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse.getDefaultInstance();
             default:
               throw new java.lang.AssertionError("Can't get here.");
@@ -4962,6 +5377,14 @@ public final class RaftProtos {
 
       };
     }
+
+    /**
+     * <code>rpc collectVote(.CollectVoteRequest) returns (.CollectVoteResponse);</code>
+     */
+    public abstract void collectVote(
+        com.google.protobuf.RpcController controller,
+        com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest request,
+        com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse> done);
 
     /**
      * <code>rpc beatHeart(.HeartBeatRequest) returns (.HeartBeatResponse);</code>
@@ -5002,11 +5425,16 @@ public final class RaftProtos {
       }
       switch(method.getIndex()) {
         case 0:
+          this.collectVote(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest)request,
+            com.google.protobuf.RpcUtil.<com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse>specializeCallback(
+              done));
+          return;
+        case 1:
           this.beatHeart(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest)request,
             com.google.protobuf.RpcUtil.<com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse>specializeCallback(
               done));
           return;
-        case 1:
+        case 2:
           this.listServer(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest)request,
             com.google.protobuf.RpcUtil.<com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse>specializeCallback(
               done));
@@ -5026,8 +5454,10 @@ public final class RaftProtos {
       }
       switch(method.getIndex()) {
         case 0:
-          return com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest.getDefaultInstance();
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest.getDefaultInstance();
         case 1:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest.getDefaultInstance();
+        case 2:
           return com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest.getDefaultInstance();
         default:
           throw new java.lang.AssertionError("Can't get here.");
@@ -5044,8 +5474,10 @@ public final class RaftProtos {
       }
       switch(method.getIndex()) {
         case 0:
-          return com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse.getDefaultInstance();
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.getDefaultInstance();
         case 1:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse.getDefaultInstance();
+        case 2:
           return com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse.getDefaultInstance();
         default:
           throw new java.lang.AssertionError("Can't get here.");
@@ -5068,12 +5500,27 @@ public final class RaftProtos {
         return channel;
       }
 
+      public  void collectVote(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse> done) {
+        channel.callMethod(
+          getDescriptor().getMethods().get(0),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.getDefaultInstance(),
+          com.google.protobuf.RpcUtil.generalizeCallback(
+            done,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.class,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.getDefaultInstance()));
+      }
+
       public  void beatHeart(
           com.google.protobuf.RpcController controller,
           com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest request,
           com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse> done) {
         channel.callMethod(
-          getDescriptor().getMethods().get(0),
+          getDescriptor().getMethods().get(1),
           controller,
           request,
           com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse.getDefaultInstance(),
@@ -5088,7 +5535,7 @@ public final class RaftProtos {
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest request,
           com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse> done) {
         channel.callMethod(
-          getDescriptor().getMethods().get(1),
+          getDescriptor().getMethods().get(2),
           controller,
           request,
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse.getDefaultInstance(),
@@ -5105,6 +5552,11 @@ public final class RaftProtos {
     }
 
     public interface BlockingInterface {
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse collectVote(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest request)
+          throws com.google.protobuf.ServiceException;
+
       public com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse beatHeart(
           com.google.protobuf.RpcController controller,
           com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest request)
@@ -5123,12 +5575,24 @@ public final class RaftProtos {
 
       private final com.google.protobuf.BlockingRpcChannel channel;
 
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse collectVote(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest request)
+          throws com.google.protobuf.ServiceException {
+        return (com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse) channel.callBlockingMethod(
+          getDescriptor().getMethods().get(0),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse.getDefaultInstance());
+      }
+
+
       public com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse beatHeart(
           com.google.protobuf.RpcController controller,
           com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest request)
           throws com.google.protobuf.ServiceException {
         return (com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse) channel.callBlockingMethod(
-          getDescriptor().getMethods().get(0),
+          getDescriptor().getMethods().get(1),
           controller,
           request,
           com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse.getDefaultInstance());
@@ -5140,7 +5604,7 @@ public final class RaftProtos {
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest request)
           throws com.google.protobuf.ServiceException {
         return (com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse) channel.callBlockingMethod(
-          getDescriptor().getMethods().get(1),
+          getDescriptor().getMethods().get(2),
           controller,
           request,
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse.getDefaultInstance());
@@ -5187,15 +5651,15 @@ public final class RaftProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ServerListResponse_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_LeaderVoteRequest_descriptor;
+    internal_static_CollectVoteRequest_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_LeaderVoteRequest_fieldAccessorTable;
+      internal_static_CollectVoteRequest_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_LeaderVoteResponse_descriptor;
+    internal_static_CollectVoteResponse_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_LeaderVoteResponse_fieldAccessorTable;
+      internal_static_CollectVoteResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -5205,21 +5669,24 @@ public final class RaftProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\nRaft.proto\">\n\010ServerId\022\021\n\thost_name\030\001 " +
-      "\002(\t\022\014\n\004port\030\002 \001(\r\022\021\n\tthread_id\030\003 \001(\004\"1\n\r" +
-      "RequestHeader\022\n\n\002id\030\001 \001(\r\022\024\n\014request_nam" +
-      "e\030\002 \001(\t\"3\n\016ResponseHeader\022\n\n\002id\030\001 \001(\r\022\025\n" +
-      "\rresponse_name\030\002 \001(\t\"-\n\020HeartBeatRequest" +
-      "\022\031\n\006server\030\001 \001(\0132\t.ServerId\"\023\n\021HeartBeat" +
-      "Response\"\023\n\021ServerListRequest\"/\n\022ServerL" +
-      "istResponse\022\031\n\006server\030\001 \003(\0132\t.ServerId\"." +
-      "\n\021LeaderVoteRequest\022\031\n\006leader\030\001 \001(\0132\t.Se" +
-      "rverId\"&\n\022LeaderVoteResponse\022\020\n\010approved",
-      "\030\001 \001(\0102x\n\013RaftService\0222\n\tbeatHeart\022\021.Hea" +
-      "rtBeatRequest\032\022.HeartBeatResponse\0225\n\nlis" +
-      "tServer\022\022.ServerListRequest\032\023.ServerList" +
-      "ResponseB9\n#com.chicm.cmraft.protobuf.ge" +
-      "neratedB\nRaftProtosH\001\210\001\001\240\001\001"
+      "\n\nRaft.proto\"?\n\010ServerId\022\021\n\thost_name\030\001 " +
+      "\002(\t\022\014\n\004port\030\002 \001(\r\022\022\n\nstart_code\030\003 \001(\004\"1\n" +
+      "\rRequestHeader\022\n\n\002id\030\001 \001(\r\022\024\n\014request_na" +
+      "me\030\002 \001(\t\"3\n\016ResponseHeader\022\n\n\002id\030\001 \001(\r\022\025" +
+      "\n\rresponse_name\030\002 \001(\t\"-\n\020HeartBeatReques" +
+      "t\022\031\n\006server\030\001 \001(\0132\t.ServerId\"\023\n\021HeartBea" +
+      "tResponse\"\023\n\021ServerListRequest\"/\n\022Server" +
+      "ListResponse\022\031\n\006server\030\001 \003(\0132\t.ServerId\"" +
+      "B\n\022CollectVoteRequest\022\036\n\013candidateId\030\001 \001" +
+      "(\0132\t.ServerId\022\014\n\004term\030\002 \001(\004\"Q\n\023CollectVo",
+      "teResponse\022\033\n\010fromHost\030\001 \001(\0132\t.ServerId\022" +
+      "\014\n\004term\030\002 \001(\004\022\017\n\007granted\030\003 \001(\0102\262\001\n\013RaftS" +
+      "ervice\0228\n\013collectVote\022\023.CollectVoteReque" +
+      "st\032\024.CollectVoteResponse\0222\n\tbeatHeart\022\021." +
+      "HeartBeatRequest\032\022.HeartBeatResponse\0225\n\n" +
+      "listServer\022\022.ServerListRequest\032\023.ServerL" +
+      "istResponseB9\n#com.chicm.cmraft.protobuf" +
+      ".generatedB\nRaftProtosH\001\210\001\001\240\001\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5231,7 +5698,7 @@ public final class RaftProtos {
           internal_static_ServerId_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ServerId_descriptor,
-              new java.lang.String[] { "HostName", "Port", "ThreadId", });
+              new java.lang.String[] { "HostName", "Port", "StartCode", });
           internal_static_RequestHeader_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_RequestHeader_fieldAccessorTable = new
@@ -5268,18 +5735,18 @@ public final class RaftProtos {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ServerListResponse_descriptor,
               new java.lang.String[] { "Server", });
-          internal_static_LeaderVoteRequest_descriptor =
+          internal_static_CollectVoteRequest_descriptor =
             getDescriptor().getMessageTypes().get(7);
-          internal_static_LeaderVoteRequest_fieldAccessorTable = new
+          internal_static_CollectVoteRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_LeaderVoteRequest_descriptor,
-              new java.lang.String[] { "Leader", });
-          internal_static_LeaderVoteResponse_descriptor =
+              internal_static_CollectVoteRequest_descriptor,
+              new java.lang.String[] { "CandidateId", "Term", });
+          internal_static_CollectVoteResponse_descriptor =
             getDescriptor().getMessageTypes().get(8);
-          internal_static_LeaderVoteResponse_fieldAccessorTable = new
+          internal_static_CollectVoteResponse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_LeaderVoteResponse_descriptor,
-              new java.lang.String[] { "Approved", });
+              internal_static_CollectVoteResponse_descriptor,
+              new java.lang.String[] { "FromHost", "Term", "Granted", });
           return null;
         }
       };

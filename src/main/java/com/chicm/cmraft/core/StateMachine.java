@@ -23,6 +23,9 @@ package com.chicm.cmraft.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This class represents the states transition of a Raft Node.
  * Rule of Raft servers:
@@ -71,10 +74,14 @@ import java.util.Map;
  */
 
 public class StateMachine {
+  static final Log LOG = LogFactory.getLog(StateMachine.class);
+  
   private State state;
   private static Map<State, Map<Symbol, State>> transitionMap = new HashMap<>();
+  private RaftStateChangeListener listener;
   
-  StateMachine() {
+  StateMachine(RaftStateChangeListener listener) {
+    this.listener = listener;
     this.state = State.FOLLOWER;
     buildTransitionMap();
   }
@@ -87,11 +94,24 @@ public class StateMachine {
     return this.state;
   }
   
+  
+  private void notifyIfStateChange(State oldState, State newState) {
+    if(oldState != state) {
+      LOG.info(String.format("State change: %s=>%s", oldState, newState));
+      if(listener != null) {
+        listener.stateChange(oldState, state);
+      }
+    }
+  }
+  
   public State electionTimeout() {
+    LOG.info("State: " + getState() + " : electionTimeout");
     State oldState = getState();
     if(accepting(Symbol.ELECTION_TIMEOUT)) {
         state = transitionMap.get(state).get(Symbol.ELECTION_TIMEOUT);
     }
+    notifyIfStateChange(oldState, state);
+
     return oldState;
   }
   
@@ -100,6 +120,7 @@ public class StateMachine {
     if(accepting(Symbol.VOTE_RECEIVED)) {
         state = transitionMap.get(state).get(Symbol.VOTE_RECEIVED);
     }
+    notifyIfStateChange(oldState, state);
     return oldState;
   }
   
@@ -108,6 +129,7 @@ public class StateMachine {
     if(accepting(Symbol.DISCOVERD_LEADER)) {
       state = transitionMap.get(state).get(Symbol.DISCOVERD_LEADER);
     }
+    notifyIfStateChange(oldState, state);
     return oldState;
   }
   
@@ -116,6 +138,7 @@ public class StateMachine {
     if(accepting(Symbol.DISCOVERD_HIGHER_TERM)) {
       state = transitionMap.get(state).get(Symbol.DISCOVERD_HIGHER_TERM);
     }
+    notifyIfStateChange(oldState, state);
     return oldState;
   }
     

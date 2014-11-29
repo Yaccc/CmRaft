@@ -11,7 +11,7 @@ import com.chicm.cmraft.common.ServerInfo;
  */
 public interface RaftEventListener {
   
-  void electionTimeout();
+  void timeout();
   void voteReceived();
   void voteReceived(ServerInfo server);
   void discoverLeader();

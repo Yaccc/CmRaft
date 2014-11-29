@@ -28,7 +28,7 @@ public class TestStateMachine  {
 
   @Test
   public void test () {
-    StateMachine fsm = new StateMachine();
+    StateMachine fsm = new StateMachine(null);
     assertTrue(fsm.getState() == State.FOLLOWER);
     
     fsm.discoverHigherTerm();

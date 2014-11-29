@@ -43,6 +43,7 @@ import org.apache.commons.logging.LogFactory;
 import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.core.RaftRpcService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.Message;
@@ -71,11 +72,11 @@ public class RpcServer {
   private final static AtomicLong callCounter = new AtomicLong(0);
   private static boolean tpsReportStarted = false;
   
-  public RpcServer (Configuration conf) {
+  public RpcServer (Configuration conf, RaftRpcService service) {
     this.conf = conf;
     socketListener = new SocketListener();
     rpcListenThreads = conf.getInt("rpcserver.listen.threads", DEFAULT_RPC_LISTEN_THREADS);
-    service = new RaftRpcService();
+    this.service = service;
   }
   
   public BlockingService getService() {
@@ -350,7 +351,7 @@ public class RpcServer {
       PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[2]);
     }
     
-    RpcServer server = new RpcServer(CmRaftConfiguration.create());
+    RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create());
     LOG.info("starting server");
     server.startRpcServer();
     
