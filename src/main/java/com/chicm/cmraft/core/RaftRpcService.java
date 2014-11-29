@@ -32,7 +32,10 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse;
 import com.google.protobuf.BlockingService;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.RpcController;
 import com.google.protobuf.ServiceException;
 
@@ -55,6 +58,16 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   
   public RaftNode getRaftNode() {
     return node;
+  }
+  
+  @Override
+  public TestRpcResponse testRpc(RpcController controller, TestRpcRequest request)
+      throws ServiceException {
+    TestRpcResponse.Builder builder = TestRpcResponse.newBuilder();
+    byte[] bytes = new byte[500];
+    builder.setResult( ByteString.copyFrom(bytes));
+    
+    return builder.build();    
   }
   
   @Override

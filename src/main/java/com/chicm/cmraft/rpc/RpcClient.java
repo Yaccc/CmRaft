@@ -46,9 +46,12 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService.BlockingInterface;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse;
 import com.chicm.cmraft.util.BlockingHashMap;
 import com.google.protobuf.BlockingRpcChannel;
 import com.google.protobuf.BlockingService;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.Message;
 import com.google.protobuf.RpcController;
 import com.google.protobuf.ServiceException;
@@ -97,6 +100,14 @@ public class RpcClient {
     builder.setServer(sbuilder.build());
     
     getStub().beatHeart(null, builder.build());
+  }
+  
+  public void testRpc() throws ServiceException {
+    TestRpcRequest.Builder builder = TestRpcRequest.newBuilder();
+    byte[] bytes = new byte[1024];
+    builder.setData(ByteString.copyFrom(bytes));
+    
+    getStub().testRpc(null, builder.build());
   }
   
   public CollectVoteResponse collectVote(ServerInfo candidate, long term, long lastLogIndex,
@@ -305,19 +316,11 @@ public class RpcClient {
       init();
     }
     
-    ServerId.Builder sbuilder = ServerId.newBuilder();
-    sbuilder.setHostName("localhost");
-    sbuilder.setPort(11111);
-    
-    HeartBeatRequest.Builder builder = HeartBeatRequest.newBuilder();
-    builder.setServer(sbuilder.build());
-    
     LOG.info("client thread started");
     try {
       for(int i = 0; i < 5000000 ;i++) {
         startTime.set(System.currentTimeMillis());
-        HeartBeatResponse r = stub.beatHeart(null, builder.build());
-        
+        testRpc();
         if(i != 0 && i %1000 == 0 ) {
           long ms = System.currentTimeMillis() - startTime.get();
           LOG.info("RPC CALL[ " + i + "] round trip time: " + ms);

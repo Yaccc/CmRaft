@@ -47,6 +47,14 @@ message CollectVoteResponse {
   required bool granted = 3;
 }
 
+message TestRpcRequest {
+  optional bytes data = 1;
+}
+
+message TestRpcResponse {
+  optional bytes result = 1;
+}
+
 service RaftService {
   rpc collectVote(CollectVoteRequest)
     returns(CollectVoteResponse);
@@ -56,4 +64,7 @@ service RaftService {
     
   rpc listServer(ServerListRequest) 
     returns(ServerListResponse);
+  
+  rpc testRpc(TestRpcRequest)
+    returns(TestRpcResponse);
 }
