@@ -112,7 +112,7 @@ public class RpcServer {
       
       serverChannel.accept(serverChannel, this);
       LOG.info(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
-      startTPSReport();
+      //startTPSReport();
 
       for(;;) {
         try {

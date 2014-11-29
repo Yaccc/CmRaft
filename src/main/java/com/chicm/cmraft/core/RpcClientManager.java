@@ -10,7 +10,9 @@ import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.rpc.RpcClient;
 import com.google.protobuf.ServiceException;
 
@@ -19,9 +21,11 @@ public class RpcClientManager {
   private Configuration conf;
   private Map<ServerInfo, RpcClient> rpcClients;
   private ServerInfo thisServer;
+  private RaftNode raftNode;
   
-  public RpcClientManager(Configuration conf) {
+  public RpcClientManager(Configuration conf, RaftNode node) {
     this.conf = conf;
+    this.raftNode = node;
     initServerList(conf);
   }
   
@@ -38,6 +42,10 @@ public class RpcClientManager {
       RpcClient client = new RpcClient(conf, server.getHost(), server.getPort());
       rpcClients.put(server, client);
     }
+  }
+  
+  public RaftNode getRaftNode() {
+    return raftNode;
   }
   
   public Set<ServerInfo> getOtherServers() {
@@ -64,17 +72,48 @@ public class RpcClientManager {
   
   public int collectVote(long term) {
     int voted = 0;
+    
+    try {
+      CollectVoteResponse res = collectVoteFromMyself(thisServer, term, 0, 0);
+      if(res != null && res.getGranted()) {
+        voted++;
+        getRaftNode().addEvent(new StateEvent(StateEventType.VOTE_RECEIVED_ONE, thisServer, res.getTerm() ));
+      }
+    } catch(Exception exp) {
+      LOG.error("collect vote from myself", exp);
+    }
+    
     for(ServerInfo server: getOtherServers()) {
       RpcClient client = rpcClients.get(server);
       try {
-        if(client.collectVote(server, term).getGranted())
+        CollectVoteResponse response = client.collectVote(thisServer, term, 0, 0);
+        if(response != null && response.getGranted()) {
           voted++;
+          getRaftNode().addEvent(new StateEvent(StateEventType.VOTE_RECEIVED_ONE, server, response.getTerm() ));
+        }
       } catch(ServiceException e) {
         LOG.error("RPC: beatHeart failed:" + server.getHost() + ":" + server.getPort(), e);
         return voted;
       }
     }
     return voted;
+  }
+  
+  private CollectVoteResponse collectVoteFromMyself(ServerInfo candidate, long term, long lastLogIndex,
+      long lastLogTerm) throws ServiceException  {
+    ServerId.Builder sbuilder = ServerId.newBuilder();
+    sbuilder.setHostName(candidate.getHost());
+    sbuilder.setPort(candidate.getPort());
+    sbuilder.setStartCode(candidate.getStartCode());
+    
+    CollectVoteRequest.Builder builder = CollectVoteRequest.newBuilder();
+    builder.setCandidateId(sbuilder.build());
+    builder.setTerm(term);
+    builder.setLastLogIndex(lastLogIndex);
+    builder.setLastLogTerm(lastLogTerm);
+    
+    return (CollectVoteResponse) getRaftNode().getRaftService().collectVote(null, builder.build());
+
   }
   
 }

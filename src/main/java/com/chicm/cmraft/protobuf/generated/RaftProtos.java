@@ -26,13 +26,13 @@ public final class RaftProtos {
     com.google.protobuf.ByteString
         getHostNameBytes();
 
-    // optional uint32 port = 2;
+    // required uint32 port = 2;
     /**
-     * <code>optional uint32 port = 2;</code>
+     * <code>required uint32 port = 2;</code>
      */
     boolean hasPort();
     /**
-     * <code>optional uint32 port = 2;</code>
+     * <code>required uint32 port = 2;</code>
      */
     int getPort();
 
@@ -195,17 +195,17 @@ public final class RaftProtos {
       }
     }
 
-    // optional uint32 port = 2;
+    // required uint32 port = 2;
     public static final int PORT_FIELD_NUMBER = 2;
     private int port_;
     /**
-     * <code>optional uint32 port = 2;</code>
+     * <code>required uint32 port = 2;</code>
      */
     public boolean hasPort() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional uint32 port = 2;</code>
+     * <code>required uint32 port = 2;</code>
      */
     public int getPort() {
       return port_;
@@ -238,6 +238,10 @@ public final class RaftProtos {
       if (isInitialized != -1) return isInitialized == 1;
 
       if (!hasHostName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasPort()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -339,7 +343,7 @@ public final class RaftProtos {
       }
       if (hasStartCode()) {
         hash = (37 * hash) + START_CODE_FIELD_NUMBER;
-        hash = (53 * hash) + (int)getStartCode();
+        hash = (53 * hash) + (int)(getStartCode());
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -532,6 +536,10 @@ public final class RaftProtos {
           
           return false;
         }
+        if (!hasPort()) {
+          
+          return false;
+        }
         return true;
       }
 
@@ -628,22 +636,22 @@ public final class RaftProtos {
         return this;
       }
 
-      // optional uint32 port = 2;
+      // required uint32 port = 2;
       private int port_ ;
       /**
-       * <code>optional uint32 port = 2;</code>
+       * <code>required uint32 port = 2;</code>
        */
       public boolean hasPort() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional uint32 port = 2;</code>
+       * <code>required uint32 port = 2;</code>
        */
       public int getPort() {
         return port_;
       }
       /**
-       * <code>optional uint32 port = 2;</code>
+       * <code>required uint32 port = 2;</code>
        */
       public Builder setPort(int value) {
         bitField0_ |= 0x00000002;
@@ -652,7 +660,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional uint32 port = 2;</code>
+       * <code>required uint32 port = 2;</code>
        */
       public Builder clearPort() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -708,27 +716,27 @@ public final class RaftProtos {
   public interface RequestHeaderOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional uint32 id = 1;
+    // required uint32 id = 1;
     /**
-     * <code>optional uint32 id = 1;</code>
+     * <code>required uint32 id = 1;</code>
      */
     boolean hasId();
     /**
-     * <code>optional uint32 id = 1;</code>
+     * <code>required uint32 id = 1;</code>
      */
     int getId();
 
-    // optional string request_name = 2;
+    // required string request_name = 2;
     /**
-     * <code>optional string request_name = 2;</code>
+     * <code>required string request_name = 2;</code>
      */
     boolean hasRequestName();
     /**
-     * <code>optional string request_name = 2;</code>
+     * <code>required string request_name = 2;</code>
      */
     java.lang.String getRequestName();
     /**
-     * <code>optional string request_name = 2;</code>
+     * <code>required string request_name = 2;</code>
      */
     com.google.protobuf.ByteString
         getRequestNameBytes();
@@ -834,33 +842,33 @@ public final class RaftProtos {
     }
 
     private int bitField0_;
-    // optional uint32 id = 1;
+    // required uint32 id = 1;
     public static final int ID_FIELD_NUMBER = 1;
     private int id_;
     /**
-     * <code>optional uint32 id = 1;</code>
+     * <code>required uint32 id = 1;</code>
      */
     public boolean hasId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional uint32 id = 1;</code>
+     * <code>required uint32 id = 1;</code>
      */
     public int getId() {
       return id_;
     }
 
-    // optional string request_name = 2;
+    // required string request_name = 2;
     public static final int REQUEST_NAME_FIELD_NUMBER = 2;
     private java.lang.Object requestName_;
     /**
-     * <code>optional string request_name = 2;</code>
+     * <code>required string request_name = 2;</code>
      */
     public boolean hasRequestName() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional string request_name = 2;</code>
+     * <code>required string request_name = 2;</code>
      */
     public java.lang.String getRequestName() {
       java.lang.Object ref = requestName_;
@@ -877,7 +885,7 @@ public final class RaftProtos {
       }
     }
     /**
-     * <code>optional string request_name = 2;</code>
+     * <code>required string request_name = 2;</code>
      */
     public com.google.protobuf.ByteString
         getRequestNameBytes() {
@@ -902,6 +910,14 @@ public final class RaftProtos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasRequestName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1164,6 +1180,14 @@ public final class RaftProtos {
       }
 
       public final boolean isInitialized() {
+        if (!hasId()) {
+          
+          return false;
+        }
+        if (!hasRequestName()) {
+          
+          return false;
+        }
         return true;
       }
 
@@ -1186,22 +1210,22 @@ public final class RaftProtos {
       }
       private int bitField0_;
 
-      // optional uint32 id = 1;
+      // required uint32 id = 1;
       private int id_ ;
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>required uint32 id = 1;</code>
        */
       public boolean hasId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>required uint32 id = 1;</code>
        */
       public int getId() {
         return id_;
       }
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>required uint32 id = 1;</code>
        */
       public Builder setId(int value) {
         bitField0_ |= 0x00000001;
@@ -1210,7 +1234,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>required uint32 id = 1;</code>
        */
       public Builder clearId() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -1219,16 +1243,16 @@ public final class RaftProtos {
         return this;
       }
 
-      // optional string request_name = 2;
+      // required string request_name = 2;
       private java.lang.Object requestName_ = "";
       /**
-       * <code>optional string request_name = 2;</code>
+       * <code>required string request_name = 2;</code>
        */
       public boolean hasRequestName() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional string request_name = 2;</code>
+       * <code>required string request_name = 2;</code>
        */
       public java.lang.String getRequestName() {
         java.lang.Object ref = requestName_;
@@ -1242,7 +1266,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>optional string request_name = 2;</code>
+       * <code>required string request_name = 2;</code>
        */
       public com.google.protobuf.ByteString
           getRequestNameBytes() {
@@ -1258,7 +1282,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>optional string request_name = 2;</code>
+       * <code>required string request_name = 2;</code>
        */
       public Builder setRequestName(
           java.lang.String value) {
@@ -1271,7 +1295,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional string request_name = 2;</code>
+       * <code>required string request_name = 2;</code>
        */
       public Builder clearRequestName() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -1280,7 +1304,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional string request_name = 2;</code>
+       * <code>required string request_name = 2;</code>
        */
       public Builder setRequestNameBytes(
           com.google.protobuf.ByteString value) {
@@ -1307,27 +1331,27 @@ public final class RaftProtos {
   public interface ResponseHeaderOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional uint32 id = 1;
+    // required uint32 id = 1;
     /**
-     * <code>optional uint32 id = 1;</code>
+     * <code>required uint32 id = 1;</code>
      */
     boolean hasId();
     /**
-     * <code>optional uint32 id = 1;</code>
+     * <code>required uint32 id = 1;</code>
      */
     int getId();
 
-    // optional string response_name = 2;
+    // required string response_name = 2;
     /**
-     * <code>optional string response_name = 2;</code>
+     * <code>required string response_name = 2;</code>
      */
     boolean hasResponseName();
     /**
-     * <code>optional string response_name = 2;</code>
+     * <code>required string response_name = 2;</code>
      */
     java.lang.String getResponseName();
     /**
-     * <code>optional string response_name = 2;</code>
+     * <code>required string response_name = 2;</code>
      */
     com.google.protobuf.ByteString
         getResponseNameBytes();
@@ -1433,33 +1457,33 @@ public final class RaftProtos {
     }
 
     private int bitField0_;
-    // optional uint32 id = 1;
+    // required uint32 id = 1;
     public static final int ID_FIELD_NUMBER = 1;
     private int id_;
     /**
-     * <code>optional uint32 id = 1;</code>
+     * <code>required uint32 id = 1;</code>
      */
     public boolean hasId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional uint32 id = 1;</code>
+     * <code>required uint32 id = 1;</code>
      */
     public int getId() {
       return id_;
     }
 
-    // optional string response_name = 2;
+    // required string response_name = 2;
     public static final int RESPONSE_NAME_FIELD_NUMBER = 2;
     private java.lang.Object responseName_;
     /**
-     * <code>optional string response_name = 2;</code>
+     * <code>required string response_name = 2;</code>
      */
     public boolean hasResponseName() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional string response_name = 2;</code>
+     * <code>required string response_name = 2;</code>
      */
     public java.lang.String getResponseName() {
       java.lang.Object ref = responseName_;
@@ -1476,7 +1500,7 @@ public final class RaftProtos {
       }
     }
     /**
-     * <code>optional string response_name = 2;</code>
+     * <code>required string response_name = 2;</code>
      */
     public com.google.protobuf.ByteString
         getResponseNameBytes() {
@@ -1501,6 +1525,14 @@ public final class RaftProtos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasResponseName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1763,6 +1795,14 @@ public final class RaftProtos {
       }
 
       public final boolean isInitialized() {
+        if (!hasId()) {
+          
+          return false;
+        }
+        if (!hasResponseName()) {
+          
+          return false;
+        }
         return true;
       }
 
@@ -1785,22 +1825,22 @@ public final class RaftProtos {
       }
       private int bitField0_;
 
-      // optional uint32 id = 1;
+      // required uint32 id = 1;
       private int id_ ;
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>required uint32 id = 1;</code>
        */
       public boolean hasId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>required uint32 id = 1;</code>
        */
       public int getId() {
         return id_;
       }
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>required uint32 id = 1;</code>
        */
       public Builder setId(int value) {
         bitField0_ |= 0x00000001;
@@ -1809,7 +1849,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional uint32 id = 1;</code>
+       * <code>required uint32 id = 1;</code>
        */
       public Builder clearId() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -1818,16 +1858,16 @@ public final class RaftProtos {
         return this;
       }
 
-      // optional string response_name = 2;
+      // required string response_name = 2;
       private java.lang.Object responseName_ = "";
       /**
-       * <code>optional string response_name = 2;</code>
+       * <code>required string response_name = 2;</code>
        */
       public boolean hasResponseName() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional string response_name = 2;</code>
+       * <code>required string response_name = 2;</code>
        */
       public java.lang.String getResponseName() {
         java.lang.Object ref = responseName_;
@@ -1841,7 +1881,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>optional string response_name = 2;</code>
+       * <code>required string response_name = 2;</code>
        */
       public com.google.protobuf.ByteString
           getResponseNameBytes() {
@@ -1857,7 +1897,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>optional string response_name = 2;</code>
+       * <code>required string response_name = 2;</code>
        */
       public Builder setResponseName(
           java.lang.String value) {
@@ -1870,7 +1910,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional string response_name = 2;</code>
+       * <code>required string response_name = 2;</code>
        */
       public Builder clearResponseName() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -1879,7 +1919,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional string response_name = 2;</code>
+       * <code>required string response_name = 2;</code>
        */
       public Builder setResponseNameBytes(
           com.google.protobuf.ByteString value) {
@@ -1906,17 +1946,17 @@ public final class RaftProtos {
   public interface HeartBeatRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional .ServerId server = 1;
+    // required .ServerId server = 1;
     /**
-     * <code>optional .ServerId server = 1;</code>
+     * <code>required .ServerId server = 1;</code>
      */
     boolean hasServer();
     /**
-     * <code>optional .ServerId server = 1;</code>
+     * <code>required .ServerId server = 1;</code>
      */
     com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getServer();
     /**
-     * <code>optional .ServerId server = 1;</code>
+     * <code>required .ServerId server = 1;</code>
      */
     com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getServerOrBuilder();
   }
@@ -2024,23 +2064,23 @@ public final class RaftProtos {
     }
 
     private int bitField0_;
-    // optional .ServerId server = 1;
+    // required .ServerId server = 1;
     public static final int SERVER_FIELD_NUMBER = 1;
     private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId server_;
     /**
-     * <code>optional .ServerId server = 1;</code>
+     * <code>required .ServerId server = 1;</code>
      */
     public boolean hasServer() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .ServerId server = 1;</code>
+     * <code>required .ServerId server = 1;</code>
      */
     public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getServer() {
       return server_;
     }
     /**
-     * <code>optional .ServerId server = 1;</code>
+     * <code>required .ServerId server = 1;</code>
      */
     public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getServerOrBuilder() {
       return server_;
@@ -2054,11 +2094,13 @@ public final class RaftProtos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (hasServer()) {
-        if (!getServer().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
+      if (!hasServer()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getServer().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
       }
       memoizedIsInitialized = 1;
       return true;
@@ -2304,11 +2346,13 @@ public final class RaftProtos {
       }
 
       public final boolean isInitialized() {
-        if (hasServer()) {
-          if (!getServer().isInitialized()) {
-            
-            return false;
-          }
+        if (!hasServer()) {
+          
+          return false;
+        }
+        if (!getServer().isInitialized()) {
+          
+          return false;
         }
         return true;
       }
@@ -2332,18 +2376,18 @@ public final class RaftProtos {
       }
       private int bitField0_;
 
-      // optional .ServerId server = 1;
+      // required .ServerId server = 1;
       private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId server_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> serverBuilder_;
       /**
-       * <code>optional .ServerId server = 1;</code>
+       * <code>required .ServerId server = 1;</code>
        */
       public boolean hasServer() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional .ServerId server = 1;</code>
+       * <code>required .ServerId server = 1;</code>
        */
       public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getServer() {
         if (serverBuilder_ == null) {
@@ -2353,7 +2397,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>optional .ServerId server = 1;</code>
+       * <code>required .ServerId server = 1;</code>
        */
       public Builder setServer(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
         if (serverBuilder_ == null) {
@@ -2369,7 +2413,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId server = 1;</code>
+       * <code>required .ServerId server = 1;</code>
        */
       public Builder setServer(
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder builderForValue) {
@@ -2383,7 +2427,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId server = 1;</code>
+       * <code>required .ServerId server = 1;</code>
        */
       public Builder mergeServer(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
         if (serverBuilder_ == null) {
@@ -2402,7 +2446,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId server = 1;</code>
+       * <code>required .ServerId server = 1;</code>
        */
       public Builder clearServer() {
         if (serverBuilder_ == null) {
@@ -2415,7 +2459,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId server = 1;</code>
+       * <code>required .ServerId server = 1;</code>
        */
       public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder getServerBuilder() {
         bitField0_ |= 0x00000001;
@@ -2423,7 +2467,7 @@ public final class RaftProtos {
         return getServerFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .ServerId server = 1;</code>
+       * <code>required .ServerId server = 1;</code>
        */
       public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getServerOrBuilder() {
         if (serverBuilder_ != null) {
@@ -2433,7 +2477,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>optional .ServerId server = 1;</code>
+       * <code>required .ServerId server = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> 
@@ -3860,29 +3904,49 @@ public final class RaftProtos {
   public interface CollectVoteRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional .ServerId candidateId = 1;
+    // required .ServerId candidateId = 1;
     /**
-     * <code>optional .ServerId candidateId = 1;</code>
+     * <code>required .ServerId candidateId = 1;</code>
      */
     boolean hasCandidateId();
     /**
-     * <code>optional .ServerId candidateId = 1;</code>
+     * <code>required .ServerId candidateId = 1;</code>
      */
     com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getCandidateId();
     /**
-     * <code>optional .ServerId candidateId = 1;</code>
+     * <code>required .ServerId candidateId = 1;</code>
      */
     com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getCandidateIdOrBuilder();
 
-    // optional uint64 term = 2;
+    // required uint64 term = 2;
     /**
-     * <code>optional uint64 term = 2;</code>
+     * <code>required uint64 term = 2;</code>
      */
     boolean hasTerm();
     /**
-     * <code>optional uint64 term = 2;</code>
+     * <code>required uint64 term = 2;</code>
      */
     long getTerm();
+
+    // required uint64 lastLogIndex = 3;
+    /**
+     * <code>required uint64 lastLogIndex = 3;</code>
+     */
+    boolean hasLastLogIndex();
+    /**
+     * <code>required uint64 lastLogIndex = 3;</code>
+     */
+    long getLastLogIndex();
+
+    // required uint64 lastLogTerm = 4;
+    /**
+     * <code>required uint64 lastLogTerm = 4;</code>
+     */
+    boolean hasLastLogTerm();
+    /**
+     * <code>required uint64 lastLogTerm = 4;</code>
+     */
+    long getLastLogTerm();
   }
   /**
    * Protobuf type {@code CollectVoteRequest}
@@ -3953,6 +4017,16 @@ public final class RaftProtos {
               term_ = input.readUInt64();
               break;
             }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              lastLogIndex_ = input.readUInt64();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              lastLogTerm_ = input.readUInt64();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -3993,58 +4067,106 @@ public final class RaftProtos {
     }
 
     private int bitField0_;
-    // optional .ServerId candidateId = 1;
+    // required .ServerId candidateId = 1;
     public static final int CANDIDATEID_FIELD_NUMBER = 1;
     private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId candidateId_;
     /**
-     * <code>optional .ServerId candidateId = 1;</code>
+     * <code>required .ServerId candidateId = 1;</code>
      */
     public boolean hasCandidateId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .ServerId candidateId = 1;</code>
+     * <code>required .ServerId candidateId = 1;</code>
      */
     public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getCandidateId() {
       return candidateId_;
     }
     /**
-     * <code>optional .ServerId candidateId = 1;</code>
+     * <code>required .ServerId candidateId = 1;</code>
      */
     public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getCandidateIdOrBuilder() {
       return candidateId_;
     }
 
-    // optional uint64 term = 2;
+    // required uint64 term = 2;
     public static final int TERM_FIELD_NUMBER = 2;
     private long term_;
     /**
-     * <code>optional uint64 term = 2;</code>
+     * <code>required uint64 term = 2;</code>
      */
     public boolean hasTerm() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional uint64 term = 2;</code>
+     * <code>required uint64 term = 2;</code>
      */
     public long getTerm() {
       return term_;
     }
 
+    // required uint64 lastLogIndex = 3;
+    public static final int LASTLOGINDEX_FIELD_NUMBER = 3;
+    private long lastLogIndex_;
+    /**
+     * <code>required uint64 lastLogIndex = 3;</code>
+     */
+    public boolean hasLastLogIndex() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required uint64 lastLogIndex = 3;</code>
+     */
+    public long getLastLogIndex() {
+      return lastLogIndex_;
+    }
+
+    // required uint64 lastLogTerm = 4;
+    public static final int LASTLOGTERM_FIELD_NUMBER = 4;
+    private long lastLogTerm_;
+    /**
+     * <code>required uint64 lastLogTerm = 4;</code>
+     */
+    public boolean hasLastLogTerm() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>required uint64 lastLogTerm = 4;</code>
+     */
+    public long getLastLogTerm() {
+      return lastLogTerm_;
+    }
+
     private void initFields() {
       candidateId_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
       term_ = 0L;
+      lastLogIndex_ = 0L;
+      lastLogTerm_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (hasCandidateId()) {
-        if (!getCandidateId().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
+      if (!hasCandidateId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTerm()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasLastLogIndex()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasLastLogTerm()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getCandidateId().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
       }
       memoizedIsInitialized = 1;
       return true;
@@ -4058,6 +4180,12 @@ public final class RaftProtos {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeUInt64(2, term_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeUInt64(3, lastLogIndex_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeUInt64(4, lastLogTerm_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -4075,6 +4203,14 @@ public final class RaftProtos {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt64Size(2, term_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(3, lastLogIndex_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(4, lastLogTerm_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4109,6 +4245,16 @@ public final class RaftProtos {
         result = result && (getTerm()
             == other.getTerm());
       }
+      result = result && (hasLastLogIndex() == other.hasLastLogIndex());
+      if (hasLastLogIndex()) {
+        result = result && (getLastLogIndex()
+            == other.getLastLogIndex());
+      }
+      result = result && (hasLastLogTerm() == other.hasLastLogTerm());
+      if (hasLastLogTerm()) {
+        result = result && (getLastLogTerm()
+            == other.getLastLogTerm());
+      }
       result = result &&
           getUnknownFields().equals(other.getUnknownFields());
       return result;
@@ -4128,7 +4274,15 @@ public final class RaftProtos {
       }
       if (hasTerm()) {
         hash = (37 * hash) + TERM_FIELD_NUMBER;
-        hash = (53 * hash) + (int)getTerm();
+        hash = (53 * hash) + (int)(getTerm());
+      }
+      if (hasLastLogIndex()) {
+        hash = (37 * hash) + LASTLOGINDEX_FIELD_NUMBER;
+        hash = (53 * hash) + (int)getLastLogIndex();
+      }
+      if (hasLastLogTerm()) {
+        hash = (37 * hash) + LASTLOGTERM_FIELD_NUMBER;
+        hash = (53 * hash) + (int)(getLastLogTerm());
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -4248,6 +4402,10 @@ public final class RaftProtos {
         bitField0_ = (bitField0_ & ~0x00000001);
         term_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000002);
+        lastLogIndex_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        lastLogTerm_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -4288,6 +4446,14 @@ public final class RaftProtos {
           to_bitField0_ |= 0x00000002;
         }
         result.term_ = term_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.lastLogIndex_ = lastLogIndex_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.lastLogTerm_ = lastLogTerm_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -4310,16 +4476,36 @@ public final class RaftProtos {
         if (other.hasTerm()) {
           setTerm(other.getTerm());
         }
+        if (other.hasLastLogIndex()) {
+          setLastLogIndex(other.getLastLogIndex());
+        }
+        if (other.hasLastLogTerm()) {
+          setLastLogTerm(other.getLastLogTerm());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
-        if (hasCandidateId()) {
-          if (!getCandidateId().isInitialized()) {
-            
-            return false;
-          }
+        if (!hasCandidateId()) {
+          
+          return false;
+        }
+        if (!hasTerm()) {
+          
+          return false;
+        }
+        if (!hasLastLogIndex()) {
+          
+          return false;
+        }
+        if (!hasLastLogTerm()) {
+          
+          return false;
+        }
+        if (!getCandidateId().isInitialized()) {
+          
+          return false;
         }
         return true;
       }
@@ -4343,18 +4529,18 @@ public final class RaftProtos {
       }
       private int bitField0_;
 
-      // optional .ServerId candidateId = 1;
+      // required .ServerId candidateId = 1;
       private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId candidateId_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> candidateIdBuilder_;
       /**
-       * <code>optional .ServerId candidateId = 1;</code>
+       * <code>required .ServerId candidateId = 1;</code>
        */
       public boolean hasCandidateId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional .ServerId candidateId = 1;</code>
+       * <code>required .ServerId candidateId = 1;</code>
        */
       public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getCandidateId() {
         if (candidateIdBuilder_ == null) {
@@ -4364,7 +4550,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>optional .ServerId candidateId = 1;</code>
+       * <code>required .ServerId candidateId = 1;</code>
        */
       public Builder setCandidateId(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
         if (candidateIdBuilder_ == null) {
@@ -4380,7 +4566,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId candidateId = 1;</code>
+       * <code>required .ServerId candidateId = 1;</code>
        */
       public Builder setCandidateId(
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder builderForValue) {
@@ -4394,7 +4580,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId candidateId = 1;</code>
+       * <code>required .ServerId candidateId = 1;</code>
        */
       public Builder mergeCandidateId(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
         if (candidateIdBuilder_ == null) {
@@ -4413,7 +4599,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId candidateId = 1;</code>
+       * <code>required .ServerId candidateId = 1;</code>
        */
       public Builder clearCandidateId() {
         if (candidateIdBuilder_ == null) {
@@ -4426,7 +4612,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId candidateId = 1;</code>
+       * <code>required .ServerId candidateId = 1;</code>
        */
       public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder getCandidateIdBuilder() {
         bitField0_ |= 0x00000001;
@@ -4434,7 +4620,7 @@ public final class RaftProtos {
         return getCandidateIdFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .ServerId candidateId = 1;</code>
+       * <code>required .ServerId candidateId = 1;</code>
        */
       public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getCandidateIdOrBuilder() {
         if (candidateIdBuilder_ != null) {
@@ -4444,7 +4630,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>optional .ServerId candidateId = 1;</code>
+       * <code>required .ServerId candidateId = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> 
@@ -4460,22 +4646,22 @@ public final class RaftProtos {
         return candidateIdBuilder_;
       }
 
-      // optional uint64 term = 2;
+      // required uint64 term = 2;
       private long term_ ;
       /**
-       * <code>optional uint64 term = 2;</code>
+       * <code>required uint64 term = 2;</code>
        */
       public boolean hasTerm() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional uint64 term = 2;</code>
+       * <code>required uint64 term = 2;</code>
        */
       public long getTerm() {
         return term_;
       }
       /**
-       * <code>optional uint64 term = 2;</code>
+       * <code>required uint64 term = 2;</code>
        */
       public Builder setTerm(long value) {
         bitField0_ |= 0x00000002;
@@ -4484,11 +4670,77 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional uint64 term = 2;</code>
+       * <code>required uint64 term = 2;</code>
        */
       public Builder clearTerm() {
         bitField0_ = (bitField0_ & ~0x00000002);
         term_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      // required uint64 lastLogIndex = 3;
+      private long lastLogIndex_ ;
+      /**
+       * <code>required uint64 lastLogIndex = 3;</code>
+       */
+      public boolean hasLastLogIndex() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required uint64 lastLogIndex = 3;</code>
+       */
+      public long getLastLogIndex() {
+        return lastLogIndex_;
+      }
+      /**
+       * <code>required uint64 lastLogIndex = 3;</code>
+       */
+      public Builder setLastLogIndex(long value) {
+        bitField0_ |= 0x00000004;
+        lastLogIndex_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required uint64 lastLogIndex = 3;</code>
+       */
+      public Builder clearLastLogIndex() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        lastLogIndex_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      // required uint64 lastLogTerm = 4;
+      private long lastLogTerm_ ;
+      /**
+       * <code>required uint64 lastLogTerm = 4;</code>
+       */
+      public boolean hasLastLogTerm() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>required uint64 lastLogTerm = 4;</code>
+       */
+      public long getLastLogTerm() {
+        return lastLogTerm_;
+      }
+      /**
+       * <code>required uint64 lastLogTerm = 4;</code>
+       */
+      public Builder setLastLogTerm(long value) {
+        bitField0_ |= 0x00000008;
+        lastLogTerm_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required uint64 lastLogTerm = 4;</code>
+       */
+      public Builder clearLastLogTerm() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        lastLogTerm_ = 0L;
         onChanged();
         return this;
       }
@@ -4507,37 +4759,37 @@ public final class RaftProtos {
   public interface CollectVoteResponseOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional .ServerId fromHost = 1;
+    // required .ServerId fromHost = 1;
     /**
-     * <code>optional .ServerId fromHost = 1;</code>
+     * <code>required .ServerId fromHost = 1;</code>
      */
     boolean hasFromHost();
     /**
-     * <code>optional .ServerId fromHost = 1;</code>
+     * <code>required .ServerId fromHost = 1;</code>
      */
     com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getFromHost();
     /**
-     * <code>optional .ServerId fromHost = 1;</code>
+     * <code>required .ServerId fromHost = 1;</code>
      */
     com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getFromHostOrBuilder();
 
-    // optional uint64 term = 2;
+    // required uint64 term = 2;
     /**
-     * <code>optional uint64 term = 2;</code>
+     * <code>required uint64 term = 2;</code>
      */
     boolean hasTerm();
     /**
-     * <code>optional uint64 term = 2;</code>
+     * <code>required uint64 term = 2;</code>
      */
     long getTerm();
 
-    // optional bool granted = 3;
+    // required bool granted = 3;
     /**
-     * <code>optional bool granted = 3;</code>
+     * <code>required bool granted = 3;</code>
      */
     boolean hasGranted();
     /**
-     * <code>optional bool granted = 3;</code>
+     * <code>required bool granted = 3;</code>
      */
     boolean getGranted();
   }
@@ -4655,55 +4907,55 @@ public final class RaftProtos {
     }
 
     private int bitField0_;
-    // optional .ServerId fromHost = 1;
+    // required .ServerId fromHost = 1;
     public static final int FROMHOST_FIELD_NUMBER = 1;
     private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId fromHost_;
     /**
-     * <code>optional .ServerId fromHost = 1;</code>
+     * <code>required .ServerId fromHost = 1;</code>
      */
     public boolean hasFromHost() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .ServerId fromHost = 1;</code>
+     * <code>required .ServerId fromHost = 1;</code>
      */
     public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getFromHost() {
       return fromHost_;
     }
     /**
-     * <code>optional .ServerId fromHost = 1;</code>
+     * <code>required .ServerId fromHost = 1;</code>
      */
     public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getFromHostOrBuilder() {
       return fromHost_;
     }
 
-    // optional uint64 term = 2;
+    // required uint64 term = 2;
     public static final int TERM_FIELD_NUMBER = 2;
     private long term_;
     /**
-     * <code>optional uint64 term = 2;</code>
+     * <code>required uint64 term = 2;</code>
      */
     public boolean hasTerm() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional uint64 term = 2;</code>
+     * <code>required uint64 term = 2;</code>
      */
     public long getTerm() {
       return term_;
     }
 
-    // optional bool granted = 3;
+    // required bool granted = 3;
     public static final int GRANTED_FIELD_NUMBER = 3;
     private boolean granted_;
     /**
-     * <code>optional bool granted = 3;</code>
+     * <code>required bool granted = 3;</code>
      */
     public boolean hasGranted() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional bool granted = 3;</code>
+     * <code>required bool granted = 3;</code>
      */
     public boolean getGranted() {
       return granted_;
@@ -4719,11 +4971,21 @@ public final class RaftProtos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (hasFromHost()) {
-        if (!getFromHost().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
+      if (!hasFromHost()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTerm()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasGranted()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getFromHost().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
       }
       memoizedIsInitialized = 1;
       return true;
@@ -4819,7 +5081,7 @@ public final class RaftProtos {
       }
       if (hasTerm()) {
         hash = (37 * hash) + TERM_FIELD_NUMBER;
-        hash = (53 * hash) + (int)getTerm();
+        hash = (53 * hash) + (int)(getTerm());
       }
       if (hasGranted()) {
         hash = (37 * hash) + GRANTED_FIELD_NUMBER;
@@ -5019,11 +5281,21 @@ public final class RaftProtos {
       }
 
       public final boolean isInitialized() {
-        if (hasFromHost()) {
-          if (!getFromHost().isInitialized()) {
-            
-            return false;
-          }
+        if (!hasFromHost()) {
+          
+          return false;
+        }
+        if (!hasTerm()) {
+          
+          return false;
+        }
+        if (!hasGranted()) {
+          
+          return false;
+        }
+        if (!getFromHost().isInitialized()) {
+          
+          return false;
         }
         return true;
       }
@@ -5047,18 +5319,18 @@ public final class RaftProtos {
       }
       private int bitField0_;
 
-      // optional .ServerId fromHost = 1;
+      // required .ServerId fromHost = 1;
       private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId fromHost_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> fromHostBuilder_;
       /**
-       * <code>optional .ServerId fromHost = 1;</code>
+       * <code>required .ServerId fromHost = 1;</code>
        */
       public boolean hasFromHost() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional .ServerId fromHost = 1;</code>
+       * <code>required .ServerId fromHost = 1;</code>
        */
       public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getFromHost() {
         if (fromHostBuilder_ == null) {
@@ -5068,7 +5340,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>optional .ServerId fromHost = 1;</code>
+       * <code>required .ServerId fromHost = 1;</code>
        */
       public Builder setFromHost(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
         if (fromHostBuilder_ == null) {
@@ -5084,7 +5356,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId fromHost = 1;</code>
+       * <code>required .ServerId fromHost = 1;</code>
        */
       public Builder setFromHost(
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder builderForValue) {
@@ -5098,7 +5370,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId fromHost = 1;</code>
+       * <code>required .ServerId fromHost = 1;</code>
        */
       public Builder mergeFromHost(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
         if (fromHostBuilder_ == null) {
@@ -5117,7 +5389,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId fromHost = 1;</code>
+       * <code>required .ServerId fromHost = 1;</code>
        */
       public Builder clearFromHost() {
         if (fromHostBuilder_ == null) {
@@ -5130,7 +5402,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional .ServerId fromHost = 1;</code>
+       * <code>required .ServerId fromHost = 1;</code>
        */
       public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder getFromHostBuilder() {
         bitField0_ |= 0x00000001;
@@ -5138,7 +5410,7 @@ public final class RaftProtos {
         return getFromHostFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .ServerId fromHost = 1;</code>
+       * <code>required .ServerId fromHost = 1;</code>
        */
       public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getFromHostOrBuilder() {
         if (fromHostBuilder_ != null) {
@@ -5148,7 +5420,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>optional .ServerId fromHost = 1;</code>
+       * <code>required .ServerId fromHost = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> 
@@ -5164,22 +5436,22 @@ public final class RaftProtos {
         return fromHostBuilder_;
       }
 
-      // optional uint64 term = 2;
+      // required uint64 term = 2;
       private long term_ ;
       /**
-       * <code>optional uint64 term = 2;</code>
+       * <code>required uint64 term = 2;</code>
        */
       public boolean hasTerm() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional uint64 term = 2;</code>
+       * <code>required uint64 term = 2;</code>
        */
       public long getTerm() {
         return term_;
       }
       /**
-       * <code>optional uint64 term = 2;</code>
+       * <code>required uint64 term = 2;</code>
        */
       public Builder setTerm(long value) {
         bitField0_ |= 0x00000002;
@@ -5188,7 +5460,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional uint64 term = 2;</code>
+       * <code>required uint64 term = 2;</code>
        */
       public Builder clearTerm() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -5197,22 +5469,22 @@ public final class RaftProtos {
         return this;
       }
 
-      // optional bool granted = 3;
+      // required bool granted = 3;
       private boolean granted_ ;
       /**
-       * <code>optional bool granted = 3;</code>
+       * <code>required bool granted = 3;</code>
        */
       public boolean hasGranted() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional bool granted = 3;</code>
+       * <code>required bool granted = 3;</code>
        */
       public boolean getGranted() {
         return granted_;
       }
       /**
-       * <code>optional bool granted = 3;</code>
+       * <code>required bool granted = 3;</code>
        */
       public Builder setGranted(boolean value) {
         bitField0_ |= 0x00000004;
@@ -5221,7 +5493,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>optional bool granted = 3;</code>
+       * <code>required bool granted = 3;</code>
        */
       public Builder clearGranted() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -5670,23 +5942,24 @@ public final class RaftProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\nRaft.proto\"?\n\010ServerId\022\021\n\thost_name\030\001 " +
-      "\002(\t\022\014\n\004port\030\002 \001(\r\022\022\n\nstart_code\030\003 \001(\004\"1\n" +
-      "\rRequestHeader\022\n\n\002id\030\001 \001(\r\022\024\n\014request_na" +
-      "me\030\002 \001(\t\"3\n\016ResponseHeader\022\n\n\002id\030\001 \001(\r\022\025" +
-      "\n\rresponse_name\030\002 \001(\t\"-\n\020HeartBeatReques" +
-      "t\022\031\n\006server\030\001 \001(\0132\t.ServerId\"\023\n\021HeartBea" +
+      "\002(\t\022\014\n\004port\030\002 \002(\r\022\022\n\nstart_code\030\003 \001(\004\"1\n" +
+      "\rRequestHeader\022\n\n\002id\030\001 \002(\r\022\024\n\014request_na" +
+      "me\030\002 \002(\t\"3\n\016ResponseHeader\022\n\n\002id\030\001 \002(\r\022\025" +
+      "\n\rresponse_name\030\002 \002(\t\"-\n\020HeartBeatReques" +
+      "t\022\031\n\006server\030\001 \002(\0132\t.ServerId\"\023\n\021HeartBea" +
       "tResponse\"\023\n\021ServerListRequest\"/\n\022Server" +
       "ListResponse\022\031\n\006server\030\001 \003(\0132\t.ServerId\"" +
-      "B\n\022CollectVoteRequest\022\036\n\013candidateId\030\001 \001" +
-      "(\0132\t.ServerId\022\014\n\004term\030\002 \001(\004\"Q\n\023CollectVo",
-      "teResponse\022\033\n\010fromHost\030\001 \001(\0132\t.ServerId\022" +
-      "\014\n\004term\030\002 \001(\004\022\017\n\007granted\030\003 \001(\0102\262\001\n\013RaftS" +
-      "ervice\0228\n\013collectVote\022\023.CollectVoteReque" +
-      "st\032\024.CollectVoteResponse\0222\n\tbeatHeart\022\021." +
-      "HeartBeatRequest\032\022.HeartBeatResponse\0225\n\n" +
-      "listServer\022\022.ServerListRequest\032\023.ServerL" +
-      "istResponseB9\n#com.chicm.cmraft.protobuf" +
-      ".generatedB\nRaftProtosH\001\210\001\001\240\001\001"
+      "m\n\022CollectVoteRequest\022\036\n\013candidateId\030\001 \002" +
+      "(\0132\t.ServerId\022\014\n\004term\030\002 \002(\004\022\024\n\014lastLogIn",
+      "dex\030\003 \002(\004\022\023\n\013lastLogTerm\030\004 \002(\004\"Q\n\023Collec" +
+      "tVoteResponse\022\033\n\010fromHost\030\001 \002(\0132\t.Server" +
+      "Id\022\014\n\004term\030\002 \002(\004\022\017\n\007granted\030\003 \002(\0102\262\001\n\013Ra" +
+      "ftService\0228\n\013collectVote\022\023.CollectVoteRe" +
+      "quest\032\024.CollectVoteResponse\0222\n\tbeatHeart" +
+      "\022\021.HeartBeatRequest\032\022.HeartBeatResponse\022" +
+      "5\n\nlistServer\022\022.ServerListRequest\032\023.Serv" +
+      "erListResponseB9\n#com.chicm.cmraft.proto" +
+      "buf.generatedB\nRaftProtosH\001\210\001\001\240\001\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -5740,7 +6013,7 @@ public final class RaftProtos {
           internal_static_CollectVoteRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CollectVoteRequest_descriptor,
-              new java.lang.String[] { "CandidateId", "Term", });
+              new java.lang.String[] { "CandidateId", "Term", "LastLogIndex", "LastLogTerm", });
           internal_static_CollectVoteResponse_descriptor =
             getDescriptor().getMessageTypes().get(8);
           internal_static_CollectVoteResponse_fieldAccessorTable = new

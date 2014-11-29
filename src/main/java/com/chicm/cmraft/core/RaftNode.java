@@ -20,9 +20,8 @@
 
 package com.chicm.cmraft.core;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang.math.RandomUtils;
@@ -32,7 +31,6 @@ import org.apache.commons.logging.LogFactory;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.rpc.RpcServer;
-import com.chicm.cmraft.rpc.RpcClient;
 
 /**
  * This class represents a Raft node in a cluster.
@@ -116,19 +114,37 @@ public class RaftNode {
   private RaftEventListener listener = new RaftEventListenerImpl();
   private RaftStateChangeListener stateChangeListener = new RaftStateChangeListenerImpl();
   private RaftRpcService raftService = null;
+  private BlockingQueue<StateEvent> eventQueue = null;
+  private ServerInfo serverInfo = null;
+  private volatile ServerInfo votedFor = null;
   
   private volatile AtomicLong currentTerm = new AtomicLong(0);
 
   public RaftNode(Configuration conf) {
     this.conf = conf;
+    serverInfo = ServerInfo.parseFromString(conf.getString("raft.server.local"));
     raftService = RaftRpcService.create(this);
     fsm = new StateMachine(stateChangeListener);
     rpcServer = new RpcServer(conf, raftService);
-    rpcClientManager = new RpcClientManager(conf);
+    rpcClientManager = new RpcClientManager(conf, this);
     rpcServer.startRpcServer();
     timeoutThread.start(getElectionTimeout(), listener);
+    eventQueue = new LinkedBlockingQueue<StateEvent>();
+    startEventWorker();
     
     LOG.info(String.format("%s initialized", getName()));
+  }
+  
+  public long getCurrentTerm() {
+    return currentTerm.get();
+  }
+  
+  public ServerInfo getServerInfo() {
+    return serverInfo;
+  }
+  
+  public RaftRpcService getRaftService() {
+    return raftService;
   }
   
   private int getElectionTimeout() {
@@ -137,17 +153,56 @@ public class RaftNode {
     return confTimeout + r;    
   }
   
-  private String getName() {
+  public String getName() {
     if(rpcClientManager == null)
       return "";
     return String.format("RaftNode[%s:%d]",  rpcClientManager.getThisServer().getHost(),
       rpcClientManager.getThisServer().getPort());
   }
   
+  public int getTotalServerNumbers () {
+    return rpcClientManager.getOtherServers().size() + 1;
+  }
+   
+  public void checkRpcTerm(long term) {
+    if(term > getCurrentTerm()) {
+      StateEvent event = new StateEvent(StateEventType.DISCOVERD_HIGHER_TERM, null, term);
+      addEvent(event);
+    }
+  }
+  
+  public synchronized boolean voteRequest(ServerInfo candidate, long term, long lastLogIndex, long lastLogTerm) {
+    boolean ret = false;
+    if(term < getCurrentTerm())
+      return ret;
+    if (votedFor == null || votedFor.equals(candidate)) {
+      votedFor = candidate;
+      ret = true;
+      LOG.info(getName() + "voted for: " + candidate.getHost() + ":" + candidate.getPort());
+    } else {
+      LOG.info(getName() + "vote request rejected: " + candidate.getHost() + ":" + candidate.getPort());
+    }
+    checkRpcTerm(term);
+    return ret;
+  }
+  
+  public synchronized void hearBeatRequest (ServerInfo leader) {
+    
+  }
+  
+  public void addEvent(StateEvent event) {
+    try {
+      eventQueue.put(event);
+    } catch(InterruptedException e) {
+      LOG.error("addEvent exception", e);
+    }
+  }
+  
   public void testHearBeat() {
     rpcClientManager.beatHeart();
   }
   
+  //public 
   
   private void becomeFollower(State oldState) {
     timeoutThread.stop();
@@ -186,25 +241,15 @@ public class RaftNode {
   private class RaftEventListenerImpl implements RaftEventListener {
     @Override 
     public void timeout() { 
-      LOG.info(getName() + " state:" + fsm.getState() + " timeout!!");
-      fsm.electionTimeout();
-      if(fsm.getState() == State.LEADER) {
-        rpcClientManager.beatHeart();
-      } else if(fsm.getState() == State.CANDIDATE) {
-        int n = rpcClientManager.collectVote(currentTerm.get());
-        LOG.info(getName() + " Collected vote:" + n);
-      } else if( fsm.getState() == State.FOLLOWER ) {
-        
-      }
-      
+      addEvent(new StateEvent(StateEventType.ELECTION_TIMEOUT, null, getCurrentTerm()));
     }
     @Override
     public void voteReceived() {
       
     }
     @Override
-    public void voteReceived(ServerInfo server) {
-      
+    public void voteReceived(ServerInfo server, long term) {
+      addEvent(new StateEvent(StateEventType.VOTE_RECEIVED_ONE, server, term) );
     }
     @Override
     public void discoverLeader() {
@@ -216,5 +261,77 @@ public class RaftNode {
     }
   }
   
+  private void startEventWorker () {
+    Thread thread = new Thread(new EventWorker());
+    thread.setDaemon(true);
+    thread.setName("RaftNode-EventWorker");
+    
+    thread.start();
+  }
+  
+  class EventWorker implements Runnable {
+    private volatile int voteCounter = 0;
+    
+    @Override
+    public void run() {
+      while(true) {
+        try {
+          StateEvent event = eventQueue.take();
+          if(event == null) {
+            continue;
+          }
+          switch(event.getEventType()) {
+            case ELECTION_TIMEOUT:
+              handleTimeout(event);
+              break;
+            case VOTE_RECEIVED_ONE:
+              handleOneVote(event);
+              break;
+            case VOTE_RECEIVED_MAJORITY:
+              handleVoteReceivedMajority(event);
+              break;
+            case DISCOVERD_LEADER:
+              break;
+            case DISCOVERD_HIGHER_TERM:
+              break;
+          }
+        } catch(Exception e) {
+          e.printStackTrace(System.out);
+          LOG.error("exception", e);
+        }
+      }
+    }
+    
+    public void handleTimeout(StateEvent e) {
+      LOG.info(getName() + " state:" + fsm.getState() + " timeout!!");
+      //perform state change
+      fsm.electionTimeout();
+      
+      //do initialization after state change
+      if(fsm.getState() == State.LEADER) {
+        rpcClientManager.beatHeart();
+      } else if(fsm.getState() == State.CANDIDATE) {
+        int n = rpcClientManager.collectVote(currentTerm.get());
+        LOG.info(getName() + " Collected vote:" + n);
+      } else if( fsm.getState() == State.FOLLOWER ) {
+        
+      }
+    }
+    
+    public void handleOneVote(StateEvent e) {
+      if(fsm.getState() != State.CANDIDATE)
+        return;
+      voteCounter ++;
+      
+      if(voteCounter > getTotalServerNumbers()/2) {
+        voteCounter = 0;
+        addEvent(new StateEvent(StateEventType.VOTE_RECEIVED_MAJORITY, null, getCurrentTerm()) );
+      }
+    }
+    
+    public void handleVoteReceivedMajority(StateEvent e) {
+      fsm.voteReceived();
+    }
+  }
 
 }

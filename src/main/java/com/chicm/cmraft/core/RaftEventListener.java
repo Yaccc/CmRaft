@@ -13,7 +13,7 @@ public interface RaftEventListener {
   
   void timeout();
   void voteReceived();
-  void voteReceived(ServerInfo server);
+  void voteReceived(ServerInfo server, long term);
   void discoverLeader();
   void discoverHigherTerm();
 }

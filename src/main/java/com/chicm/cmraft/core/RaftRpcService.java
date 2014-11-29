@@ -23,11 +23,13 @@ package com.chicm.cmraft.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse;
 import com.google.protobuf.BlockingService;
@@ -49,6 +51,10 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   
   private RaftRpcService(RaftNode node) {
     this.node = node;
+  }
+  
+  public RaftNode getRaftNode() {
+    return node;
   }
   
   @Override
@@ -74,9 +80,23 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   @Override
   public CollectVoteResponse collectVote(RpcController controller, CollectVoteRequest request)
       throws ServiceException {
+    
+    ServerId.Builder sbuilder = ServerId.newBuilder();
+    sbuilder.setHostName(getRaftNode().getServerInfo().getHost());
+    sbuilder.setPort(getRaftNode().getServerInfo().getPort());
+    sbuilder.setStartCode(getRaftNode().getServerInfo().getStartCode());
+    
+    LOG.info(getRaftNode().getName() + ": received vote request from: " + "{" + request + "}" );
+    
+    boolean granted = getRaftNode().voteRequest(new ServerInfo(request.getCandidateId().getHostName(), 
+      request.getCandidateId().getPort()), request.getTerm(), request.getLastLogIndex(), request.getLastLogTerm());
+    
+    LOG.info(getRaftNode().getName() + ": voted: " + granted );
+    
     CollectVoteResponse.Builder builder = CollectVoteResponse.newBuilder();
-    builder.setGranted(true);
-    builder.setTerm(0);
+    builder.setGranted(granted);
+    builder.setTerm(getRaftNode().getCurrentTerm());
+    builder.setFromHost(sbuilder.build());
     
     return builder.build();
   }

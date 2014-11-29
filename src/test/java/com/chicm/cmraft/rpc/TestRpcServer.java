@@ -20,13 +20,6 @@
 
 package com.chicm.cmraft.rpc;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
@@ -38,6 +31,7 @@ public class TestRpcServer {
   public static void main(String[] args) {
     RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create());
     server.startRpcServer();
+    server.startTPSReport();
     
     for (int i =0; i < 2; i++) {
       final RpcClient client = new RpcClient(CmRaftConfiguration.create(), "localhost", server.getServerPort());

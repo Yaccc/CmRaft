@@ -35,6 +35,7 @@ public class TestRaftNode {
     conf2.set("raft.server.local", "localhost:13888");
     conf2.set("raft.server.remote.1", "localhost:12888");
     conf2.set("raft.election.timeout", "500");
+    conf2.set("raft.heartbeat.interval", "500");
     
     node1 = new RaftNode(conf1);
     node2 = new RaftNode(conf2);

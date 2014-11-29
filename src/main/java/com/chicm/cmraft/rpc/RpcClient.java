@@ -99,7 +99,8 @@ public class RpcClient {
     getStub().beatHeart(null, builder.build());
   }
   
-  public CollectVoteResponse collectVote(ServerInfo candidate, long term) throws ServiceException  {
+  public CollectVoteResponse collectVote(ServerInfo candidate, long term, long lastLogIndex,
+      long lastLogTerm) throws ServiceException  {
     ServerId.Builder sbuilder = ServerId.newBuilder();
     sbuilder.setHostName(candidate.getHost());
     sbuilder.setPort(candidate.getPort());
@@ -108,6 +109,8 @@ public class RpcClient {
     CollectVoteRequest.Builder builder = CollectVoteRequest.newBuilder();
     builder.setCandidateId(sbuilder.build());
     builder.setTerm(term);
+    builder.setLastLogIndex(lastLogIndex);
+    builder.setLastLogTerm(lastLogTerm);
     
     return (CollectVoteResponse)(getStub().collectVote(null, builder.build()));
 

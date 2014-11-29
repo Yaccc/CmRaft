@@ -69,12 +69,15 @@ public class ServerInfo {
   
   @Override
   public String toString() {
+    
+    return String.format("[%s:%d:%d]", getHost(), getPort(), getStartCode());
+    /*
     StringBuilder s = new StringBuilder();
     s.append("host: " + getHost());
     s.append("\nport: " + getPort());
     s.append("\nstartCode: " + getStartCode());
     
-    return s.toString();
+    return s.toString();*/
   }
 
   
@@ -110,6 +113,11 @@ public class ServerInfo {
     ServerInfo other = (ServerInfo)obj;
     boolean result = true;
     result = result && ((getHost()!=null) == (other.getHost()!=null));
+    if (getHost()!=null) {
+      result = result && getHost()
+          .equals(other.getHost());
+    }
+    
     result = result && (getPort()==other.getPort());
     result = result && (getStartCode() == other.getStartCode());
     

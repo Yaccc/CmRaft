@@ -77,7 +77,7 @@ public class StateMachine {
   static final Log LOG = LogFactory.getLog(StateMachine.class);
   
   private State state;
-  private static Map<State, Map<Symbol, State>> transitionMap = new HashMap<>();
+  private static Map<State, Map<StateEventType, State>> transitionMap = new HashMap<>();
   private RaftStateChangeListener listener;
   
   StateMachine(RaftStateChangeListener listener) {
@@ -86,7 +86,7 @@ public class StateMachine {
     buildTransitionMap();
   }
   
-  public boolean accepting(Symbol sym) {
+  public boolean accepting(StateEventType sym) {
     return transitionMap.get(state).get(sym) != null;
   }
   
@@ -107,8 +107,8 @@ public class StateMachine {
   public State electionTimeout() {
     LOG.info("State: " + getState() + " : electionTimeout");
     State oldState = getState();
-    if(accepting(Symbol.ELECTION_TIMEOUT)) {
-        state = transitionMap.get(state).get(Symbol.ELECTION_TIMEOUT);
+    if(accepting(StateEventType.ELECTION_TIMEOUT)) {
+        state = transitionMap.get(state).get(StateEventType.ELECTION_TIMEOUT);
     }
     notifyIfStateChange(oldState, state);
 
@@ -117,8 +117,8 @@ public class StateMachine {
   
   public State voteReceived() {
     State oldState = getState();
-    if(accepting(Symbol.VOTE_RECEIVED)) {
-        state = transitionMap.get(state).get(Symbol.VOTE_RECEIVED);
+    if(accepting(StateEventType.VOTE_RECEIVED_MAJORITY)) {
+        state = transitionMap.get(state).get(StateEventType.VOTE_RECEIVED_MAJORITY);
     }
     notifyIfStateChange(oldState, state);
     return oldState;
@@ -126,8 +126,8 @@ public class StateMachine {
   
   public State discoverLeader() {
     State oldState = getState();
-    if(accepting(Symbol.DISCOVERD_LEADER)) {
-      state = transitionMap.get(state).get(Symbol.DISCOVERD_LEADER);
+    if(accepting(StateEventType.DISCOVERD_LEADER)) {
+      state = transitionMap.get(state).get(StateEventType.DISCOVERD_LEADER);
     }
     notifyIfStateChange(oldState, state);
     return oldState;
@@ -135,36 +135,30 @@ public class StateMachine {
   
   public State discoverHigherTerm() {
     State oldState = getState();
-    if(accepting(Symbol.DISCOVERD_HIGHER_TERM)) {
-      state = transitionMap.get(state).get(Symbol.DISCOVERD_HIGHER_TERM);
+    if(accepting(StateEventType.DISCOVERD_HIGHER_TERM)) {
+      state = transitionMap.get(state).get(StateEventType.DISCOVERD_HIGHER_TERM);
     }
     notifyIfStateChange(oldState, state);
     return oldState;
   }
     
   private void buildTransitionMap() {
-    HashMap<Symbol, State> followerMap = new HashMap<>(); 
-    HashMap<Symbol, State> candidateMap = new HashMap<>(); 
-    HashMap<Symbol, State> leaderMap = new HashMap<>(); 
+    HashMap<StateEventType, State> followerMap = new HashMap<>(); 
+    HashMap<StateEventType, State> candidateMap = new HashMap<>(); 
+    HashMap<StateEventType, State> leaderMap = new HashMap<>(); 
     
-    followerMap.put(Symbol.ELECTION_TIMEOUT, State.CANDIDATE);
+    followerMap.put(StateEventType.ELECTION_TIMEOUT, State.CANDIDATE);
     
-    candidateMap.put(Symbol.ELECTION_TIMEOUT, State.CANDIDATE);
-    candidateMap.put(Symbol.VOTE_RECEIVED, State.LEADER);
-    candidateMap.put(Symbol.DISCOVERD_LEADER, State.FOLLOWER);
+    candidateMap.put(StateEventType.ELECTION_TIMEOUT, State.CANDIDATE);
+    candidateMap.put(StateEventType.VOTE_RECEIVED_MAJORITY, State.LEADER);
+    candidateMap.put(StateEventType.DISCOVERD_LEADER, State.FOLLOWER);
     
-    leaderMap.put(Symbol.DISCOVERD_HIGHER_TERM, State.FOLLOWER);
+    leaderMap.put(StateEventType.DISCOVERD_HIGHER_TERM, State.FOLLOWER);
     
     transitionMap.put(State.FOLLOWER, followerMap);
     transitionMap.put(State.CANDIDATE, candidateMap);
     transitionMap.put(State.LEADER, leaderMap);
     
   }
-  
-  enum Symbol {
-    ELECTION_TIMEOUT,
-    VOTE_RECEIVED,
-    DISCOVERD_LEADER,
-    DISCOVERD_HIGHER_TERM;
-  }
+
 }

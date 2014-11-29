@@ -6,22 +6,22 @@ option optimize_for = SPEED;
 
 message ServerId {
   required string host_name = 1;
-  optional uint32 port = 2;
+  required uint32 port = 2;
   optional uint64 start_code = 3;
 }
 
 message RequestHeader {
-  optional uint32 id = 1;
-  optional string request_name = 2;
+  required uint32 id = 1;
+  required string request_name = 2;
 }
 
 message ResponseHeader {
-  optional uint32 id = 1;
-  optional string response_name =2;
+  required uint32 id = 1;
+  required string response_name =2;
 }
 
 message HeartBeatRequest {
-  optional ServerId server = 1;
+  required ServerId server = 1;
 }
 
 message HeartBeatResponse {
@@ -35,14 +35,16 @@ message ServerListResponse {
 }
 
 message CollectVoteRequest {
-  optional ServerId candidateId = 1;
-  optional uint64 term = 2;
+  required ServerId candidateId = 1;
+  required uint64 term = 2;
+  required uint64 lastLogIndex = 3;
+  required uint64 lastLogTerm = 4;
 }
 
 message CollectVoteResponse {
-  optional ServerId fromHost = 1;
-  optional uint64 term = 2;
-  optional bool granted = 3;
+  required ServerId fromHost = 1;
+  required uint64 term = 2;
+  required bool granted = 3;
 }
 
 service RaftService {
