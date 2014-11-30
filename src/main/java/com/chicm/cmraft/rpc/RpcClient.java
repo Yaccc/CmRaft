@@ -38,16 +38,16 @@ import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.core.RaftRpcService;
+import com.chicm.cmraft.log.LogEntry;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService.BlockingInterface;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse;
 import com.chicm.cmraft.util.BlockingHashMap;
 import com.google.protobuf.BlockingRpcChannel;
 import com.google.protobuf.BlockingService;
@@ -66,6 +66,7 @@ import com.google.protobuf.Descriptors.MethodDescriptor;
  */
 public class RpcClient {
   static final Log LOG = LogFactory.getLog(RpcClient.class);
+  private final static int DEFAULT_RPC_TIMEOUT = 2000;
   private Configuration conf = null;
   private static final int DEFAULT_SOCKET_READ_WORKS = 1;
   private static BlockingService service = null;
@@ -77,11 +78,47 @@ public class RpcClient {
   private ExecutorService socketExecutor = null;
   private InetSocketAddress serverIsa = null;
   private volatile boolean initialized = false;
+  private int rpcTimeout;
   
   
   public RpcClient(Configuration conf, String serverHost, int serverPort) {
     this.conf = conf;
+    rpcTimeout = conf.getInt("rpc.call.timeout", DEFAULT_RPC_TIMEOUT);
     this.serverIsa = new InetSocketAddress(serverHost, serverPort);
+  }
+  
+  private boolean isInitialized() {
+    return initialized;
+  }
+  
+  private synchronized boolean init() {
+    if(isInitialized())
+      return true;
+    
+    service = (RaftRpcService.create()).getService();
+    socketChannel = openConnection(serverIsa);
+    sendQueue = new RpcSendQueue(socketChannel); 
+    
+    BlockingRpcChannel c = createBlockingRpcChannel(sendQueue, responsesMap);
+    stub =  RaftService.newBlockingStub(c);
+    
+    socketExecutor = Executors.newFixedThreadPool(DEFAULT_SOCKET_READ_WORKS,
+      new ThreadFactory() {
+      @Override
+      public Thread newThread(Runnable r) {
+        Thread t = new Thread(r);
+        t.setName("RPCClient-Socket-Worker-" + System.currentTimeMillis());
+        return t;
+      }
+    });
+    
+    for(int i = 0; i < DEFAULT_SOCKET_READ_WORKS; i++ ) {
+      Thread thread = new Thread(new SocketReader(socketChannel, service, responsesMap));
+      thread.setDaemon(true);
+      socketExecutor.execute(thread);
+    }
+    initialized = true;
+    return initialized;
   }
   
   public BlockingInterface getStub() {
@@ -89,19 +126,7 @@ public class RpcClient {
       init();
     return stub;
   }
-  
-  public void heartBeat(ServerInfo server) throws ServiceException {
-    ServerId.Builder sbuilder = ServerId.newBuilder();
-    sbuilder.setHostName(server.getHost());
-    sbuilder.setPort(server.getPort());
-    sbuilder.setStartCode(server.getStartCode());
-    
-    HeartBeatRequest.Builder builder = HeartBeatRequest.newBuilder();
-    builder.setServer(sbuilder.build());
-    
-    getStub().beatHeart(null, builder.build());
-  }
-  
+ 
   public void testRpc() throws ServiceException {
     TestRpcRequest.Builder builder = TestRpcRequest.newBuilder();
     byte[] bytes = new byte[1024];
@@ -124,43 +149,34 @@ public class RpcClient {
     builder.setLastLogTerm(lastLogTerm);
     
     return (CollectVoteResponse)(getStub().collectVote(null, builder.build()));
-
   }
   
- // public 
-  
-  private boolean isInitialized() {
-    return initialized;
-  }
-  
-  private synchronized boolean init() {
-    if(isInitialized())
-      return true;
-    
-    service = (RaftRpcService.create()).getService();
-    socketChannel = openConnection(serverIsa);
-    sendQueue = new RpcSendQueue(socketChannel); 
-    
-    BlockingRpcChannel c = RpcClient.createBlockingRpcChannel(sendQueue, responsesMap);
-    stub =  RaftService.newBlockingStub(c);
-    
-    socketExecutor = Executors.newFixedThreadPool(DEFAULT_SOCKET_READ_WORKS,
-      new ThreadFactory() {
-      @Override
-      public Thread newThread(Runnable r) {
-        Thread t = new Thread(r);
-        t.setName("RPCClient-Socket-Worker-" + System.currentTimeMillis());
-        return t;
-      }
-    });
-    
-    for(int i = 0; i < DEFAULT_SOCKET_READ_WORKS; i++ ) {
-      Thread thread = new Thread(new SocketReader(socketChannel, service, responsesMap));
-      thread.setDaemon(true);
-      socketExecutor.execute(thread);
+  public void testHeartBeat() {
+    try {
+      appendEntries(0, new ServerInfo("aaa", 111), 0, 0, 0, null);
+    } catch(Exception e ) {
+      LOG.error("testHeartBeat", e);
     }
-    initialized = true;
-    return initialized;
+  }
+  
+  public AppendEntriesResponse appendEntries(long term, ServerInfo leaderId, long leaderCommit,
+      long prevLogIndex, long prevLogTerm, LogEntry[] entries) throws ServiceException {
+
+    AppendEntriesRequest.Builder builder = AppendEntriesRequest.newBuilder();
+    builder.setTerm(term);
+    builder.setLeaderId(leaderId.toServerId());
+    builder.setLeaderCommit(leaderCommit);
+    builder.setPrevLogIndex(prevLogIndex);
+    builder.setPrevLogTerm(prevLogTerm);
+    if(entries != null) {
+      for(int i = 0; i< entries.length; i++) {
+        builder.setEntries(i, entries[i].toRaftEntry());
+      }
+    }
+    LOG.info("RPCClient: making appendEntries call");
+    AppendEntriesResponse response = getStub().appendEntries(null, builder.build());
+    
+    return response;
   }
   
   private AsynchronousSocketChannel openConnection(InetSocketAddress isa) {
@@ -187,12 +203,12 @@ public class RpcClient {
     return client_call_id.get();
   }
  
-  private static BlockingRpcChannel createBlockingRpcChannel(RpcSendQueue sendQueue, 
+  private  BlockingRpcChannel createBlockingRpcChannel(RpcSendQueue sendQueue, 
       BlockingHashMap<Integer, RpcCall> responseMap) {
-    return new RpcClient.BlockingRpcChannelImplementation(sendQueue, responseMap);
+    return new BlockingRpcChannelImplementation(sendQueue, responseMap);
   }
 
-  private static class BlockingRpcChannelImplementation implements BlockingRpcChannel {
+  private  class BlockingRpcChannelImplementation implements BlockingRpcChannel {
     private RpcSendQueue sendQueue = null;
     private BlockingHashMap<Integer, RpcCall> responseMap = null;
 
@@ -213,14 +229,17 @@ public class RpcClient {
         builder.setId(callId); 
         builder.setRequestName(md.getName());
         RequestHeader header = builder.build();
-        LOG.debug("sending, callid:" + header.getId());
+        
+        LOG.info("SENDING RPC, CALLID:" + header.getId());
         RpcCall call = new RpcCall(callId, header, request, md);
         long tm = System.currentTimeMillis();
         this.sendQueue.put(call);
-        response = this.responseMap.take(callId).getMessage();
-        LOG.debug("response taken: " + callId + " :" + response);
-        LOG.debug(String.format("RPC[%d] round trip takes %d ms", header.getId(), (System.currentTimeMillis() - tm)));
-      } catch(Exception e) {
+        response = this.responseMap.take(callId, rpcTimeout).getMessage();
+        if(response != null) {
+          LOG.debug("response taken: " + callId);
+          LOG.debug(String.format("RPC[%d] round trip takes %d ms", header.getId(), (System.currentTimeMillis() - tm)));
+        }
+       } catch(Exception e) {
         e.printStackTrace(System.out);
       }
       return response;
@@ -321,6 +340,7 @@ public class RpcClient {
       for(int i = 0; i < 5000000 ;i++) {
         startTime.set(System.currentTimeMillis());
         testRpc();
+        //testHeartBeat();
         if(i != 0 && i %1000 == 0 ) {
           long ms = System.currentTimeMillis() - startTime.get();
           LOG.info("RPC CALL[ " + i + "] round trip time: " + ms);

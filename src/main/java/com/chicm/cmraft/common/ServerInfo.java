@@ -3,6 +3,8 @@ package com.chicm.cmraft.common;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
+
 public class ServerInfo {
   static final Log LOG = LogFactory.getLog(ServerInfo.class);
   private String host;
@@ -12,6 +14,12 @@ public class ServerInfo {
   public ServerInfo(String host, int port) {
     this.host = host;
     this.port = port;
+  }
+  
+  public ServerInfo(String host, int port, long startCode) {
+    this.host = host;
+    this.port = port;
+    this.startCode = startCode;
   }
   
   /**
@@ -67,17 +75,26 @@ public class ServerInfo {
     return new ServerInfo(results[0], port);
   }
   
+  public ServerId toServerId() {
+    ServerId.Builder builder = ServerId.newBuilder();
+    if(getHost() != null)
+      builder.setHostName(getHost());
+    builder.setPort(getPort());
+    builder.setStartCode(getStartCode());
+    
+    return builder.build();
+  }
+  
+  public static ServerInfo parseFromServerId(ServerId serverId) {
+    if(serverId == null)
+      return null;
+    ServerInfo server = new ServerInfo(serverId.getHostName(), serverId.getPort(), serverId.getStartCode());
+    return server;
+  }
+  
   @Override
   public String toString() {
-    
     return String.format("[%s:%d:%d]", getHost(), getPort(), getStartCode());
-    /*
-    StringBuilder s = new StringBuilder();
-    s.append("host: " + getHost());
-    s.append("\nport: " + getPort());
-    s.append("\nstartCode: " + getStartCode());
-    
-    return s.toString();*/
   }
 
   

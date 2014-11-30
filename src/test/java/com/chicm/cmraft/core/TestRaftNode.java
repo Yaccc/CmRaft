@@ -24,18 +24,18 @@ public class TestRaftNode {
   @BeforeClass
   public static void init() {
     conf1 = CmRaftConfiguration.create();
-    conf1.clear();
+    //conf1.clear();
     conf1.set("raft.server.local", "localhost:12888");
     conf1.set("raft.server.remote.1", "localhost:13888");
-    conf1.set("raft.election.timeout", "500");
-    conf1.set("raft.heartbeat.interval", "500");
+    //conf1.set("raft.election.timeout", "2500");
+    //conf1.set("raft.heartbeat.interval", "2500");
     
     Configuration conf2 = CmRaftConfiguration.create();
-    conf2.clear();
+    //conf2.clear();
     conf2.set("raft.server.local", "localhost:13888");
     conf2.set("raft.server.remote.1", "localhost:12888");
-    conf2.set("raft.election.timeout", "500");
-    conf2.set("raft.heartbeat.interval", "500");
+    //conf2.set("raft.election.timeout", "2500");
+    //conf2.set("raft.heartbeat.interval", "2500");
     
     node1 = new RaftNode(conf1);
     node2 = new RaftNode(conf2);

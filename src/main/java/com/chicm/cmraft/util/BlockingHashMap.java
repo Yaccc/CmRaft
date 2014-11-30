@@ -23,6 +23,7 @@ package com.chicm.cmraft.util;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -61,6 +62,10 @@ public class BlockingHashMap <K,V> {
   }
   
   public V take(K key) {
+    return take(key, 0);
+  }
+  
+  public V take(K key, int timeout) {
     V ret = null;
     KeyLock lock = locks.get(key);
     if(lock == null) {
@@ -76,10 +81,15 @@ public class BlockingHashMap <K,V> {
       }
       
       while(ret == null) {
-        lock.await();
+        if(timeout==0) {
+          lock.await();
+        } else {
+          lock.await(timeout);
+        }
         ret = map.get(key);
-        if(ret == null)
-          LOG.error("SHOULD NOT BE HERE");
+        if(ret == null) {
+          LOG.error("RPC TIMEOUT! KEY=" + key);
+        }
       }
       LOG.debug("wait done: " + key + ": " + ret);
     } catch (InterruptedException ex) {
@@ -89,7 +99,9 @@ public class BlockingHashMap <K,V> {
     finally {
         lock.unlock();
     }
-    remove(key);
+    if(key != null) {
+      remove(key);
+    }
     return ret;
   }
   
@@ -135,6 +147,9 @@ public class BlockingHashMap <K,V> {
     
     public void await() throws InterruptedException {
       condition.await();
+    }
+    public void await(int timeout) throws InterruptedException {
+      condition.await(timeout, TimeUnit.MILLISECONDS);
     }
   }
 

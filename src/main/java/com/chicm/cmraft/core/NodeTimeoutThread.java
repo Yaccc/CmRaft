@@ -36,23 +36,22 @@ public class NodeTimeoutThread implements Runnable {
   public NodeTimeoutThread() {
   }
   
-  public void start(int timeout, RaftEventListener listener) {
+  public void start(String name, int timeout, RaftEventListener listener) {
     this.period = timeout;
     this.listener = listener;
     
     //Thread object can not be reused, need to create new object every time
     this.thread = new Thread(this);
-    this.thread.setName("RaftNode-TimeOut-" + System.currentTimeMillis());
+    this.thread.setName(name);
     isStopped = false;
     this.thread.start();
   }
     
   public void reset() {
+    LOG.info(thread.getName() + " RESET");
     synchronized (sleepLock) {
       reset = true;
-      LOG.debug("reset:" + (System.currentTimeMillis()-starttime));
       sleepLock.notifyAll();
-      LOG.debug("reset done:" + (System.currentTimeMillis()-starttime));
     }   
   }
 
@@ -81,7 +80,7 @@ public class NodeTimeoutThread implements Runnable {
   
   @Override
   public void run() {
-    LOG.info(Thread.currentThread().getName() + " started, timeout=" + this.period);
+    LOG.info(thread.getName() + " started, timeout=" + this.period);
     try {
       init();
       while (!isStopped()) {
@@ -99,12 +98,12 @@ public class NodeTimeoutThread implements Runnable {
       //LOG.info(Thread.currentThread().getName() + " stopped");
     } catch (Throwable t) {
     } finally {
-      LOG.info(Thread.currentThread().getName() + " stopped");
+      LOG.info(thread.getName() + " STOPPED");
       cleanup();
     }
   }
   protected void cleanup () {
-    LOG.info("***cleanup");
+    LOG.info(thread.getName() + " CLEANUP");
   }
   protected boolean init() {
     LOG.debug("init");
@@ -112,12 +111,12 @@ public class NodeTimeoutThread implements Runnable {
     return true;
   }
   protected void doTimeOut() {
-    LOG.debug(Thread.currentThread().getName() + " timeout");
+    LOG.info(thread.getName() + " TIMEOUT");
     if(listener != null) {
       listener.timeout();
-      LOG.debug(Thread.currentThread().getName() + " listener timeout is called");
+      LOG.info(thread.getName() + " listener timeout is called");
     } else {
-      LOG.debug(Thread.currentThread().getName() + " listener is null");
+      LOG.info(thread.getName() + " listener is null");
     }
   }
 
@@ -126,24 +125,19 @@ public class NodeTimeoutThread implements Runnable {
   }
 
   public void stop() {
-    LOG.debug("stop");
+    LOG.info(thread.getName() + " STOP");
     this.isStopped = true;
     reset();
-    //join();
-  }
-  
-  public void join() {
     try {
       this.thread.join();
     } catch(Exception e) {
-      LOG.error("Join exception!", e);
+      LOG.error("exception", e);
     }
   }
   
-  
   public static void main(String[] args) throws Exception {
     NodeTimeoutThread p = new NodeTimeoutThread();
-    p.start(5000, null);
+    p.start("test", 5000, null);
     Thread.sleep(6000);
     
     for(int i = 0; i<7 ; i++) {

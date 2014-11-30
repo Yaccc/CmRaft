@@ -24,14 +24,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatRequest;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.HeartBeatResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListRequest;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerListResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse;
 import com.google.protobuf.BlockingService;
@@ -43,7 +41,9 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   static final Log LOG = LogFactory.getLog(RaftRpcService.class);
   
   private RaftNode node = null;
+  private RaftEventListener listener = null;
   
+  // While created from RpcClient, node and listener will be null
   public static RaftRpcService create() {
     return new RaftRpcService(null);
   }
@@ -54,10 +54,17 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   
   private RaftRpcService(RaftNode node) {
     this.node = node;
+    if(node != null) {
+      this.listener = node.getEventListener();
+    }
   }
   
   public RaftNode getRaftNode() {
     return node;
+  }
+  
+  public BlockingService getService() {
+    return RaftService.newReflectiveBlockingService(this);
   }
   
   @Override
@@ -70,24 +77,30 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     return builder.build();    
   }
   
+  
   @Override
-  public HeartBeatResponse beatHeart(RpcController controller, HeartBeatRequest request)
+  public AppendEntriesResponse appendEntries(RpcController controller, AppendEntriesRequest request)
       throws ServiceException {
-    LOG.debug("beatHeart called");
+    LOG.debug(getRaftNode().getName() + "appendEntries called!");
+    if(node == null) {
+      LOG.error("RaftNode is null");
+      return null;
+    }
     
-    HeartBeatResponse.Builder builder = HeartBeatResponse.newBuilder();
+    AppendEntriesResponse.Builder builder = AppendEntriesResponse.newBuilder();
+    if(request.getEntriesCount() == 0) {
+      LOG.debug(getRaftNode().getName() + ": heartBeat called!");
+      node.resetTimer();
+    }
+    builder.setTerm(node.getCurrentTerm());
+    builder.setSuccess(true);
+    
+    listener.discoverLeader(ServerInfo.parseFromServerId(request.getLeaderId()), request.getTerm());
+    if(request.getTerm() > node.getCurrentTerm()) {
+      listener.discoverHigherTerm(ServerInfo.parseFromServerId(request.getLeaderId()), request.getTerm());
+    }
     
     return builder.build();
-  }
-
-  @Override
-  public ServerListResponse listServer(RpcController controller, ServerListRequest request)
-      throws ServiceException {
-    return null;
-  }
-
-  public BlockingService getService() {
-    return RaftService.newReflectiveBlockingService(this);
   }
 
   @Override
@@ -99,12 +112,13 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     sbuilder.setPort(getRaftNode().getServerInfo().getPort());
     sbuilder.setStartCode(getRaftNode().getServerInfo().getStartCode());
     
-    LOG.info(getRaftNode().getName() + ": received vote request from: " + "{" + request + "}" );
+    LOG.debug(getRaftNode().getName() + ": received vote request from: " + "{" + request + "}" );
     
     boolean granted = getRaftNode().voteRequest(new ServerInfo(request.getCandidateId().getHostName(), 
       request.getCandidateId().getPort()), request.getTerm(), request.getLastLogIndex(), request.getLastLogTerm());
     
-    LOG.info(getRaftNode().getName() + ": voted: " + granted );
+    LOG.info(getRaftNode().getName() + ": voted: " + granted + " candidate: " 
+      + request.getCandidateId().getHostName() + ":" + request.getCandidateId().getPort());
     
     CollectVoteResponse.Builder builder = CollectVoteResponse.newBuilder();
     builder.setGranted(granted);

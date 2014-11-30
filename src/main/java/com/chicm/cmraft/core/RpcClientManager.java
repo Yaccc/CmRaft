@@ -10,6 +10,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.log.LogEntry;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
@@ -61,15 +63,29 @@ public class RpcClientManager {
     return s;
   }
   
-  public void beatHeart() {
+  public void beatHeart(long term, ServerInfo leaderId, long leaderCommit,
+      long prevLogIndex, long prevLogTerm) {
+    appendEntries(term, leaderId, leaderCommit, prevLogIndex, prevLogTerm, null);
+    
+  }
+  
+  public int appendEntries(long term, ServerInfo leaderId, long leaderCommit,
+      long prevLogIndex, long prevLogTerm, LogEntry[] entries) {
+    int nSuccess = 0;
+    
     for(ServerInfo server: getOtherServers()) {
       RpcClient client = rpcClients.get(server);
       try {
-        client.heartBeat(thisServer);
+        AppendEntriesResponse response = client.appendEntries(term, leaderId, leaderCommit, prevLogIndex, prevLogTerm, entries);
+        if(response != null && response.getSuccess()) {
+          nSuccess++;
+        }
       } catch(ServiceException e) {
         LOG.error("RPC: beatHeart failed:" + server.getHost() + ":" + server.getPort(), e);
       }
     }
+    
+    return nSuccess;
   }
   
   public int collectVote(long term) {

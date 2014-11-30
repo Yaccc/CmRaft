@@ -14,6 +14,6 @@ public interface RaftEventListener {
   void timeout();
   void voteReceived();
   void voteReceived(ServerInfo server, long term);
-  void discoverLeader();
-  void discoverHigherTerm();
+  void discoverLeader(ServerInfo leader, long term);
+  void discoverHigherTerm(ServerInfo leader, long term);
 }

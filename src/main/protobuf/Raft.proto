@@ -20,19 +20,6 @@ message ResponseHeader {
   required string response_name =2;
 }
 
-message HeartBeatRequest {
-  required ServerId server = 1;
-}
-
-message HeartBeatResponse {
-}
-
-message ServerListRequest {
-}
-
-message ServerListResponse {
-  repeated ServerId server = 1;
-}
 
 message CollectVoteRequest {
   required ServerId candidateId = 1;
@@ -55,15 +42,32 @@ message TestRpcResponse {
   optional bytes result = 1;
 }
 
+message RaftEntry {
+  optional uint64 index = 1;
+  optional bytes key = 2;
+  optional bytes value = 3;
+}
+
+message AppendEntriesRequest {
+  optional uint64 term = 1;
+  optional ServerId leaderId = 2;
+  optional uint64 leaderCommit = 3;
+  optional uint64 prevLogIndex = 4;
+  optional uint64 prevLogTerm = 5;
+  repeated RaftEntry entries = 6;
+}
+
+message AppendEntriesResponse {
+  optional uint64 term = 1;
+  optional bool success = 2;
+}
+
 service RaftService {
   rpc collectVote(CollectVoteRequest)
     returns(CollectVoteResponse);
     
-  rpc beatHeart(HeartBeatRequest)  
-    returns(HeartBeatResponse);
-    
-  rpc listServer(ServerListRequest) 
-    returns(ServerListResponse);
+  rpc appendEntries(AppendEntriesRequest)
+    returns(AppendEntriesResponse);
   
   rpc testRpc(TestRpcRequest)
     returns(TestRpcResponse);

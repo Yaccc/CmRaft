@@ -65,7 +65,7 @@ public class RpcServer {
   private final static int DEFAULT_REQUEST_WORKER = 10;
   private final static int DEFAULT_RESPONSE_WOKER = 10;
   private SocketListener socketListener = null;
-  private int rpcListenThreads = DEFAULT_RPC_LISTEN_THREADS;
+  private int rpcListenThreads = 0;
   private RaftRpcService service = null;
   private static PriorityBlockingQueue<RpcCall> requestQueue = new PriorityBlockingQueue<RpcCall>();
   private static PriorityBlockingQueue<RpcCall> responseQueue = new PriorityBlockingQueue<RpcCall>();
@@ -97,8 +97,8 @@ public class RpcServer {
   public boolean startRpcServer() {
     try {
       socketListener.start();
-      startRequestWorker(DEFAULT_REQUEST_WORKER);
-      startResponseWorker(DEFAULT_RESPONSE_WOKER);
+      startRequestWorker(conf.getInt("rpcserver.request.workers", DEFAULT_REQUEST_WORKER));
+      startResponseWorker(conf.getInt("rpcserver.response.workers", DEFAULT_RESPONSE_WOKER));
     } catch(IOException e) {
       e.printStackTrace(System.out);
       return false;
@@ -139,15 +139,29 @@ public class RpcServer {
   
   class SocketListener {
     public void start() throws IOException {
+      
       AsynchronousChannelGroup group = AsynchronousChannelGroup.withFixedThreadPool(rpcListenThreads, 
           new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {
               Thread t = new Thread(r);
-              t.setName("Socket-Listener-" + System.currentTimeMillis());
+              t.setName("Socket-Listener-" + (byte)System.currentTimeMillis());
               return t;
             }
           });
+      /*
+      ExecutorService executor = Executors.newFixedThreadPool(rpcListenThreads,
+        new ThreadFactory() {
+          @Override
+          public Thread newThread(Runnable r) {
+            Thread t = new Thread(r);
+            t.setName("Socket-Listener-" + (byte)System.currentTimeMillis());
+            return t;
+          }
+      });
+      AsynchronousChannelGroup group = AsynchronousChannelGroup.withCachedThreadPool(executor, rpcListenThreads);
+      */
+      
       LOG.info("Server binding to:" + getServerPort());
       final AsynchronousServerSocketChannel serverChannel = AsynchronousServerSocketChannel.open(group)
           .bind(new InetSocketAddress(getServerPort()));
