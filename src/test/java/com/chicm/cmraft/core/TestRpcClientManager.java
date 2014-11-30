@@ -2,12 +2,15 @@ package com.chicm.cmraft.core;
 
 import static org.junit.Assert.*;
 
+import java.nio.channels.AsynchronousChannel;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.rpc.RpcClient;
 
 public class TestRpcClientManager {
   private static RpcClientManager mgr;
@@ -34,5 +37,27 @@ public class TestRpcClientManager {
     assertTrue(mgr.getAllServers().contains(new ServerInfo("chicm1", 1111)));
     assertTrue(mgr.getAllServers().contains(new ServerInfo("chicm2", 2222)));
     assertTrue(mgr.getAllServers().contains(new ServerInfo("chicm3", 3333)));
+  }
+  @Test
+  public void testRpcClientMap() {
+    LocalCluster cluster = new LocalCluster(3, 12888);
+    RaftNode[] nodes = cluster.createCluster();
+    try {
+      Thread.sleep(5000);
+    } catch(Exception e) {
+      e.printStackTrace(System.out);
+    }
+    for(int i = 0; i < nodes.length; i++) {
+      RpcClientManager mgr = nodes[i].getRpcClientManager();
+      
+      System.out.println(mgr.getThisServer());
+      for(ServerInfo server: mgr.getOtherServers()) {
+        System.out.println(server);
+        RpcClient client = mgr.getRpcClient(server);
+        AsynchronousChannel channel = client.getChannel();
+        System.out.println("channel:" + channel);
+      }
+    }
+    
   }
 }

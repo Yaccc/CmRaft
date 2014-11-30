@@ -63,6 +63,10 @@ public class RpcClientManager {
     return s;
   }
   
+  public RpcClient getRpcClient(ServerInfo server) {
+    return rpcClients.get(server);
+  }
+  
   public void beatHeart(long term, ServerInfo leaderId, long leaderCommit,
       long prevLogIndex, long prevLogTerm) {
     appendEntries(term, leaderId, leaderCommit, prevLogIndex, prevLogTerm, null);
@@ -76,6 +80,10 @@ public class RpcClientManager {
     for(ServerInfo server: getOtherServers()) {
       RpcClient client = rpcClients.get(server);
       try {
+        try {
+          LOG.info(getRaftNode().getName() + ": SENDING BEATHEART TO:" + client.getChannel().getRemoteAddress());
+        } catch(Exception e) {LOG.error("exception", e);}
+        
         AppendEntriesResponse response = client.appendEntries(term, leaderId, leaderCommit, prevLogIndex, prevLogTerm, entries);
         if(response != null && response.getSuccess()) {
           nSuccess++;

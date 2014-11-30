@@ -4,8 +4,11 @@ import java.util.Iterator;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class CmRaftConfiguration implements Configuration {
+  static final Log LOG = LogFactory.getLog(CmRaftConfiguration.class);
   private PropertiesConfiguration conf;
   
   public CmRaftConfiguration() throws ConfigurationException {
@@ -20,6 +23,34 @@ public class CmRaftConfiguration implements Configuration {
     } catch(ConfigurationException e) {
       return null;
     }
+  }
+  
+  @Override
+  public void useResource(String resourceName) {
+    try {
+      conf = new PropertiesConfiguration(resourceName);
+    } catch(ConfigurationException e) {
+      LOG.error("load resource exception", e);
+    }
+  }
+  
+  @Override
+  public Object clone() {
+    Configuration obj = CmRaftConfiguration.create();
+    obj.clear();
+    for(String key: this.getKeys()) {
+      obj.set(key, this.getString(key));
+    }
+    return (Object)obj;
+  }
+  
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    for(String key: this.getKeys()) {
+      sb.append(key + ":" + conf.getString(key)+"\n");
+    }
+    return sb.toString();
   }
   
   @Override
@@ -59,6 +90,11 @@ public class CmRaftConfiguration implements Configuration {
   @Override
   public void clear() {
     conf.clear();
+  }
+  
+  @Override
+  public void remove(String key) {
+    conf.clearProperty(key);
   }
   
   private class ConfigurationIterableImpl implements Iterable<String> {

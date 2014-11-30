@@ -81,24 +81,29 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   @Override
   public AppendEntriesResponse appendEntries(RpcController controller, AppendEntriesRequest request)
       throws ServiceException {
-    LOG.debug(getRaftNode().getName() + "appendEntries called!");
+    LOG.info(getRaftNode().getName() + "appendEntries CALLED, FROM:" + ServerInfo.parseFromServerId(request.getLeaderId()));
     if(node == null) {
       LOG.error("RaftNode is null");
       return null;
     }
     
-    AppendEntriesResponse.Builder builder = AppendEntriesResponse.newBuilder();
-    if(request.getEntriesCount() == 0) {
-      LOG.debug(getRaftNode().getName() + ": heartBeat called!");
-      node.resetTimer();
-    }
-    builder.setTerm(node.getCurrentTerm());
-    builder.setSuccess(true);
-    
     listener.discoverLeader(ServerInfo.parseFromServerId(request.getLeaderId()), request.getTerm());
     if(request.getTerm() > node.getCurrentTerm()) {
       listener.discoverHigherTerm(ServerInfo.parseFromServerId(request.getLeaderId()), request.getTerm());
     }
+    
+    if(node.getServerInfo().getPort() == request.getLeaderId().getPort()) {
+      Exception e = new Exception("heartbeat From my self");
+      e.printStackTrace(System.out);
+    }
+    
+    AppendEntriesResponse.Builder builder = AppendEntriesResponse.newBuilder();
+    if(request.getEntriesCount() == 0) {
+      LOG.info(getRaftNode().getName() + ": HEARTBEAT CALLED**!");
+      node.resetTimer();
+    }
+    builder.setTerm(node.getCurrentTerm());
+    builder.setSuccess(request.getTerm() >= node.getCurrentTerm());
     
     return builder.build();
   }
@@ -106,13 +111,16 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   @Override
   public CollectVoteResponse collectVote(RpcController controller, CollectVoteRequest request)
       throws ServiceException {
+    LOG.debug(getRaftNode().getName() + ": received vote request from: " + "{" + request + "}" );
+    
+    if(request.getTerm() > node.getCurrentTerm()) {
+      listener.discoverHigherTerm(ServerInfo.parseFromServerId(request.getCandidateId()), request.getTerm());
+    }
     
     ServerId.Builder sbuilder = ServerId.newBuilder();
     sbuilder.setHostName(getRaftNode().getServerInfo().getHost());
     sbuilder.setPort(getRaftNode().getServerInfo().getPort());
     sbuilder.setStartCode(getRaftNode().getServerInfo().getStartCode());
-    
-    LOG.debug(getRaftNode().getName() + ": received vote request from: " + "{" + request + "}" );
     
     boolean granted = getRaftNode().voteRequest(new ServerInfo(request.getCandidateId().getHostName(), 
       request.getCandidateId().getPort()), request.getTerm(), request.getLastLogIndex(), request.getLastLogTerm());
@@ -124,6 +132,8 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     builder.setGranted(granted);
     builder.setTerm(getRaftNode().getCurrentTerm());
     builder.setFromHost(sbuilder.build());
+    
+    
     
     return builder.build();
   }

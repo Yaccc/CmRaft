@@ -67,10 +67,10 @@ public class RpcServer {
   private SocketListener socketListener = null;
   private int rpcListenThreads = 0;
   private RaftRpcService service = null;
-  private static PriorityBlockingQueue<RpcCall> requestQueue = new PriorityBlockingQueue<RpcCall>();
-  private static PriorityBlockingQueue<RpcCall> responseQueue = new PriorityBlockingQueue<RpcCall>();
+  private PriorityBlockingQueue<RpcCall> requestQueue = new PriorityBlockingQueue<RpcCall>();
+  private PriorityBlockingQueue<RpcCall> responseQueue = new PriorityBlockingQueue<RpcCall>();
   private final static AtomicLong callCounter = new AtomicLong(0);
-  private static boolean tpsReportStarted = false;
+  private boolean tpsReportStarted = false;
   
   public RpcServer (Configuration conf, RaftRpcService service) {
     this.conf = conf;
@@ -307,10 +307,8 @@ public class RpcServer {
     }
   }
   
-  static class ResponseWorker implements Runnable {
-    private static final ConcurrentHashMap<AsynchronousSocketChannel, Lock> locks = new ConcurrentHashMap<>();
-    private static final ReentrantLock channelLock = new ReentrantLock();
-    
+  private final ConcurrentHashMap<AsynchronousSocketChannel, Lock> locks = new ConcurrentHashMap<>();
+  class ResponseWorker implements Runnable {
     @Override
     public void run() {
       while(true) {

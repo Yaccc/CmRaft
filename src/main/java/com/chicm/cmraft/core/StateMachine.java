@@ -76,7 +76,7 @@ import org.apache.commons.logging.LogFactory;
 public class StateMachine {
   static final Log LOG = LogFactory.getLog(StateMachine.class);
   
-  private State state;
+  private volatile State state;
   private static Map<State, Map<StateEventType, State>> transitionMap = new HashMap<>();
   private RaftStateChangeListener listener;
   
@@ -149,9 +149,10 @@ public class StateMachine {
     
     followerMap.put(StateEventType.ELECTION_TIMEOUT, State.CANDIDATE);
     
-    candidateMap.put(StateEventType.ELECTION_TIMEOUT, State.CANDIDATE);
+    //candidateMap.put(StateEventType.ELECTION_TIMEOUT, State.CANDIDATE);
     candidateMap.put(StateEventType.VOTE_RECEIVED_MAJORITY, State.LEADER);
     candidateMap.put(StateEventType.DISCOVERD_LEADER, State.FOLLOWER);
+    candidateMap.put(StateEventType.DISCOVERD_HIGHER_TERM, State.FOLLOWER);
     
     leaderMap.put(StateEventType.DISCOVERD_HIGHER_TERM, State.FOLLOWER);
     

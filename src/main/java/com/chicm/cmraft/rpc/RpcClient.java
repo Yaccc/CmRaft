@@ -126,6 +126,10 @@ public class RpcClient {
       init();
     return stub;
   }
+  
+  public AsynchronousSocketChannel getChannel() {
+    return this.socketChannel;
+  }
  
   public void testRpc() throws ServiceException {
     TestRpcRequest.Builder builder = TestRpcRequest.newBuilder();
@@ -173,7 +177,10 @@ public class RpcClient {
         builder.setEntries(i, entries[i].toRaftEntry());
       }
     }
-    LOG.info("RPCClient: making appendEntries call");
+    try {
+      LOG.info(leaderId + "making appendEntries call to: " + this.socketChannel.getRemoteAddress());
+    } catch(Exception e) {LOG.error("exception", e);}
+    
     AppendEntriesResponse response = getStub().appendEntries(null, builder.build());
     
     return response;
@@ -230,7 +237,7 @@ public class RpcClient {
         builder.setRequestName(md.getName());
         RequestHeader header = builder.build();
         
-        LOG.info("SENDING RPC, CALLID:" + header.getId());
+        LOG.debug("SENDING RPC, CALLID:" + header.getId());
         RpcCall call = new RpcCall(callId, header, request, md);
         long tm = System.currentTimeMillis();
         this.sendQueue.put(call);
