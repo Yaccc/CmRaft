@@ -8,7 +8,7 @@ public class TestLogEntry {
   
   @Test
   public void test() {
-    LogEntry le = new LogEntry(1, 2, "key1", "value1");
+    LogEntry le = new LogEntry(1, 2, "key1".getBytes(), "value1".getBytes());
     
     RaftEntry re = le.toRaftEntry();
     

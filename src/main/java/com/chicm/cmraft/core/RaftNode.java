@@ -119,9 +119,10 @@ public class RaftNode {
   private RaftTimeoutListener timeoutListener = new TimeoutHandler();
   private RaftStateChangeListener stateChangeListener = new RaftStateChangeListenerImpl();
   private RaftRpcService raftService = null;
-  private LogManager logManager= new LogManager();
+  private LogManager logManager= null;
 
   private ServerInfo serverInfo = null;
+  private ServerInfo currentLeader = null;
   
   //persistent state for all servers
   //need to reset votedFor to null every time increasing currentTerm.
@@ -133,6 +134,7 @@ public class RaftNode {
     this.conf = conf;
     serverInfo = ServerInfo.parseFromString(conf.getString("raft.server.local"));
     raftService = RaftRpcService.create(this);
+    logManager= new LogManager(this);
     fsm = new StateMachine(stateChangeListener);
     rpcServer = new RpcServer(conf, raftService);
     rpcClientManager = new RpcClientManager(conf, this);
@@ -148,6 +150,17 @@ public class RaftNode {
   
   public ServerInfo getServerInfo() {
     return serverInfo;
+  }
+  
+  private void setCurrentLeader(ServerInfo newLeader) {
+    this.currentLeader = newLeader;
+  }
+  public ServerInfo getCurrentLeader() {
+    return currentLeader;
+  }
+  
+  public LogManager getLogManager() {
+    return this.logManager;
   }
   
   public RaftRpcService getRaftService() {
@@ -227,6 +240,7 @@ public class RaftNode {
       return;
     }
     LOG.info(getName() + " discover leader, leader term:" + leader + ":" + term + ", local term:" + getCurrentTerm());
+    setCurrentLeader(leader);
     if(term > getCurrentTerm()) {
       currentTerm.set(term);
       votedFor = null;
@@ -325,6 +339,7 @@ public class RaftNode {
           //increaseTerm(); //Term will be increased every timeout, so we do not need to increase term here
           break;
         case LEADER:
+          setCurrentLeader(getServerInfo());
           //send heartbeat right away after becoming leader, then send out heartbeat every timeout 
           rpcClientManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
             logManager.getCurrentIndex(), logManager.getCurrentTerm());

@@ -294,62 +294,6 @@ public final class RaftProtos {
       return super.writeReplace();
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId)) {
-        return super.equals(obj);
-      }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId other = (com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId) obj;
-
-      boolean result = true;
-      result = result && (hasHostName() == other.hasHostName());
-      if (hasHostName()) {
-        result = result && getHostName()
-            .equals(other.getHostName());
-      }
-      result = result && (hasPort() == other.hasPort());
-      if (hasPort()) {
-        result = result && (getPort()
-            == other.getPort());
-      }
-      result = result && (hasStartCode() == other.hasStartCode());
-      if (hasStartCode()) {
-        result = result && (getStartCode()
-            == other.getStartCode());
-      }
-      result = result &&
-          getUnknownFields().equals(other.getUnknownFields());
-      return result;
-    }
-
-    private int memoizedHashCode = 0;
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasHostName()) {
-        hash = (37 * hash) + HOST_NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getHostName().hashCode();
-      }
-      if (hasPort()) {
-        hash = (37 * hash) + PORT_FIELD_NUMBER;
-        hash = (53 * hash) + getPort();
-      }
-      if (hasStartCode()) {
-        hash = (37 * hash) + START_CODE_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getStartCode());
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
     public static com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -960,53 +904,6 @@ public final class RaftProtos {
       return super.writeReplace();
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader)) {
-        return super.equals(obj);
-      }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader other = (com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader) obj;
-
-      boolean result = true;
-      result = result && (hasId() == other.hasId());
-      if (hasId()) {
-        result = result && (getId()
-            == other.getId());
-      }
-      result = result && (hasRequestName() == other.hasRequestName());
-      if (hasRequestName()) {
-        result = result && getRequestName()
-            .equals(other.getRequestName());
-      }
-      result = result &&
-          getUnknownFields().equals(other.getUnknownFields());
-      return result;
-    }
-
-    private int memoizedHashCode = 0;
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasId()) {
-        hash = (37 * hash) + ID_FIELD_NUMBER;
-        hash = (53 * hash) + getId();
-      }
-      if (hasRequestName()) {
-        hash = (37 * hash) + REQUEST_NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getRequestName().hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
     public static com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1573,53 +1470,6 @@ public final class RaftProtos {
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader)) {
-        return super.equals(obj);
-      }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader other = (com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader) obj;
-
-      boolean result = true;
-      result = result && (hasId() == other.hasId());
-      if (hasId()) {
-        result = result && (getId()
-            == other.getId());
-      }
-      result = result && (hasResponseName() == other.hasResponseName());
-      if (hasResponseName()) {
-        result = result && getResponseName()
-            .equals(other.getResponseName());
-      }
-      result = result &&
-          getUnknownFields().equals(other.getUnknownFields());
-      return result;
-    }
-
-    private int memoizedHashCode = 0;
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasId()) {
-        hash = (37 * hash) + ID_FIELD_NUMBER;
-        hash = (53 * hash) + getId();
-      }
-      if (hasResponseName()) {
-        hash = (37 * hash) + RESPONSE_NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getResponseName().hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
     }
 
     public static com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader parseFrom(
@@ -2264,71 +2114,6 @@ public final class RaftProtos {
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest)) {
-        return super.equals(obj);
-      }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest other = (com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest) obj;
-
-      boolean result = true;
-      result = result && (hasCandidateId() == other.hasCandidateId());
-      if (hasCandidateId()) {
-        result = result && getCandidateId()
-            .equals(other.getCandidateId());
-      }
-      result = result && (hasTerm() == other.hasTerm());
-      if (hasTerm()) {
-        result = result && (getTerm()
-            == other.getTerm());
-      }
-      result = result && (hasLastLogIndex() == other.hasLastLogIndex());
-      if (hasLastLogIndex()) {
-        result = result && (getLastLogIndex()
-            == other.getLastLogIndex());
-      }
-      result = result && (hasLastLogTerm() == other.hasLastLogTerm());
-      if (hasLastLogTerm()) {
-        result = result && (getLastLogTerm()
-            == other.getLastLogTerm());
-      }
-      result = result &&
-          getUnknownFields().equals(other.getUnknownFields());
-      return result;
-    }
-
-    private int memoizedHashCode = 0;
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasCandidateId()) {
-        hash = (37 * hash) + CANDIDATEID_FIELD_NUMBER;
-        hash = (53 * hash) + getCandidateId().hashCode();
-      }
-      if (hasTerm()) {
-        hash = (37 * hash) + TERM_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getTerm());
-      }
-      if (hasLastLogIndex()) {
-        hash = (37 * hash) + LASTLOGINDEX_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getLastLogIndex());
-      }
-      if (hasLastLogTerm()) {
-        hash = (37 * hash) + LASTLOGTERM_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getLastLogTerm());
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
     }
 
     public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest parseFrom(
@@ -3078,62 +2863,6 @@ public final class RaftProtos {
       return super.writeReplace();
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse)) {
-        return super.equals(obj);
-      }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse other = (com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse) obj;
-
-      boolean result = true;
-      result = result && (hasFromHost() == other.hasFromHost());
-      if (hasFromHost()) {
-        result = result && getFromHost()
-            .equals(other.getFromHost());
-      }
-      result = result && (hasTerm() == other.hasTerm());
-      if (hasTerm()) {
-        result = result && (getTerm()
-            == other.getTerm());
-      }
-      result = result && (hasGranted() == other.hasGranted());
-      if (hasGranted()) {
-        result = result && (getGranted()
-            == other.getGranted());
-      }
-      result = result &&
-          getUnknownFields().equals(other.getUnknownFields());
-      return result;
-    }
-
-    private int memoizedHashCode = 0;
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasFromHost()) {
-        hash = (37 * hash) + FROMHOST_FIELD_NUMBER;
-        hash = (53 * hash) + getFromHost().hashCode();
-      }
-      if (hasTerm()) {
-        hash = (37 * hash) + TERM_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getTerm());
-      }
-      if (hasGranted()) {
-        hash = (37 * hash) + GRANTED_FIELD_NUMBER;
-        hash = (53 * hash) + new Boolean(getGranted()).hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
     public static com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -3723,44 +3452,6 @@ public final class RaftProtos {
       return super.writeReplace();
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest)) {
-        return super.equals(obj);
-      }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest other = (com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest) obj;
-
-      boolean result = true;
-      result = result && (hasData() == other.hasData());
-      if (hasData()) {
-        result = result && getData()
-            .equals(other.getData());
-      }
-      result = result &&
-          getUnknownFields().equals(other.getUnknownFields());
-      return result;
-    }
-
-    private int memoizedHashCode = 0;
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasData()) {
-        hash = (37 * hash) + DATA_FIELD_NUMBER;
-        hash = (53 * hash) + getData().hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
     public static com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -4158,44 +3849,6 @@ public final class RaftProtos {
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse)) {
-        return super.equals(obj);
-      }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse other = (com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse) obj;
-
-      boolean result = true;
-      result = result && (hasResult() == other.hasResult());
-      if (hasResult()) {
-        result = result && getResult()
-            .equals(other.getResult());
-      }
-      result = result &&
-          getUnknownFields().equals(other.getUnknownFields());
-      return result;
-    }
-
-    private int memoizedHashCode = 0;
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasResult()) {
-        hash = (37 * hash) + RESULT_FIELD_NUMBER;
-        hash = (53 * hash) + getResult().hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
     }
 
     public static com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse parseFrom(
@@ -4673,62 +4326,6 @@ public final class RaftProtos {
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry)) {
-        return super.equals(obj);
-      }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry other = (com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry) obj;
-
-      boolean result = true;
-      result = result && (hasIndex() == other.hasIndex());
-      if (hasIndex()) {
-        result = result && (getIndex()
-            == other.getIndex());
-      }
-      result = result && (hasKey() == other.hasKey());
-      if (hasKey()) {
-        result = result && getKey()
-            .equals(other.getKey());
-      }
-      result = result && (hasValue() == other.hasValue());
-      if (hasValue()) {
-        result = result && getValue()
-            .equals(other.getValue());
-      }
-      result = result &&
-          getUnknownFields().equals(other.getUnknownFields());
-      return result;
-    }
-
-    private int memoizedHashCode = 0;
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasIndex()) {
-        hash = (37 * hash) + INDEX_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getIndex());
-      }
-      if (hasKey()) {
-        hash = (37 * hash) + KEY_FIELD_NUMBER;
-        hash = (53 * hash) + getKey().hashCode();
-      }
-      if (hasValue()) {
-        hash = (37 * hash) + VALUE_FIELD_NUMBER;
-        hash = (53 * hash) + getValue().hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
     }
 
     public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseFrom(
@@ -5475,86 +5072,6 @@ public final class RaftProtos {
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest)) {
-        return super.equals(obj);
-      }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest other = (com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest) obj;
-
-      boolean result = true;
-      result = result && (hasTerm() == other.hasTerm());
-      if (hasTerm()) {
-        result = result && (getTerm()
-            == other.getTerm());
-      }
-      result = result && (hasLeaderId() == other.hasLeaderId());
-      if (hasLeaderId()) {
-        result = result && getLeaderId()
-            .equals(other.getLeaderId());
-      }
-      result = result && (hasLeaderCommit() == other.hasLeaderCommit());
-      if (hasLeaderCommit()) {
-        result = result && (getLeaderCommit()
-            == other.getLeaderCommit());
-      }
-      result = result && (hasPrevLogIndex() == other.hasPrevLogIndex());
-      if (hasPrevLogIndex()) {
-        result = result && (getPrevLogIndex()
-            == other.getPrevLogIndex());
-      }
-      result = result && (hasPrevLogTerm() == other.hasPrevLogTerm());
-      if (hasPrevLogTerm()) {
-        result = result && (getPrevLogTerm()
-            == other.getPrevLogTerm());
-      }
-      result = result && getEntriesList()
-          .equals(other.getEntriesList());
-      result = result &&
-          getUnknownFields().equals(other.getUnknownFields());
-      return result;
-    }
-
-    private int memoizedHashCode = 0;
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasTerm()) {
-        hash = (37 * hash) + TERM_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getTerm());
-      }
-      if (hasLeaderId()) {
-        hash = (37 * hash) + LEADERID_FIELD_NUMBER;
-        hash = (53 * hash) + getLeaderId().hashCode();
-      }
-      if (hasLeaderCommit()) {
-        hash = (37 * hash) + LEADERCOMMIT_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getLeaderCommit());
-      }
-      if (hasPrevLogIndex()) {
-        hash = (37 * hash) + PREVLOGINDEX_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getPrevLogIndex());
-      }
-      if (hasPrevLogTerm()) {
-        hash = (37 * hash) + PREVLOGTERM_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getPrevLogTerm());
-      }
-      if (getEntriesCount() > 0) {
-        hash = (37 * hash) + ENTRIES_FIELD_NUMBER;
-        hash = (53 * hash) + getEntriesList().hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
     }
 
     public static com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest parseFrom(
@@ -6541,53 +6058,6 @@ public final class RaftProtos {
       return super.writeReplace();
     }
 
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-       return true;
-      }
-      if (!(obj instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse)) {
-        return super.equals(obj);
-      }
-      com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse other = (com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse) obj;
-
-      boolean result = true;
-      result = result && (hasTerm() == other.hasTerm());
-      if (hasTerm()) {
-        result = result && (getTerm()
-            == other.getTerm());
-      }
-      result = result && (hasSuccess() == other.hasSuccess());
-      if (hasSuccess()) {
-        result = result && (getSuccess()
-            == other.getSuccess());
-      }
-      result = result &&
-          getUnknownFields().equals(other.getUnknownFields());
-      return result;
-    }
-
-    private int memoizedHashCode = 0;
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasTerm()) {
-        hash = (37 * hash) + TERM_FIELD_NUMBER;
-        hash = (53 * hash) + (int)(getTerm());
-      }
-      if (hasSuccess()) {
-        hash = (37 * hash) + SUCCESS_FIELD_NUMBER;
-        hash = (53 * hash) + new Boolean(getSuccess()).hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
     public static com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -6858,6 +6328,5027 @@ public final class RaftProtos {
     // @@protoc_insertion_point(class_scope:AppendEntriesResponse)
   }
 
+  public interface LookupLeaderRequestOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * Protobuf type {@code LookupLeaderRequest}
+   */
+  public static final class LookupLeaderRequest extends
+      com.google.protobuf.GeneratedMessage
+      implements LookupLeaderRequestOrBuilder {
+    // Use LookupLeaderRequest.newBuilder() to construct.
+    private LookupLeaderRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private LookupLeaderRequest(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final LookupLeaderRequest defaultInstance;
+    public static LookupLeaderRequest getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public LookupLeaderRequest getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private LookupLeaderRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LookupLeaderRequest_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LookupLeaderRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<LookupLeaderRequest> PARSER =
+        new com.google.protobuf.AbstractParser<LookupLeaderRequest>() {
+      public LookupLeaderRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new LookupLeaderRequest(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<LookupLeaderRequest> getParserForType() {
+      return PARSER;
+    }
+
+    private void initFields() {
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code LookupLeaderRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LookupLeaderRequest_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LookupLeaderRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LookupLeaderRequest_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest result = new com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest(this);
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:LookupLeaderRequest)
+    }
+
+    static {
+      defaultInstance = new LookupLeaderRequest(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:LookupLeaderRequest)
+  }
+
+  public interface LookupLeaderResponseOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional .ServerId leader = 1;
+    /**
+     * <code>optional .ServerId leader = 1;</code>
+     */
+    boolean hasLeader();
+    /**
+     * <code>optional .ServerId leader = 1;</code>
+     */
+    com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getLeader();
+    /**
+     * <code>optional .ServerId leader = 1;</code>
+     */
+    com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getLeaderOrBuilder();
+  }
+  /**
+   * Protobuf type {@code LookupLeaderResponse}
+   */
+  public static final class LookupLeaderResponse extends
+      com.google.protobuf.GeneratedMessage
+      implements LookupLeaderResponseOrBuilder {
+    // Use LookupLeaderResponse.newBuilder() to construct.
+    private LookupLeaderResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private LookupLeaderResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final LookupLeaderResponse defaultInstance;
+    public static LookupLeaderResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public LookupLeaderResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private LookupLeaderResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = leader_.toBuilder();
+              }
+              leader_ = input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(leader_);
+                leader_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LookupLeaderResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LookupLeaderResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<LookupLeaderResponse> PARSER =
+        new com.google.protobuf.AbstractParser<LookupLeaderResponse>() {
+      public LookupLeaderResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new LookupLeaderResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<LookupLeaderResponse> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional .ServerId leader = 1;
+    public static final int LEADER_FIELD_NUMBER = 1;
+    private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId leader_;
+    /**
+     * <code>optional .ServerId leader = 1;</code>
+     */
+    public boolean hasLeader() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional .ServerId leader = 1;</code>
+     */
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getLeader() {
+      return leader_;
+    }
+    /**
+     * <code>optional .ServerId leader = 1;</code>
+     */
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getLeaderOrBuilder() {
+      return leader_;
+    }
+
+    private void initFields() {
+      leader_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (hasLeader()) {
+        if (!getLeader().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, leader_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, leader_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code LookupLeaderResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LookupLeaderResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LookupLeaderResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getLeaderFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (leaderBuilder_ == null) {
+          leader_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+        } else {
+          leaderBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_LookupLeaderResponse_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse result = new com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (leaderBuilder_ == null) {
+          result.leader_ = leader_;
+        } else {
+          result.leader_ = leaderBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.getDefaultInstance()) return this;
+        if (other.hasLeader()) {
+          mergeLeader(other.getLeader());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (hasLeader()) {
+          if (!getLeader().isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional .ServerId leader = 1;
+      private com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId leader_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> leaderBuilder_;
+      /**
+       * <code>optional .ServerId leader = 1;</code>
+       */
+      public boolean hasLeader() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional .ServerId leader = 1;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId getLeader() {
+        if (leaderBuilder_ == null) {
+          return leader_;
+        } else {
+          return leaderBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .ServerId leader = 1;</code>
+       */
+      public Builder setLeader(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
+        if (leaderBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          leader_ = value;
+          onChanged();
+        } else {
+          leaderBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .ServerId leader = 1;</code>
+       */
+      public Builder setLeader(
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder builderForValue) {
+        if (leaderBuilder_ == null) {
+          leader_ = builderForValue.build();
+          onChanged();
+        } else {
+          leaderBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .ServerId leader = 1;</code>
+       */
+      public Builder mergeLeader(com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId value) {
+        if (leaderBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              leader_ != com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance()) {
+            leader_ =
+              com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.newBuilder(leader_).mergeFrom(value).buildPartial();
+          } else {
+            leader_ = value;
+          }
+          onChanged();
+        } else {
+          leaderBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .ServerId leader = 1;</code>
+       */
+      public Builder clearLeader() {
+        if (leaderBuilder_ == null) {
+          leader_ = com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.getDefaultInstance();
+          onChanged();
+        } else {
+          leaderBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>optional .ServerId leader = 1;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder getLeaderBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getLeaderFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .ServerId leader = 1;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder getLeaderOrBuilder() {
+        if (leaderBuilder_ != null) {
+          return leaderBuilder_.getMessageOrBuilder();
+        } else {
+          return leader_;
+        }
+      }
+      /**
+       * <code>optional .ServerId leader = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder> 
+          getLeaderFieldBuilder() {
+        if (leaderBuilder_ == null) {
+          leaderBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.ServerIdOrBuilder>(
+                  leader_,
+                  getParentForChildren(),
+                  isClean());
+          leader_ = null;
+        }
+        return leaderBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:LookupLeaderResponse)
+    }
+
+    static {
+      defaultInstance = new LookupLeaderResponse(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:LookupLeaderResponse)
+  }
+
+  public interface SetRequestOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bytes key = 1;
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    boolean hasKey();
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    com.google.protobuf.ByteString getKey();
+
+    // optional bytes value = 2;
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    boolean hasValue();
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    com.google.protobuf.ByteString getValue();
+  }
+  /**
+   * Protobuf type {@code SetRequest}
+   */
+  public static final class SetRequest extends
+      com.google.protobuf.GeneratedMessage
+      implements SetRequestOrBuilder {
+    // Use SetRequest.newBuilder() to construct.
+    private SetRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SetRequest(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SetRequest defaultInstance;
+    public static SetRequest getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SetRequest getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SetRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              key_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              value_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_SetRequest_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_SetRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SetRequest> PARSER =
+        new com.google.protobuf.AbstractParser<SetRequest>() {
+      public SetRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SetRequest(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SetRequest> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bytes key = 1;
+    public static final int KEY_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString key_;
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    public boolean hasKey() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
+    }
+
+    // optional bytes value = 2;
+    public static final int VALUE_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString value_;
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    public boolean hasValue() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    public com.google.protobuf.ByteString getValue() {
+      return value_;
+    }
+
+    private void initFields() {
+      key_ = com.google.protobuf.ByteString.EMPTY;
+      value_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, key_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, value_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, key_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, value_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code SetRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_SetRequest_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_SetRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        key_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        value_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_SetRequest_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest result = new com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.key_ = key_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.value_ = value_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest.getDefaultInstance()) return this;
+        if (other.hasKey()) {
+          setKey(other.getKey());
+        }
+        if (other.hasValue()) {
+          setValue(other.getValue());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bytes key = 1;
+      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public boolean hasKey() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public com.google.protobuf.ByteString getKey() {
+        return key_;
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public Builder setKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        key_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public Builder clearKey() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        key_ = getDefaultInstance().getKey();
+        onChanged();
+        return this;
+      }
+
+      // optional bytes value = 2;
+      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public boolean hasValue() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public com.google.protobuf.ByteString getValue() {
+        return value_;
+      }
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public Builder setValue(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public Builder clearValue() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        value_ = getDefaultInstance().getValue();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:SetRequest)
+    }
+
+    static {
+      defaultInstance = new SetRequest(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:SetRequest)
+  }
+
+  public interface SetResponseOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bool success = 1;
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    boolean hasSuccess();
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    boolean getSuccess();
+  }
+  /**
+   * Protobuf type {@code SetResponse}
+   */
+  public static final class SetResponse extends
+      com.google.protobuf.GeneratedMessage
+      implements SetResponseOrBuilder {
+    // Use SetResponse.newBuilder() to construct.
+    private SetResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private SetResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final SetResponse defaultInstance;
+    public static SetResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public SetResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SetResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              success_ = input.readBool();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_SetResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_SetResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<SetResponse> PARSER =
+        new com.google.protobuf.AbstractParser<SetResponse>() {
+      public SetResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SetResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SetResponse> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bool success = 1;
+    public static final int SUCCESS_FIELD_NUMBER = 1;
+    private boolean success_;
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    public boolean hasSuccess() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    public boolean getSuccess() {
+      return success_;
+    }
+
+    private void initFields() {
+      success_ = false;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBool(1, success_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, success_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code SetResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_SetResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_SetResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        success_ = false;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_SetResponse_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse result = new com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.success_ = success_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.getDefaultInstance()) return this;
+        if (other.hasSuccess()) {
+          setSuccess(other.getSuccess());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bool success = 1;
+      private boolean success_ ;
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public boolean hasSuccess() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public boolean getSuccess() {
+        return success_;
+      }
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public Builder setSuccess(boolean value) {
+        bitField0_ |= 0x00000001;
+        success_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public Builder clearSuccess() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        success_ = false;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:SetResponse)
+    }
+
+    static {
+      defaultInstance = new SetResponse(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:SetResponse)
+  }
+
+  public interface GetRequestOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bytes key = 1;
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    boolean hasKey();
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    com.google.protobuf.ByteString getKey();
+  }
+  /**
+   * Protobuf type {@code GetRequest}
+   */
+  public static final class GetRequest extends
+      com.google.protobuf.GeneratedMessage
+      implements GetRequestOrBuilder {
+    // Use GetRequest.newBuilder() to construct.
+    private GetRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private GetRequest(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final GetRequest defaultInstance;
+    public static GetRequest getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public GetRequest getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private GetRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              key_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_GetRequest_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_GetRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<GetRequest> PARSER =
+        new com.google.protobuf.AbstractParser<GetRequest>() {
+      public GetRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new GetRequest(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GetRequest> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bytes key = 1;
+    public static final int KEY_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString key_;
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    public boolean hasKey() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
+    }
+
+    private void initFields() {
+      key_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, key_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, key_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code GetRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_GetRequest_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_GetRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        key_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_GetRequest_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest result = new com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.key_ = key_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest.getDefaultInstance()) return this;
+        if (other.hasKey()) {
+          setKey(other.getKey());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bytes key = 1;
+      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public boolean hasKey() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public com.google.protobuf.ByteString getKey() {
+        return key_;
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public Builder setKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        key_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public Builder clearKey() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        key_ = getDefaultInstance().getKey();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:GetRequest)
+    }
+
+    static {
+      defaultInstance = new GetRequest(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:GetRequest)
+  }
+
+  public interface GetResponseOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bytes value = 1;
+    /**
+     * <code>optional bytes value = 1;</code>
+     */
+    boolean hasValue();
+    /**
+     * <code>optional bytes value = 1;</code>
+     */
+    com.google.protobuf.ByteString getValue();
+
+    // optional bool success = 2;
+    /**
+     * <code>optional bool success = 2;</code>
+     */
+    boolean hasSuccess();
+    /**
+     * <code>optional bool success = 2;</code>
+     */
+    boolean getSuccess();
+  }
+  /**
+   * Protobuf type {@code GetResponse}
+   */
+  public static final class GetResponse extends
+      com.google.protobuf.GeneratedMessage
+      implements GetResponseOrBuilder {
+    // Use GetResponse.newBuilder() to construct.
+    private GetResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private GetResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final GetResponse defaultInstance;
+    public static GetResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public GetResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private GetResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              value_ = input.readBytes();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              success_ = input.readBool();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_GetResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_GetResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<GetResponse> PARSER =
+        new com.google.protobuf.AbstractParser<GetResponse>() {
+      public GetResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new GetResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GetResponse> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bytes value = 1;
+    public static final int VALUE_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString value_;
+    /**
+     * <code>optional bytes value = 1;</code>
+     */
+    public boolean hasValue() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bytes value = 1;</code>
+     */
+    public com.google.protobuf.ByteString getValue() {
+      return value_;
+    }
+
+    // optional bool success = 2;
+    public static final int SUCCESS_FIELD_NUMBER = 2;
+    private boolean success_;
+    /**
+     * <code>optional bool success = 2;</code>
+     */
+    public boolean hasSuccess() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional bool success = 2;</code>
+     */
+    public boolean getSuccess() {
+      return success_;
+    }
+
+    private void initFields() {
+      value_ = com.google.protobuf.ByteString.EMPTY;
+      success_ = false;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, value_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBool(2, success_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, value_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(2, success_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code GetResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_GetResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_GetResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        value_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        success_ = false;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_GetResponse_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse result = new com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.value_ = value_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.success_ = success_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.getDefaultInstance()) return this;
+        if (other.hasValue()) {
+          setValue(other.getValue());
+        }
+        if (other.hasSuccess()) {
+          setSuccess(other.getSuccess());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bytes value = 1;
+      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes value = 1;</code>
+       */
+      public boolean hasValue() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bytes value = 1;</code>
+       */
+      public com.google.protobuf.ByteString getValue() {
+        return value_;
+      }
+      /**
+       * <code>optional bytes value = 1;</code>
+       */
+      public Builder setValue(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes value = 1;</code>
+       */
+      public Builder clearValue() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        value_ = getDefaultInstance().getValue();
+        onChanged();
+        return this;
+      }
+
+      // optional bool success = 2;
+      private boolean success_ ;
+      /**
+       * <code>optional bool success = 2;</code>
+       */
+      public boolean hasSuccess() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional bool success = 2;</code>
+       */
+      public boolean getSuccess() {
+        return success_;
+      }
+      /**
+       * <code>optional bool success = 2;</code>
+       */
+      public Builder setSuccess(boolean value) {
+        bitField0_ |= 0x00000002;
+        success_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool success = 2;</code>
+       */
+      public Builder clearSuccess() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        success_ = false;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:GetResponse)
+    }
+
+    static {
+      defaultInstance = new GetResponse(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:GetResponse)
+  }
+
+  public interface KeyValueOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bytes key = 1;
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    boolean hasKey();
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    com.google.protobuf.ByteString getKey();
+
+    // optional bytes value = 2;
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    boolean hasValue();
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    com.google.protobuf.ByteString getValue();
+  }
+  /**
+   * Protobuf type {@code KeyValue}
+   */
+  public static final class KeyValue extends
+      com.google.protobuf.GeneratedMessage
+      implements KeyValueOrBuilder {
+    // Use KeyValue.newBuilder() to construct.
+    private KeyValue(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private KeyValue(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final KeyValue defaultInstance;
+    public static KeyValue getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public KeyValue getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private KeyValue(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              key_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              value_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValue_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValue_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.class, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<KeyValue> PARSER =
+        new com.google.protobuf.AbstractParser<KeyValue>() {
+      public KeyValue parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new KeyValue(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<KeyValue> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bytes key = 1;
+    public static final int KEY_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString key_;
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    public boolean hasKey() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
+    }
+
+    // optional bytes value = 2;
+    public static final int VALUE_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString value_;
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    public boolean hasValue() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    public com.google.protobuf.ByteString getValue() {
+      return value_;
+    }
+
+    private void initFields() {
+      key_ = com.google.protobuf.ByteString.EMPTY;
+      value_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, key_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, value_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, key_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, value_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code KeyValue}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValue_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValue_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.class, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        key_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        value_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValue_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue result = new com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.key_ = key_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.value_ = value_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.getDefaultInstance()) return this;
+        if (other.hasKey()) {
+          setKey(other.getKey());
+        }
+        if (other.hasValue()) {
+          setValue(other.getValue());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bytes key = 1;
+      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public boolean hasKey() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public com.google.protobuf.ByteString getKey() {
+        return key_;
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public Builder setKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        key_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public Builder clearKey() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        key_ = getDefaultInstance().getKey();
+        onChanged();
+        return this;
+      }
+
+      // optional bytes value = 2;
+      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public boolean hasValue() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public com.google.protobuf.ByteString getValue() {
+        return value_;
+      }
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public Builder setValue(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public Builder clearValue() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        value_ = getDefaultInstance().getValue();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:KeyValue)
+    }
+
+    static {
+      defaultInstance = new KeyValue(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:KeyValue)
+  }
+
+  public interface ListRequestOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bytes pattern = 1;
+    /**
+     * <code>optional bytes pattern = 1;</code>
+     */
+    boolean hasPattern();
+    /**
+     * <code>optional bytes pattern = 1;</code>
+     */
+    com.google.protobuf.ByteString getPattern();
+  }
+  /**
+   * Protobuf type {@code ListRequest}
+   */
+  public static final class ListRequest extends
+      com.google.protobuf.GeneratedMessage
+      implements ListRequestOrBuilder {
+    // Use ListRequest.newBuilder() to construct.
+    private ListRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private ListRequest(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final ListRequest defaultInstance;
+    public static ListRequest getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public ListRequest getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ListRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              pattern_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_ListRequest_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_ListRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<ListRequest> PARSER =
+        new com.google.protobuf.AbstractParser<ListRequest>() {
+      public ListRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ListRequest(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ListRequest> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bytes pattern = 1;
+    public static final int PATTERN_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString pattern_;
+    /**
+     * <code>optional bytes pattern = 1;</code>
+     */
+    public boolean hasPattern() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bytes pattern = 1;</code>
+     */
+    public com.google.protobuf.ByteString getPattern() {
+      return pattern_;
+    }
+
+    private void initFields() {
+      pattern_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, pattern_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, pattern_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ListRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_ListRequest_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_ListRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        pattern_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_ListRequest_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest result = new com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.pattern_ = pattern_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest.getDefaultInstance()) return this;
+        if (other.hasPattern()) {
+          setPattern(other.getPattern());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bytes pattern = 1;
+      private com.google.protobuf.ByteString pattern_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes pattern = 1;</code>
+       */
+      public boolean hasPattern() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bytes pattern = 1;</code>
+       */
+      public com.google.protobuf.ByteString getPattern() {
+        return pattern_;
+      }
+      /**
+       * <code>optional bytes pattern = 1;</code>
+       */
+      public Builder setPattern(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        pattern_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes pattern = 1;</code>
+       */
+      public Builder clearPattern() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        pattern_ = getDefaultInstance().getPattern();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:ListRequest)
+    }
+
+    static {
+      defaultInstance = new ListRequest(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:ListRequest)
+  }
+
+  public interface ListResponseOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bool success = 1;
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    boolean hasSuccess();
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    boolean getSuccess();
+
+    // repeated .KeyValue results = 2;
+    /**
+     * <code>repeated .KeyValue results = 2;</code>
+     */
+    java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> 
+        getResultsList();
+    /**
+     * <code>repeated .KeyValue results = 2;</code>
+     */
+    com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue getResults(int index);
+    /**
+     * <code>repeated .KeyValue results = 2;</code>
+     */
+    int getResultsCount();
+    /**
+     * <code>repeated .KeyValue results = 2;</code>
+     */
+    java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder> 
+        getResultsOrBuilderList();
+    /**
+     * <code>repeated .KeyValue results = 2;</code>
+     */
+    com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder getResultsOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code ListResponse}
+   */
+  public static final class ListResponse extends
+      com.google.protobuf.GeneratedMessage
+      implements ListResponseOrBuilder {
+    // Use ListResponse.newBuilder() to construct.
+    private ListResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private ListResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final ListResponse defaultInstance;
+    public static ListResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public ListResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ListResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              success_ = input.readBool();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                results_ = new java.util.ArrayList<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              results_.add(input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          results_ = java.util.Collections.unmodifiableList(results_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_ListResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_ListResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<ListResponse> PARSER =
+        new com.google.protobuf.AbstractParser<ListResponse>() {
+      public ListResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ListResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ListResponse> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bool success = 1;
+    public static final int SUCCESS_FIELD_NUMBER = 1;
+    private boolean success_;
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    public boolean hasSuccess() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    public boolean getSuccess() {
+      return success_;
+    }
+
+    // repeated .KeyValue results = 2;
+    public static final int RESULTS_FIELD_NUMBER = 2;
+    private java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> results_;
+    /**
+     * <code>repeated .KeyValue results = 2;</code>
+     */
+    public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> getResultsList() {
+      return results_;
+    }
+    /**
+     * <code>repeated .KeyValue results = 2;</code>
+     */
+    public java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder> 
+        getResultsOrBuilderList() {
+      return results_;
+    }
+    /**
+     * <code>repeated .KeyValue results = 2;</code>
+     */
+    public int getResultsCount() {
+      return results_.size();
+    }
+    /**
+     * <code>repeated .KeyValue results = 2;</code>
+     */
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue getResults(int index) {
+      return results_.get(index);
+    }
+    /**
+     * <code>repeated .KeyValue results = 2;</code>
+     */
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder getResultsOrBuilder(
+        int index) {
+      return results_.get(index);
+    }
+
+    private void initFields() {
+      success_ = false;
+      results_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBool(1, success_);
+      }
+      for (int i = 0; i < results_.size(); i++) {
+        output.writeMessage(2, results_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, success_);
+      }
+      for (int i = 0; i < results_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, results_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code ListResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_ListResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_ListResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getResultsFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        success_ = false;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (resultsBuilder_ == null) {
+          results_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          resultsBuilder_.clear();
+        }
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_ListResponse_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse result = new com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.success_ = success_;
+        if (resultsBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            results_ = java.util.Collections.unmodifiableList(results_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.results_ = results_;
+        } else {
+          result.results_ = resultsBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.getDefaultInstance()) return this;
+        if (other.hasSuccess()) {
+          setSuccess(other.getSuccess());
+        }
+        if (resultsBuilder_ == null) {
+          if (!other.results_.isEmpty()) {
+            if (results_.isEmpty()) {
+              results_ = other.results_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureResultsIsMutable();
+              results_.addAll(other.results_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.results_.isEmpty()) {
+            if (resultsBuilder_.isEmpty()) {
+              resultsBuilder_.dispose();
+              resultsBuilder_ = null;
+              results_ = other.results_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              resultsBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getResultsFieldBuilder() : null;
+            } else {
+              resultsBuilder_.addAllMessages(other.results_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bool success = 1;
+      private boolean success_ ;
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public boolean hasSuccess() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public boolean getSuccess() {
+        return success_;
+      }
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public Builder setSuccess(boolean value) {
+        bitField0_ |= 0x00000001;
+        success_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public Builder clearSuccess() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        success_ = false;
+        onChanged();
+        return this;
+      }
+
+      // repeated .KeyValue results = 2;
+      private java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> results_ =
+        java.util.Collections.emptyList();
+      private void ensureResultsIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          results_ = new java.util.ArrayList<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue>(results_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder> resultsBuilder_;
+
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> getResultsList() {
+        if (resultsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(results_);
+        } else {
+          return resultsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public int getResultsCount() {
+        if (resultsBuilder_ == null) {
+          return results_.size();
+        } else {
+          return resultsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue getResults(int index) {
+        if (resultsBuilder_ == null) {
+          return results_.get(index);
+        } else {
+          return resultsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public Builder setResults(
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue value) {
+        if (resultsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureResultsIsMutable();
+          results_.set(index, value);
+          onChanged();
+        } else {
+          resultsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public Builder setResults(
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder builderForValue) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          resultsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public Builder addResults(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue value) {
+        if (resultsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureResultsIsMutable();
+          results_.add(value);
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public Builder addResults(
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue value) {
+        if (resultsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureResultsIsMutable();
+          results_.add(index, value);
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public Builder addResults(
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder builderForValue) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.add(builderForValue.build());
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public Builder addResults(
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder builderForValue) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          resultsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public Builder addAllResults(
+          java.lang.Iterable<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> values) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          super.addAll(values, results_);
+          onChanged();
+        } else {
+          resultsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public Builder clearResults() {
+        if (resultsBuilder_ == null) {
+          results_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          resultsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public Builder removeResults(int index) {
+        if (resultsBuilder_ == null) {
+          ensureResultsIsMutable();
+          results_.remove(index);
+          onChanged();
+        } else {
+          resultsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder getResultsBuilder(
+          int index) {
+        return getResultsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder getResultsOrBuilder(
+          int index) {
+        if (resultsBuilder_ == null) {
+          return results_.get(index);  } else {
+          return resultsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder> 
+           getResultsOrBuilderList() {
+        if (resultsBuilder_ != null) {
+          return resultsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(results_);
+        }
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder addResultsBuilder() {
+        return getResultsFieldBuilder().addBuilder(
+            com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder addResultsBuilder(
+          int index) {
+        return getResultsFieldBuilder().addBuilder(
+            index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .KeyValue results = 2;</code>
+       */
+      public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder> 
+           getResultsBuilderList() {
+        return getResultsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder> 
+          getResultsFieldBuilder() {
+        if (resultsBuilder_ == null) {
+          resultsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder>(
+                  results_,
+                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  getParentForChildren(),
+                  isClean());
+          results_ = null;
+        }
+        return resultsBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:ListResponse)
+    }
+
+    static {
+      defaultInstance = new ListResponse(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:ListResponse)
+  }
+
+  public interface DeleteRequestOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bytes key = 1;
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    boolean hasKey();
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    com.google.protobuf.ByteString getKey();
+  }
+  /**
+   * Protobuf type {@code DeleteRequest}
+   */
+  public static final class DeleteRequest extends
+      com.google.protobuf.GeneratedMessage
+      implements DeleteRequestOrBuilder {
+    // Use DeleteRequest.newBuilder() to construct.
+    private DeleteRequest(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private DeleteRequest(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final DeleteRequest defaultInstance;
+    public static DeleteRequest getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public DeleteRequest getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DeleteRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              key_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_DeleteRequest_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_DeleteRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<DeleteRequest> PARSER =
+        new com.google.protobuf.AbstractParser<DeleteRequest>() {
+      public DeleteRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DeleteRequest(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DeleteRequest> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bytes key = 1;
+    public static final int KEY_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString key_;
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    public boolean hasKey() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
+    }
+
+    private void initFields() {
+      key_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, key_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, key_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code DeleteRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_DeleteRequest_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_DeleteRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest.class, com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        key_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_DeleteRequest_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest result = new com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.key_ = key_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest.getDefaultInstance()) return this;
+        if (other.hasKey()) {
+          setKey(other.getKey());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bytes key = 1;
+      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public boolean hasKey() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public com.google.protobuf.ByteString getKey() {
+        return key_;
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public Builder setKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        key_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public Builder clearKey() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        key_ = getDefaultInstance().getKey();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:DeleteRequest)
+    }
+
+    static {
+      defaultInstance = new DeleteRequest(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:DeleteRequest)
+  }
+
+  public interface DeleteResponseOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bool success = 1;
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    boolean hasSuccess();
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    boolean getSuccess();
+  }
+  /**
+   * Protobuf type {@code DeleteResponse}
+   */
+  public static final class DeleteResponse extends
+      com.google.protobuf.GeneratedMessage
+      implements DeleteResponseOrBuilder {
+    // Use DeleteResponse.newBuilder() to construct.
+    private DeleteResponse(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private DeleteResponse(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final DeleteResponse defaultInstance;
+    public static DeleteResponse getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public DeleteResponse getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DeleteResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              success_ = input.readBool();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_DeleteResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_DeleteResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<DeleteResponse> PARSER =
+        new com.google.protobuf.AbstractParser<DeleteResponse>() {
+      public DeleteResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DeleteResponse(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DeleteResponse> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bool success = 1;
+    public static final int SUCCESS_FIELD_NUMBER = 1;
+    private boolean success_;
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    public boolean hasSuccess() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bool success = 1;</code>
+     */
+    public boolean getSuccess() {
+      return success_;
+    }
+
+    private void initFields() {
+      success_ = false;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBool(1, success_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, success_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code DeleteResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_DeleteResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_DeleteResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.class, com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        success_ = false;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_DeleteResponse_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse result = new com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.success_ = success_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.getDefaultInstance()) return this;
+        if (other.hasSuccess()) {
+          setSuccess(other.getSuccess());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bool success = 1;
+      private boolean success_ ;
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public boolean hasSuccess() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public boolean getSuccess() {
+        return success_;
+      }
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public Builder setSuccess(boolean value) {
+        bitField0_ |= 0x00000001;
+        success_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool success = 1;</code>
+       */
+      public Builder clearSuccess() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        success_ = false;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:DeleteResponse)
+    }
+
+    static {
+      defaultInstance = new DeleteResponse(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:DeleteResponse)
+  }
+
   /**
    * Protobuf service {@code RaftService}
    */
@@ -6890,6 +11381,46 @@ public final class RaftProtos {
           com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest request,
           com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse> done);
 
+      /**
+       * <code>rpc lookupLeader(.LookupLeaderRequest) returns (.LookupLeaderResponse);</code>
+       */
+      public abstract void lookupLeader(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse> done);
+
+      /**
+       * <code>rpc get(.GetRequest) returns (.GetResponse);</code>
+       */
+      public abstract void get(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse> done);
+
+      /**
+       * <code>rpc set(.SetRequest) returns (.SetResponse);</code>
+       */
+      public abstract void set(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse> done);
+
+      /**
+       * <code>rpc delete(.DeleteRequest) returns (.DeleteResponse);</code>
+       */
+      public abstract void delete(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse> done);
+
+      /**
+       * <code>rpc list(.ListRequest) returns (.ListResponse);</code>
+       */
+      public abstract void list(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse> done);
+
     }
 
     public static com.google.protobuf.Service newReflectiveService(
@@ -6917,6 +11448,46 @@ public final class RaftProtos {
             com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest request,
             com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse> done) {
           impl.testRpc(controller, request, done);
+        }
+
+        @java.lang.Override
+        public  void lookupLeader(
+            com.google.protobuf.RpcController controller,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest request,
+            com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse> done) {
+          impl.lookupLeader(controller, request, done);
+        }
+
+        @java.lang.Override
+        public  void get(
+            com.google.protobuf.RpcController controller,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest request,
+            com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse> done) {
+          impl.get(controller, request, done);
+        }
+
+        @java.lang.Override
+        public  void set(
+            com.google.protobuf.RpcController controller,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest request,
+            com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse> done) {
+          impl.set(controller, request, done);
+        }
+
+        @java.lang.Override
+        public  void delete(
+            com.google.protobuf.RpcController controller,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest request,
+            com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse> done) {
+          impl.delete(controller, request, done);
+        }
+
+        @java.lang.Override
+        public  void list(
+            com.google.protobuf.RpcController controller,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest request,
+            com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse> done) {
+          impl.list(controller, request, done);
         }
 
       };
@@ -6947,6 +11518,16 @@ public final class RaftProtos {
               return impl.appendEntries(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest)request);
             case 2:
               return impl.testRpc(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest)request);
+            case 3:
+              return impl.lookupLeader(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest)request);
+            case 4:
+              return impl.get(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest)request);
+            case 5:
+              return impl.set(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest)request);
+            case 6:
+              return impl.delete(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest)request);
+            case 7:
+              return impl.list(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest)request);
             default:
               throw new java.lang.AssertionError("Can't get here.");
           }
@@ -6967,6 +11548,16 @@ public final class RaftProtos {
               return com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest.getDefaultInstance();
             case 2:
               return com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest.getDefaultInstance();
+            case 3:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest.getDefaultInstance();
+            case 4:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest.getDefaultInstance();
+            case 5:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest.getDefaultInstance();
+            case 6:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest.getDefaultInstance();
+            case 7:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest.getDefaultInstance();
             default:
               throw new java.lang.AssertionError("Can't get here.");
           }
@@ -6987,6 +11578,16 @@ public final class RaftProtos {
               return com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse.getDefaultInstance();
             case 2:
               return com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse.getDefaultInstance();
+            case 3:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.getDefaultInstance();
+            case 4:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.getDefaultInstance();
+            case 5:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.getDefaultInstance();
+            case 6:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.getDefaultInstance();
+            case 7:
+              return com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.getDefaultInstance();
             default:
               throw new java.lang.AssertionError("Can't get here.");
           }
@@ -7018,6 +11619,46 @@ public final class RaftProtos {
         com.google.protobuf.RpcController controller,
         com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest request,
         com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse> done);
+
+    /**
+     * <code>rpc lookupLeader(.LookupLeaderRequest) returns (.LookupLeaderResponse);</code>
+     */
+    public abstract void lookupLeader(
+        com.google.protobuf.RpcController controller,
+        com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest request,
+        com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse> done);
+
+    /**
+     * <code>rpc get(.GetRequest) returns (.GetResponse);</code>
+     */
+    public abstract void get(
+        com.google.protobuf.RpcController controller,
+        com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest request,
+        com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse> done);
+
+    /**
+     * <code>rpc set(.SetRequest) returns (.SetResponse);</code>
+     */
+    public abstract void set(
+        com.google.protobuf.RpcController controller,
+        com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest request,
+        com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse> done);
+
+    /**
+     * <code>rpc delete(.DeleteRequest) returns (.DeleteResponse);</code>
+     */
+    public abstract void delete(
+        com.google.protobuf.RpcController controller,
+        com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest request,
+        com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse> done);
+
+    /**
+     * <code>rpc list(.ListRequest) returns (.ListResponse);</code>
+     */
+    public abstract void list(
+        com.google.protobuf.RpcController controller,
+        com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest request,
+        com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse> done);
 
     public static final
         com.google.protobuf.Descriptors.ServiceDescriptor
@@ -7056,6 +11697,31 @@ public final class RaftProtos {
             com.google.protobuf.RpcUtil.<com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse>specializeCallback(
               done));
           return;
+        case 3:
+          this.lookupLeader(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest)request,
+            com.google.protobuf.RpcUtil.<com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse>specializeCallback(
+              done));
+          return;
+        case 4:
+          this.get(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest)request,
+            com.google.protobuf.RpcUtil.<com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse>specializeCallback(
+              done));
+          return;
+        case 5:
+          this.set(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest)request,
+            com.google.protobuf.RpcUtil.<com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse>specializeCallback(
+              done));
+          return;
+        case 6:
+          this.delete(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest)request,
+            com.google.protobuf.RpcUtil.<com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse>specializeCallback(
+              done));
+          return;
+        case 7:
+          this.list(controller, (com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest)request,
+            com.google.protobuf.RpcUtil.<com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse>specializeCallback(
+              done));
+          return;
         default:
           throw new java.lang.AssertionError("Can't get here.");
       }
@@ -7076,6 +11742,16 @@ public final class RaftProtos {
           return com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest.getDefaultInstance();
         case 2:
           return com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest.getDefaultInstance();
+        case 3:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest.getDefaultInstance();
+        case 4:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest.getDefaultInstance();
+        case 5:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest.getDefaultInstance();
+        case 6:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest.getDefaultInstance();
+        case 7:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest.getDefaultInstance();
         default:
           throw new java.lang.AssertionError("Can't get here.");
       }
@@ -7096,6 +11772,16 @@ public final class RaftProtos {
           return com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse.getDefaultInstance();
         case 2:
           return com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse.getDefaultInstance();
+        case 3:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.getDefaultInstance();
+        case 4:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.getDefaultInstance();
+        case 5:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.getDefaultInstance();
+        case 6:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.getDefaultInstance();
+        case 7:
+          return com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.getDefaultInstance();
         default:
           throw new java.lang.AssertionError("Can't get here.");
       }
@@ -7161,6 +11847,81 @@ public final class RaftProtos {
             com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse.class,
             com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse.getDefaultInstance()));
       }
+
+      public  void lookupLeader(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse> done) {
+        channel.callMethod(
+          getDescriptor().getMethods().get(3),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.getDefaultInstance(),
+          com.google.protobuf.RpcUtil.generalizeCallback(
+            done,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.class,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.getDefaultInstance()));
+      }
+
+      public  void get(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse> done) {
+        channel.callMethod(
+          getDescriptor().getMethods().get(4),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.getDefaultInstance(),
+          com.google.protobuf.RpcUtil.generalizeCallback(
+            done,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.class,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.getDefaultInstance()));
+      }
+
+      public  void set(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse> done) {
+        channel.callMethod(
+          getDescriptor().getMethods().get(5),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.getDefaultInstance(),
+          com.google.protobuf.RpcUtil.generalizeCallback(
+            done,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.class,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.getDefaultInstance()));
+      }
+
+      public  void delete(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse> done) {
+        channel.callMethod(
+          getDescriptor().getMethods().get(6),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.getDefaultInstance(),
+          com.google.protobuf.RpcUtil.generalizeCallback(
+            done,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.class,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.getDefaultInstance()));
+      }
+
+      public  void list(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest request,
+          com.google.protobuf.RpcCallback<com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse> done) {
+        channel.callMethod(
+          getDescriptor().getMethods().get(7),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.getDefaultInstance(),
+          com.google.protobuf.RpcUtil.generalizeCallback(
+            done,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.class,
+            com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.getDefaultInstance()));
+      }
     }
 
     public static BlockingInterface newBlockingStub(
@@ -7182,6 +11943,31 @@ public final class RaftProtos {
       public com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse testRpc(
           com.google.protobuf.RpcController controller,
           com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest request)
+          throws com.google.protobuf.ServiceException;
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse lookupLeader(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest request)
+          throws com.google.protobuf.ServiceException;
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse get(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest request)
+          throws com.google.protobuf.ServiceException;
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse set(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest request)
+          throws com.google.protobuf.ServiceException;
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse delete(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest request)
+          throws com.google.protobuf.ServiceException;
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse list(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest request)
           throws com.google.protobuf.ServiceException;
     }
 
@@ -7225,6 +12011,66 @@ public final class RaftProtos {
           controller,
           request,
           com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse.getDefaultInstance());
+      }
+
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse lookupLeader(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest request)
+          throws com.google.protobuf.ServiceException {
+        return (com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse) channel.callBlockingMethod(
+          getDescriptor().getMethods().get(3),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse.getDefaultInstance());
+      }
+
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse get(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest request)
+          throws com.google.protobuf.ServiceException {
+        return (com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse) channel.callBlockingMethod(
+          getDescriptor().getMethods().get(4),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse.getDefaultInstance());
+      }
+
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse set(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest request)
+          throws com.google.protobuf.ServiceException {
+        return (com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse) channel.callBlockingMethod(
+          getDescriptor().getMethods().get(5),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse.getDefaultInstance());
+      }
+
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse delete(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest request)
+          throws com.google.protobuf.ServiceException {
+        return (com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse) channel.callBlockingMethod(
+          getDescriptor().getMethods().get(6),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse.getDefaultInstance());
+      }
+
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse list(
+          com.google.protobuf.RpcController controller,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest request)
+          throws com.google.protobuf.ServiceException {
+        return (com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse) channel.callBlockingMethod(
+          getDescriptor().getMethods().get(7),
+          controller,
+          request,
+          com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse.getDefaultInstance());
       }
 
     }
@@ -7282,6 +12128,61 @@ public final class RaftProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_AppendEntriesResponse_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_LookupLeaderRequest_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_LookupLeaderRequest_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_LookupLeaderResponse_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_LookupLeaderResponse_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_SetRequest_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_SetRequest_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_SetResponse_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_SetResponse_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_GetRequest_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_GetRequest_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_GetResponse_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_GetResponse_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_KeyValue_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_KeyValue_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_ListRequest_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_ListRequest_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_ListResponse_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_ListResponse_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_DeleteRequest_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_DeleteRequest_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_DeleteResponse_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_DeleteResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -7308,13 +12209,29 @@ public final class RaftProtos {
       "rverId\022\024\n\014leaderCommit\030\003 \001(\004\022\024\n\014prevLogI" +
       "ndex\030\004 \001(\004\022\023\n\013prevLogTerm\030\005 \001(\004\022\033\n\007entri" +
       "es\030\006 \003(\0132\n.RaftEntry\"6\n\025AppendEntriesRes" +
-      "ponse\022\014\n\004term\030\001 \001(\004\022\017\n\007success\030\002 \001(\0102\265\001\n" +
-      "\013RaftService\0228\n\013collectVote\022\023.CollectVot" +
-      "eRequest\032\024.CollectVoteResponse\022>\n\rappend",
-      "Entries\022\025.AppendEntriesRequest\032\026.AppendE" +
-      "ntriesResponse\022,\n\007testRpc\022\017.TestRpcReque" +
-      "st\032\020.TestRpcResponseB9\n#com.chicm.cmraft" +
-      ".protobuf.generatedB\nRaftProtosH\001\210\001\001\240\001\001"
+      "ponse\022\014\n\004term\030\001 \001(\004\022\017\n\007success\030\002 \001(\010\"\025\n\023" +
+      "LookupLeaderRequest\"1\n\024LookupLeaderRespo" +
+      "nse\022\031\n\006leader\030\001 \001(\0132\t.ServerId\"(\n\nSetReq",
+      "uest\022\013\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\"\036\n\013SetR" +
+      "esponse\022\017\n\007success\030\001 \001(\010\"\031\n\nGetRequest\022\013" +
+      "\n\003key\030\001 \001(\014\"-\n\013GetResponse\022\r\n\005value\030\001 \001(" +
+      "\014\022\017\n\007success\030\002 \001(\010\"&\n\010KeyValue\022\013\n\003key\030\001 " +
+      "\001(\014\022\r\n\005value\030\002 \001(\014\"\036\n\013ListRequest\022\017\n\007pat" +
+      "tern\030\001 \001(\014\";\n\014ListResponse\022\017\n\007success\030\001 " +
+      "\001(\010\022\032\n\007results\030\002 \003(\0132\t.KeyValue\"\034\n\rDelet" +
+      "eRequest\022\013\n\003key\030\001 \001(\014\"!\n\016DeleteResponse\022" +
+      "\017\n\007success\030\001 \001(\0102\206\003\n\013RaftService\0228\n\013coll" +
+      "ectVote\022\023.CollectVoteRequest\032\024.CollectVo",
+      "teResponse\022>\n\rappendEntries\022\025.AppendEntr" +
+      "iesRequest\032\026.AppendEntriesResponse\022,\n\007te" +
+      "stRpc\022\017.TestRpcRequest\032\020.TestRpcResponse" +
+      "\022;\n\014lookupLeader\022\024.LookupLeaderRequest\032\025" +
+      ".LookupLeaderResponse\022 \n\003get\022\013.GetReques" +
+      "t\032\014.GetResponse\022 \n\003set\022\013.SetRequest\032\014.Se" +
+      "tResponse\022)\n\006delete\022\016.DeleteRequest\032\017.De" +
+      "leteResponse\022#\n\004list\022\014.ListRequest\032\r.Lis" +
+      "tResponseB6\n#com.chicm.cmraft.protobuf.g" +
+      "eneratedB\nRaftProtosH\001\210\001\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -7381,6 +12298,72 @@ public final class RaftProtos {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_AppendEntriesResponse_descriptor,
               new java.lang.String[] { "Term", "Success", });
+          internal_static_LookupLeaderRequest_descriptor =
+            getDescriptor().getMessageTypes().get(10);
+          internal_static_LookupLeaderRequest_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_LookupLeaderRequest_descriptor,
+              new java.lang.String[] { });
+          internal_static_LookupLeaderResponse_descriptor =
+            getDescriptor().getMessageTypes().get(11);
+          internal_static_LookupLeaderResponse_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_LookupLeaderResponse_descriptor,
+              new java.lang.String[] { "Leader", });
+          internal_static_SetRequest_descriptor =
+            getDescriptor().getMessageTypes().get(12);
+          internal_static_SetRequest_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_SetRequest_descriptor,
+              new java.lang.String[] { "Key", "Value", });
+          internal_static_SetResponse_descriptor =
+            getDescriptor().getMessageTypes().get(13);
+          internal_static_SetResponse_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_SetResponse_descriptor,
+              new java.lang.String[] { "Success", });
+          internal_static_GetRequest_descriptor =
+            getDescriptor().getMessageTypes().get(14);
+          internal_static_GetRequest_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_GetRequest_descriptor,
+              new java.lang.String[] { "Key", });
+          internal_static_GetResponse_descriptor =
+            getDescriptor().getMessageTypes().get(15);
+          internal_static_GetResponse_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_GetResponse_descriptor,
+              new java.lang.String[] { "Value", "Success", });
+          internal_static_KeyValue_descriptor =
+            getDescriptor().getMessageTypes().get(16);
+          internal_static_KeyValue_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_KeyValue_descriptor,
+              new java.lang.String[] { "Key", "Value", });
+          internal_static_ListRequest_descriptor =
+            getDescriptor().getMessageTypes().get(17);
+          internal_static_ListRequest_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_ListRequest_descriptor,
+              new java.lang.String[] { "Pattern", });
+          internal_static_ListResponse_descriptor =
+            getDescriptor().getMessageTypes().get(18);
+          internal_static_ListResponse_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_ListResponse_descriptor,
+              new java.lang.String[] { "Success", "Results", });
+          internal_static_DeleteRequest_descriptor =
+            getDescriptor().getMessageTypes().get(19);
+          internal_static_DeleteRequest_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_DeleteRequest_descriptor,
+              new java.lang.String[] { "Key", });
+          internal_static_DeleteResponse_descriptor =
+            getDescriptor().getMessageTypes().get(20);
+          internal_static_DeleteResponse_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_DeleteResponse_descriptor,
+              new java.lang.String[] { "Success", });
           return null;
         }
       };

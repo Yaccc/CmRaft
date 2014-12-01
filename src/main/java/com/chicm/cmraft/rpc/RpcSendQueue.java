@@ -58,6 +58,10 @@ public class RpcSendQueue {
     }
   }
   
+  public void stop() {
+    executor.shutdownNow();
+  }
+  
   public void put(RpcCall call) {
     callQueue.put(call);
   }
@@ -91,7 +95,9 @@ public class RpcSendQueue {
           }
           
         } catch (InterruptedException e) {
-          e.printStackTrace(System.out);
+          LOG.error("InterruptedException catched", e);
+          break;
+          //e.printStackTrace(System.out);
         }
       }
     }

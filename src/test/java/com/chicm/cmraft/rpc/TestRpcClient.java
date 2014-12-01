@@ -20,33 +20,31 @@
 
 package com.chicm.cmraft.rpc;
 
+
 import org.junit.Test;
 
-public class TestRpcSendQueue {
+import com.chicm.cmraft.common.CmRaftConfiguration;
+import com.chicm.cmraft.common.Configuration;
+import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.core.RaftRpcService;
 
-  @Test
-  public void testRpcSendQueue() throws Exception {
-    RpcSendQueue q = new RpcSendQueue(null);
-    long tm = System.currentTimeMillis();
-    for(int i = 0;i < 1000; i++) {
-      RpcCall call = new RpcCall(RpcClient.generateCallId(), null, null, null);
-      call.setPriority(10);
-      if (i % 2 == 0) {
-        call.setPriority(20);
-      }
-      try {
-        q.put(call);
-      } catch(Exception e) {
-        e.printStackTrace(System.out);
-      }
-      
-    }
-    System.out.println("PUT done****************");
-    long t = System.currentTimeMillis() - tm;
-    System.out.println("" + t/1000);
-    
-    Thread.sleep(1);
-    q.stop();
+public class TestRpcClient {
+
+  public static void main(String[] args) throws Exception {
+    //RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create());
+    //server.startRpcServer();
+    //server.startTPSReport();
+    Configuration conf = CmRaftConfiguration.create();
+    int port = ServerInfo.parseFromString(conf.getString("raft.server.local")).getPort();
+      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), "localhost", port);
+
+      client.testRpc();
+      Thread.sleep(3000);
+      System.out.println("closing");
+      //client.close();
+      System.out.println("closed");
   }
 
 }
+
+

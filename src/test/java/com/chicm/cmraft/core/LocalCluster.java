@@ -1,7 +1,11 @@
 package com.chicm.cmraft.core;
 
+import org.junit.Test;
+
 import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
+
+import static org.junit.Assert.*;
 
 public class LocalCluster {
   
@@ -10,41 +14,66 @@ public class LocalCluster {
   
   private int nodeNumber = NODE_NUMBER;
   private int startPort = START_PORT;
+  
+  private Configuration[] confs;
 
-  public LocalCluster(int n, int startPort) {
-    this.nodeNumber = n;
-    this.startPort = startPort;
+  public LocalCluster() {
   }
   
-  public static void main(String[] args) throws Exception {
-    LocalCluster clu = new LocalCluster(8, 12888);
+  public Configuration getConf(int index) {
+    return confs[index];
+  }
+  
+  public void checkNodesState(RaftNode[] nodes) {
+    int nLeader = 0;
+    int nFollower = 0;
     
-    RaftNode[] nodes = clu.createCluster();
-    
+    for (int i =0; i < nodeNumber; i++) {
+      if(nodes[i].getState() == State.LEADER) {
+        nLeader++;
+      } else if(nodes[i].getState() == State.FOLLOWER) {
+        nFollower++;
+      }
+    }
+    assertTrue(nLeader == 1);
+    assertTrue(nFollower == (nodeNumber -1));
+  }
+  
+  public void checkGetCurrentLeader(RaftNode[] nodes) {
+
+    for (int i =0; i < nodeNumber; i++) {
+      if(i != 0) {
+        assertTrue(nodes[i].getCurrentLeader().equals(nodes[i-1].getCurrentLeader()));
+      }
+    }
+  }
+  
+  @Test
+  public void testCluster() throws Exception {
+    RaftNode[] nodes = createCluster(8, 12888);
     Thread.sleep(10000);
+    
+    checkNodesState(nodes);
+    
     for(RaftNode node: nodes) {
-      System.out.println(node.getName() + ":" + node.getState());
+      System.out.println(node.getName() + ":" + node.getState() + ":" + node.getCurrentTerm());
       if(node.isLeader()) {
         System.out.println(node.getServerInfo() + " is leader, killing it");
         node.kill();
       }
     }
-    /*
-    while(true) {
-      Thread.sleep(5000);
-      System.out.println("**************************************");
-      for(RaftNode node: nodes) {
-        System.out.println(node.getName() + ":" + node.getState());
-        if(node.isLeader()) {
-          System.out.println(node.getServerInfo() + " is leader, killing it");
-          node.kill();
-        }
-      }
-    }*/
+    for(int i=0; i < 5; i++) {
+      Thread.sleep(8000);
+      checkNodesState(nodes);
+      checkGetCurrentLeader(nodes);
+    }
   }
   
-  public RaftNode[] createCluster() {
-    Configuration[] confs = createConfiguration();
+  public RaftNode[] createCluster(int n, int startPort) {
+    this.nodeNumber = n;
+    this.startPort = startPort;
+    
+    createConfiguration();
     
     RaftNode[] nodes = new RaftNode[nodeNumber];
     for(int i = 0; i < nodeNumber; i++) {
@@ -53,8 +82,8 @@ public class LocalCluster {
     return nodes;
   }
   
-  public Configuration[] createConfiguration() {
-    Configuration[] confs = new Configuration[nodeNumber];
+  private void createConfiguration() {
+    confs = new Configuration[nodeNumber];
     for(int i = 0; i < nodeNumber; i++) {
       confs[i] = CmRaftConfiguration.create();
       confs[i].useResource("cmraft_cluster_test.properties");
@@ -66,7 +95,20 @@ public class LocalCluster {
       
       System.out.println("confs[" + i + "]:\n" + confs[i].toString());
     }
-    return confs;
   }
-
+  
+  public static void main(String[] args) throws Exception {
+    LocalCluster clu = new LocalCluster();
+    
+    RaftNode[] nodes = clu.createCluster(8, 12888);
+    
+    Thread.sleep(10000);
+    for(RaftNode node: nodes) {
+      System.out.println(node.getName() + ":" + node.getState() + ":" + node.getCurrentTerm());
+      if(node.isLeader()) {
+        System.out.println(node.getServerInfo() + " is leader, killing it");
+        //node.kill();
+      }
+    }
+  }
 }

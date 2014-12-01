@@ -67,6 +67,7 @@ import com.google.protobuf.Descriptors.MethodDescriptor;
 public class RpcClient {
   static final Log LOG = LogFactory.getLog(RpcClient.class);
   private final static int DEFAULT_RPC_TIMEOUT = 2000;
+  private final static int DEFAULT_RPC_RETRIES = 3;
   private Configuration conf = null;
   private static final int DEFAULT_SOCKET_READ_WORKS = 1;
   private static BlockingService service = null;
@@ -79,11 +80,13 @@ public class RpcClient {
   private InetSocketAddress serverIsa = null;
   private volatile boolean initialized = false;
   private int rpcTimeout;
+  private int rpcRetries;
   
   
   public RpcClient(Configuration conf, String serverHost, int serverPort) {
     this.conf = conf;
     rpcTimeout = conf.getInt("rpc.call.timeout", DEFAULT_RPC_TIMEOUT);
+    rpcRetries = conf.getInt("rpc.call.retries", DEFAULT_RPC_RETRIES);
     this.serverIsa = new InetSocketAddress(serverHost, serverPort);
   }
   
@@ -119,6 +122,18 @@ public class RpcClient {
     }
     initialized = true;
     return initialized;
+  }
+  
+  public void close() {
+    sendQueue.stop();
+    socketExecutor.shutdownNow();
+    if(socketChannel.isOpen()) {
+      try {
+        socketChannel.close();
+      } catch(IOException e) {
+        LOG.error("closing failed", e);
+      }
+    }
   }
   
   public BlockingInterface getStub() {
@@ -241,7 +256,7 @@ public class RpcClient {
         RpcCall call = new RpcCall(callId, header, request, md);
         long tm = System.currentTimeMillis();
         this.sendQueue.put(call);
-        response = this.responseMap.take(callId, rpcTimeout).getMessage();
+        response = this.responseMap.take(callId, rpcTimeout, rpcRetries).getMessage();
         if(response != null) {
           LOG.debug("response taken: " + callId);
           LOG.debug(String.format("RPC[%d] round trip takes %d ms", header.getId(), (System.currentTimeMillis() - tm)));
@@ -283,8 +298,8 @@ public class RpcClient {
           }
           LOG.debug("put response, call id: " + call.getCallId() + " result map size: " + results.size());
         } catch (InterruptedException | ExecutionException |IOException e) {
-          LOG.error("exception", e);
-          e.printStackTrace(System.out);
+          LOG.error("exception catched, exiting", e);
+          //e.printStackTrace(System.out);
           break;
         } catch(ReadPendingException e) {
           LOG.error("retry", e);

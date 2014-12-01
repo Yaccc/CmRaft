@@ -9,11 +9,11 @@ public class LogEntry {
   private byte[] key;
   private byte[] value;
   
-  public LogEntry(long index, long term, String key, String value) {
+  public LogEntry(long index, long term, byte[] key, byte[] value) {
     this.index = index;
     this.term = term;
-    this.key = key.getBytes();
-    this.value = value.getBytes();
+    this.key = key;
+    this.value = value;
   }
   
   /**

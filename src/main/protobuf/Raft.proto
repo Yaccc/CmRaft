@@ -1,7 +1,7 @@
 option java_package = "com.chicm.cmraft.protobuf.generated";
 option java_outer_classname = "RaftProtos";
 option java_generic_services = true;
-option java_generate_equals_and_hash = true;
+//option java_generate_equals_and_hash = true;
 option optimize_for = SPEED;
 
 message ServerId {
@@ -19,7 +19,6 @@ message ResponseHeader {
   required uint32 id = 1;
   required string response_name =2;
 }
-
 
 message CollectVoteRequest {
   required ServerId candidateId = 1;
@@ -62,6 +61,53 @@ message AppendEntriesResponse {
   optional bool success = 2;
 }
 
+message LookupLeaderRequest {
+}
+
+message LookupLeaderResponse {
+  optional ServerId leader = 1;
+}
+
+message SetRequest {
+  optional bytes key = 1;
+  optional bytes value =2;
+}
+
+message SetResponse {
+  optional bool success = 1;
+}
+
+message GetRequest {
+  optional bytes key = 1;
+}
+
+message GetResponse {
+  optional bytes value = 1;
+  optional bool success = 2;
+}
+
+message KeyValue {
+  optional bytes key = 1;
+  optional bytes value = 2;
+}
+
+message ListRequest {
+  optional bytes pattern = 1;
+}
+
+message ListResponse {
+  optional bool success = 1;
+  repeated KeyValue results = 2;
+}
+
+message DeleteRequest {
+  optional bytes key = 1;
+}
+ 
+message DeleteResponse {
+  optional bool success = 1;
+}
+
 service RaftService {
   rpc collectVote(CollectVoteRequest)
     returns(CollectVoteResponse);
@@ -71,4 +117,19 @@ service RaftService {
   
   rpc testRpc(TestRpcRequest)
     returns(TestRpcResponse);
+    
+  rpc lookupLeader(LookupLeaderRequest)
+    returns(LookupLeaderResponse);
+    
+  rpc get(GetRequest)
+    returns(GetResponse);
+    
+  rpc set(SetRequest)
+    returns(SetResponse);
+    
+  rpc delete(DeleteRequest)
+    returns(DeleteResponse);
+    
+  rpc list(ListRequest)
+    returns(ListResponse);
 }

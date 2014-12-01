@@ -62,10 +62,10 @@ public class BlockingHashMap <K,V> {
   }
   
   public V take(K key) {
-    return take(key, 0);
+    return take(key, 0, 0);
   }
   
-  public V take(K key, int timeout) {
+  public V take(K key, int timeout, int retries) {
     V ret = null;
     KeyLock lock = locks.get(key);
     if(lock == null) {
@@ -79,7 +79,7 @@ public class BlockingHashMap <K,V> {
         remove(key);
         return ret;
       }
-      
+      int retried = 0;
       while(ret == null) {
         if(timeout==0) {
           lock.await();
@@ -89,6 +89,10 @@ public class BlockingHashMap <K,V> {
         ret = map.get(key);
         if(ret == null) {
           LOG.error("RPC TIMEOUT! KEY=" + key);
+          retried++;
+          if(retried >= retries) {
+            return null;
+          }
         }
       }
       LOG.debug("wait done: " + key + ": " + ret);

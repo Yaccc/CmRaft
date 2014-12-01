@@ -20,16 +20,30 @@
 
 package com.chicm.cmraft.core;
 
+import java.util.Collection;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.log.LogEntry;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse;
 import com.google.protobuf.BlockingService;
@@ -134,8 +148,62 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     builder.setTerm(getRaftNode().getCurrentTerm());
     builder.setFromHost(sbuilder.build());
     
+    return builder.build();
+  }
+
+  @Override
+  public LookupLeaderResponse lookupLeader(RpcController controller, LookupLeaderRequest request)
+      throws ServiceException {
+    ServerId leader = node.getCurrentLeader().toServerId();
+    LookupLeaderResponse.Builder builder = LookupLeaderResponse.newBuilder();
+    if(leader != null) {
+      builder.setLeader(leader);
+      LOG.info(getRaftNode().getName() + ": lookupLeader responded: [" + leader.getHostName() 
+        + ":" + leader.getPort() + "]");
+    } else {
+      LOG.info(getRaftNode().getName() + ": lookupLeader responded: null");
+    }
     
+    return builder.build();
+  }
+
+  @Override
+  public GetResponse get(RpcController controller, GetRequest request) throws ServiceException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public SetResponse set(RpcController controller, SetRequest request) throws ServiceException {
+    LOG.info(node.getName() + ": set request responded");
+    SetResponse.Builder builder = SetResponse.newBuilder();
+    builder.setSuccess(true);
+    node.getLogManager().set(request.getKey().toByteArray(), request.getValue().toByteArray());
     
+    return builder.build();
+  }
+
+  @Override
+  public DeleteResponse delete(RpcController controller, DeleteRequest request)
+      throws ServiceException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public ListResponse list(RpcController controller, ListRequest request) throws ServiceException {
+    LOG.info(node.getName() + ": list request responded");
+    ListResponse.Builder builder = ListResponse.newBuilder();
+    Collection<LogEntry> col = node.getLogManager().list(request.getPattern().toByteArray());
+    //int i=0;
+    for(LogEntry entry: col) {
+      KeyValue.Builder kvbuilder = KeyValue.newBuilder();
+      kvbuilder.setKey(ByteString.copyFrom(entry.getKey()));
+      kvbuilder.setValue(ByteString.copyFrom(entry.getValue()));
+      builder.addResults(kvbuilder.build());
+      //builder.
+    }
+    builder.setSuccess(true);
     return builder.build();
   }
 }
