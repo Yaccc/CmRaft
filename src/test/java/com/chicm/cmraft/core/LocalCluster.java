@@ -17,7 +17,7 @@ public class LocalCluster {
   }
   
   public static void main(String[] args) throws Exception {
-    LocalCluster clu = new LocalCluster(5, 12888);
+    LocalCluster clu = new LocalCluster(8, 12888);
     
     RaftNode[] nodes = clu.createCluster();
     
@@ -29,6 +29,7 @@ public class LocalCluster {
         node.kill();
       }
     }
+    /*
     while(true) {
       Thread.sleep(5000);
       System.out.println("**************************************");
@@ -39,7 +40,7 @@ public class LocalCluster {
           node.kill();
         }
       }
-    }
+    }*/
   }
   
   public RaftNode[] createCluster() {

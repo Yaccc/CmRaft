@@ -41,7 +41,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   static final Log LOG = LogFactory.getLog(RaftRpcService.class);
   
   private RaftNode node = null;
-  private RaftEventListener listener = null;
+  //private RaftTimeoutListener listener = null;
   
   // While created from RpcClient, node and listener will be null
   public static RaftRpcService create() {
@@ -54,9 +54,10 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   
   private RaftRpcService(RaftNode node) {
     this.node = node;
+    /*
     if(node != null) {
       this.listener = node.getEventListener();
-    }
+    }*/
   }
   
   public RaftNode getRaftNode() {
@@ -87,9 +88,9 @@ public class RaftRpcService implements RaftService.BlockingInterface{
       return null;
     }
     
-    listener.discoverLeader(ServerInfo.parseFromServerId(request.getLeaderId()), request.getTerm());
+    getRaftNode().discoverLeader(ServerInfo.parseFromServerId(request.getLeaderId()), request.getTerm());
     if(request.getTerm() > node.getCurrentTerm()) {
-      listener.discoverHigherTerm(ServerInfo.parseFromServerId(request.getLeaderId()), request.getTerm());
+      getRaftNode().discoverHigherTerm(ServerInfo.parseFromServerId(request.getLeaderId()), request.getTerm());
     }
     
     if(node.getServerInfo().getPort() == request.getLeaderId().getPort()) {
@@ -114,7 +115,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     LOG.debug(getRaftNode().getName() + ": received vote request from: " + "{" + request + "}" );
     
     if(request.getTerm() > node.getCurrentTerm()) {
-      listener.discoverHigherTerm(ServerInfo.parseFromServerId(request.getCandidateId()), request.getTerm());
+      getRaftNode().discoverHigherTerm(ServerInfo.parseFromServerId(request.getCandidateId()), request.getTerm());
     }
     
     ServerId.Builder sbuilder = ServerId.newBuilder();

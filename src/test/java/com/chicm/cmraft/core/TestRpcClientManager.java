@@ -22,7 +22,7 @@ public class TestRpcClientManager {
     conf.set("raft.server.remote.1", "chicm2:2222");
     conf.set("raft.server.remote.2", "chicm3:3333");
     
-    mgr = new RpcClientManager(conf, null, null);
+    mgr = new RpcClientManager(conf, null);
   }
   
   @Test

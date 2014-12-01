@@ -97,7 +97,7 @@ public class StateMachine {
   
   private void notifyIfStateChange(State oldState, State newState) {
     if(oldState != state) {
-      LOG.info(String.format("State change: %s=>%s", oldState, newState));
+      LOG.debug(String.format("State change: %s=>%s", oldState, newState));
       if(listener != null) {
         listener.stateChange(oldState, state);
       }
@@ -105,7 +105,6 @@ public class StateMachine {
   }
   
   public State electionTimeout() {
-    LOG.info("State: " + getState() + " : electionTimeout");
     State oldState = getState();
     if(accepting(StateEventType.ELECTION_TIMEOUT)) {
         state = transitionMap.get(state).get(StateEventType.ELECTION_TIMEOUT);
@@ -149,7 +148,6 @@ public class StateMachine {
     
     followerMap.put(StateEventType.ELECTION_TIMEOUT, State.CANDIDATE);
     
-    //candidateMap.put(StateEventType.ELECTION_TIMEOUT, State.CANDIDATE);
     candidateMap.put(StateEventType.VOTE_RECEIVED_MAJORITY, State.LEADER);
     candidateMap.put(StateEventType.DISCOVERD_LEADER, State.FOLLOWER);
     candidateMap.put(StateEventType.DISCOVERD_HIGHER_TERM, State.FOLLOWER);

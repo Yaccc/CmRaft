@@ -1,4 +1,4 @@
-/*
+/**
 * Copyright 2014 The Apache Software Foundation
 *
 * Licensed to the Apache Software Foundation (ASF) under one
@@ -23,21 +23,20 @@ package com.chicm.cmraft.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class NodeTimeoutThread implements Runnable {
-  static final Log LOG = LogFactory.getLog(NodeTimeoutThread.class);
-  private RaftEventListener listener = null;
-  private int period = 0;
-  private long starttime = 0;
+public class TimeoutWorker implements Runnable {
+  static final Log LOG = LogFactory.getLog(TimeoutWorker.class);
+  private RaftTimeoutListener listener = null;
+  private int timeout = 0;
   private final Object sleepLock = new Object();
   private boolean reset = false;
   private volatile boolean isStopped = false;
   private Thread thread = null;
   
-  public NodeTimeoutThread() {
+  public TimeoutWorker() {
   }
   
-  public void start(String name, int timeout, RaftEventListener listener) {
-    this.period = timeout;
+  public void start(String name, int timeout, RaftTimeoutListener listener) {
+    this.timeout = timeout;
     this.listener = listener;
     
     //Thread object can not be reused, need to create new object every time
@@ -54,72 +53,7 @@ public class NodeTimeoutThread implements Runnable {
       sleepLock.notifyAll();
     }   
   }
-
-  private void sleep() {
-    LOG.debug("entering sleep");
-    try {
-      while(!isStopped()) {
-        reset = false;
-        synchronized (sleepLock) {
-          LOG.debug("sleep:" + (System.currentTimeMillis() - starttime));
-          sleepLock.wait(this.period);
-          LOG.debug("sleep done:"  + (System.currentTimeMillis() -starttime) );
-        }
-        if(reset)
-          continue;
-        break;
-      }
-    } catch(InterruptedException iex) {
-      LOG.debug("interrupted");
-    }
-  }
-
-  public final int getPeriod() {
-    return period;
-  }
   
-  @Override
-  public void run() {
-    LOG.info(thread.getName() + " started, timeout=" + this.period);
-    try {
-      init();
-      while (!isStopped()) {
-        sleep();
-        if(isStopped())
-          break;
-        try {
-           doTimeOut();
-        } catch (Exception e) {
-          if (isStopped()) {
-            break;
-          }
-        }        
-      }
-      //LOG.info(Thread.currentThread().getName() + " stopped");
-    } catch (Throwable t) {
-    } finally {
-      LOG.info(thread.getName() + " STOPPED");
-      cleanup();
-    }
-  }
-  protected void cleanup () {
-    LOG.info(thread.getName() + " CLEANUP");
-  }
-  protected boolean init() {
-    LOG.debug("init");
-    starttime = System.currentTimeMillis();
-    return true;
-  }
-  protected void doTimeOut() {
-    LOG.info(thread.getName() + " TIMEOUT");
-    if(listener != null) {
-      listener.timeout();
-      LOG.info(thread.getName() + " listener timeout is called");
-    } else {
-      LOG.info(thread.getName() + " listener is null");
-    }
-  }
-
   public boolean isStopped() {
     return isStopped;
   }
@@ -134,24 +68,57 @@ public class NodeTimeoutThread implements Runnable {
       LOG.error("exception", e);
     }
   }
-  
-  public static void main(String[] args) throws Exception {
-    NodeTimeoutThread p = new NodeTimeoutThread();
-    p.start("test", 5000, null);
-    Thread.sleep(6000);
-    
-    for(int i = 0; i<7 ; i++) {
-      
-      p.reset();
-      Thread.sleep(3000);
-      if(i == 5) {
-        p.stop();
+
+  private void sleep() {
+    LOG.debug("entering sleep");
+    try {
+      while(!isStopped()) {
+        reset = false;
+        synchronized (sleepLock) {
+          sleepLock.wait(this.timeout);
+        }
+        if(reset)
+          continue;
         break;
       }
+    } catch(InterruptedException iex) {
+      LOG.debug("interrupted");
     }
-    //p.join();
-    
-    System.exit(0);
-    
   }
+
+  @Override
+  public void run() {
+    LOG.info(thread.getName() + " started, timeout=" + this.timeout);
+    try {
+      while (!isStopped()) {
+        sleep();
+        if(isStopped())
+          break;
+        try {
+           doTimeOut();
+        } catch (Exception e) {
+          if (isStopped()) {
+            break;
+          }
+        }        
+      }
+    } catch (Throwable t) {
+      LOG.error("TimeoutWorker exception", t);
+    } finally {
+      LOG.info(thread.getName() + " STOPPED");
+    }
+  }
+
+  private void doTimeOut() {
+    LOG.info(thread.getName() + " TIMEOUT");
+    if(listener != null) {
+      listener.timeout();
+      LOG.info(thread.getName() + " listener timeout is called");
+    } else {
+      LOG.info(thread.getName() + " listener is null");
+    }
+  }
+
+
+ 
 }

@@ -121,7 +121,7 @@ public class ServerInfo {
       return true;
     }
     if(obj == null) {
-      LOG.error("equals (null)");
+      LOG.debug("equals (null)");
       return false;
     }
     if (!(obj instanceof ServerInfo)) {

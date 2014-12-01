@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,9 +15,7 @@ import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.log.LogEntry;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.rpc.RpcClient;
 import com.google.protobuf.ServiceException;
 
@@ -24,13 +25,11 @@ public class RpcClientManager {
   private Map<ServerInfo, RpcClient> rpcClients;
   private ServerInfo thisServer;
   private RaftNode raftNode;
-  private RaftEventListener eventListener;
   
-  public RpcClientManager(Configuration conf, RaftNode node, RaftEventListener listener) {
+  public RpcClientManager(Configuration conf, RaftNode node) {
     this.conf = conf;
     this.raftNode = node;
-    this.eventListener = listener;
-    initServerList(conf);
+    initServerList(this.conf);
   }
   
   public ServerInfo getThisServer() {
@@ -73,75 +72,124 @@ public class RpcClientManager {
     
   }
   
-  public int appendEntries(long term, ServerInfo leaderId, long leaderCommit,
+  public void appendEntries(long term, ServerInfo leaderId, long leaderCommit,
       long prevLogIndex, long prevLogTerm, LogEntry[] entries) {
-    int nSuccess = 0;
+    int nServers = getOtherServers().size();
+    ExecutorService executor = Executors.newFixedThreadPool(nServers,
+      new ThreadFactory() {
+        @Override
+        public Thread newThread(Runnable r) {
+          Thread t = new Thread(r);
+          t.setName(getRaftNode().getName() + "-AsyncRpcCaller" + (byte)System.currentTimeMillis());
+          return t;
+        }
+    });
     
     for(ServerInfo server: getOtherServers()) {
       RpcClient client = rpcClients.get(server);
-      try {
-        try {
-          LOG.info(getRaftNode().getName() + ": SENDING BEATHEART TO:" + client.getChannel().getRemoteAddress());
-        } catch(Exception e) {LOG.error("exception", e);}
-        
-        AppendEntriesResponse response = client.appendEntries(term, leaderId, leaderCommit, prevLogIndex, prevLogTerm, entries);
-        if(response != null && response.getSuccess()) {
-          nSuccess++;
-        }
-      } catch(ServiceException e) {
-        LOG.error("RPC: beatHeart failed:" + server.getHost() + ":" + server.getPort(), e);
-      }
+      LOG.info(getRaftNode().getName() + ": SENDING appendEntries Request TO: " + server);
+      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), client, thisServer, term,
+        leaderCommit, prevLogIndex, prevLogTerm, entries));
+      t.setDaemon(true);
+      executor.execute(t);
     }
-    
-    return nSuccess;
   }
   
-  public int collectVote(long term) {
-    int voted = 0;
-    
-    try {
-      CollectVoteResponse res = collectVoteFromMyself(thisServer, term, 0, 0);
-      if(res != null && res.getGranted()) {
-        voted++;
-        //getRaftNode().addEvent(new StateEvent(StateEventType.VOTE_RECEIVED_ONE, thisServer, res.getTerm() ));
-        eventListener.voteReceived(thisServer, res.getTerm());
-      }
-    } catch(Exception exp) {
-      LOG.error("collect vote from myself", exp);
-    }
+  public void collectVote(long term, long lastLogIndex, long lastLogTerm) {
+    int nServers = getOtherServers().size();
+    ExecutorService executor = Executors.newFixedThreadPool(nServers,
+      new ThreadFactory() {
+        @Override
+        public Thread newThread(Runnable r) {
+          Thread t = new Thread(r);
+          t.setName(getRaftNode().getName() + "-AsyncRpcCaller" + (byte)System.currentTimeMillis());
+          return t;
+        }
+    });
     
     for(ServerInfo server: getOtherServers()) {
       RpcClient client = rpcClients.get(server);
+      LOG.info(getRaftNode().getName() + ": SENDING COLLECTVOTE Request TO: " + server);
+      Thread t = new Thread(new AsynchronousVoteWorker(getRaftNode(), client, thisServer, term,
+        lastLogIndex, lastLogTerm));
+      t.setDaemon(true);
+      executor.execute(t);
+    }
+  }
+  
+  class AsynchronousVoteWorker implements Runnable {
+    private ServerInfo candidate;
+    private long term;
+    private long lastLogIndex;
+    private long lastLogTerm;
+    private RaftNode node;
+    private RpcClient client;
+    
+    public AsynchronousVoteWorker(RaftNode node, RpcClient client, ServerInfo thisServer, long term,
+        long lastLogIndex, long lastLogTerm) {
+      this.client = client;
+      this.node = node;
+      this.candidate = thisServer;
+      this.term = term;
+      this.lastLogIndex = lastLogIndex;
+      this.lastLogTerm = lastLogTerm;
+    }
+    
+    @Override
+    public void run () {
+      CollectVoteResponse response = null;
       try {
-        CollectVoteResponse response = client.collectVote(thisServer, term, 0, 0);
+        response = client.collectVote(candidate, term, lastLogIndex, lastLogTerm);
         if(response != null && response.getGranted()) {
-          voted++;
-          //getRaftNode().addEvent(new StateEvent(StateEventType.VOTE_RECEIVED_ONE, server, response.getTerm() ));
-          eventListener.voteReceived(server, response.getTerm());
+          node.voteReceived(ServerInfo.parseFromServerId(response.getFromHost()), response.getTerm());
+        } else if( response == null) {
+          LOG.error("RPC failed, response == null");
+        } else if(response.getGranted() == false) {
+          LOG.info(node.getName() + "VOTE REJECTED BY " + response.getFromHost().getHostName()
+            + ":" + response.getFromHost().getPort());
         }
       } catch(ServiceException e) {
-        LOG.error("RPC: beatHeart failed:" + server.getHost() + ":" + server.getPort(), e);
-        return voted;
+        try {
+        LOG.error("RPC: collectVote failed: from " + getRaftNode().getName() + 
+          ", to: " + client.getChannel().getRemoteAddress(), e);
+        } catch(Exception e2) {}
       }
     }
-    return voted;
   }
-  
-  private CollectVoteResponse collectVoteFromMyself(ServerInfo candidate, long term, long lastLogIndex,
-      long lastLogTerm) throws ServiceException  {
-    ServerId.Builder sbuilder = ServerId.newBuilder();
-    sbuilder.setHostName(candidate.getHost());
-    sbuilder.setPort(candidate.getPort());
-    sbuilder.setStartCode(candidate.getStartCode());
-    
-    CollectVoteRequest.Builder builder = CollectVoteRequest.newBuilder();
-    builder.setCandidateId(sbuilder.build());
-    builder.setTerm(term);
-    builder.setLastLogIndex(lastLogIndex);
-    builder.setLastLogTerm(lastLogTerm);
-    
-    return (CollectVoteResponse) getRaftNode().getRaftService().collectVote(null, builder.build());
 
+  class AsynchronousAppendEntriesWorker implements Runnable {
+    private ServerInfo leader;
+    private long term;
+    private long leaderCommit;
+    private long prevLogIndex;
+    private long prevLogTerm;
+    private LogEntry[] entries;
+    private RaftNode node;
+    private RpcClient client;
+    
+    public AsynchronousAppendEntriesWorker(RaftNode node, RpcClient client, ServerInfo thisServer, long term,
+        long leaderCommit, long prevLogIndex, long prevLogTerm, LogEntry[] entries) {
+      this.client = client;
+      this.node = node;
+      this.leader = thisServer;
+      this.term = term;
+      this.leaderCommit = leaderCommit;
+      this.prevLogIndex = prevLogIndex;
+      this.prevLogTerm = prevLogTerm;
+      this.entries = entries;
+    }
+    
+    @Override
+    public void run () {
+      try {
+        AppendEntriesResponse response = client.appendEntries(term, leader, leaderCommit, prevLogIndex, prevLogTerm, entries);
+        //todo: set commit status for entries
+      } catch(ServiceException e) {
+        try {
+        LOG.error("RPC: collectVote failed: from " + getRaftNode().getName() + 
+          ", to: " + client.getChannel().getRemoteAddress(), e);
+        } catch(Exception e2) {}
+      }
+    }
   }
-  
 }
