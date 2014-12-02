@@ -23,6 +23,7 @@ package com.chicm.cmraft.rpc;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.ReadPendingException;
 import java.nio.channels.WritePendingException;
 import java.util.concurrent.ExecutionException;
@@ -77,17 +78,18 @@ public class RpcClient {
   private AsynchronousSocketChannel socketChannel = null;
   private BlockingHashMap<Integer, RpcCall> responsesMap = new BlockingHashMap<>();
   private ExecutorService socketExecutor = null;
-  private InetSocketAddress serverIsa = null;
   private volatile boolean initialized = false;
   private int rpcTimeout;
   private int rpcRetries;
+  private ServerInfo remoteServer = null;
+  private volatile boolean stop = false;
   
   
   public RpcClient(Configuration conf, String serverHost, int serverPort) {
     this.conf = conf;
     rpcTimeout = conf.getInt("rpc.call.timeout", DEFAULT_RPC_TIMEOUT);
     rpcRetries = conf.getInt("rpc.call.retries", DEFAULT_RPC_RETRIES);
-    this.serverIsa = new InetSocketAddress(serverHost, serverPort);
+    this.remoteServer = new ServerInfo(serverHost, serverPort);
   }
   
   private boolean isInitialized() {
@@ -99,6 +101,7 @@ public class RpcClient {
       return true;
     
     service = (RaftRpcService.create()).getService();
+    InetSocketAddress serverIsa = new InetSocketAddress(getRemoteServer().getHost(), getRemoteServer().getPort());
     socketChannel = openConnection(serverIsa);
     sendQueue = new RpcSendQueue(socketChannel); 
     
@@ -124,7 +127,12 @@ public class RpcClient {
     return initialized;
   }
   
+  public ServerInfo getRemoteServer() {
+    return remoteServer;
+  }
+  
   public void close() {
+    stop = true;
     sendQueue.stop();
     socketExecutor.shutdownNow();
     if(socketChannel.isOpen()) {
@@ -285,34 +293,57 @@ public class RpcClient {
         try {
           RpcCall call = PacketUtils.parseRpcResponseFromChannel(channel, service);
           results.put(call.getCallId(), call);
-          
-          int id = call.getCallId();
-          if(id % 1000 == 0) {
-            long curtm = System.currentTimeMillis();
-            long elipsetm = (curtm - starttime) /1000;
-            if(elipsetm == 0)
-              elipsetm =1;
-            long tps = id / elipsetm;
-            
-            LOG.info("response id: " + id + " time: " + elipsetm + " TPS: " + tps);
-          }
           LOG.debug("put response, call id: " + call.getCallId() + " result map size: " + results.size());
-        } catch (InterruptedException | ExecutionException |IOException e) {
-          LOG.error("exception catched, exiting", e);
-          //e.printStackTrace(System.out);
+          reportRPCStatistics(starttime, call);          
+        } catch (InterruptedException | ExecutionException e) {
+          if(!stop) {
+            LOG.error("Exception:" + e.getClass().getName() + ", exiting");
+          }
+          break;
+        } catch (ClosedChannelException e) {
+          if(!stop) {
+            LOG.error("ClosedChannelException:" + e.getMessage() + ", exiting");
+          }
+          break;
+        } catch (IOException e) {
+          if(!stop) {
+            LOG.error("IOException:" + e.getMessage());
+            if(e.getCause() != null) {
+              LOG.error("IOException:" + e.getCause().getClass().getName());
+              if(e.getCause() instanceof  ClosedChannelException) {
+                LOG.info("Channel closed, exiting");
+              }
+            }
+          }
           break;
         } catch(ReadPendingException e) {
           LOG.error("retry", e);
           try {
             Thread.sleep(1);
           } catch(Exception e2) {
-            
+          }
+        } finally {
+          if(stop) {
+            LOG.info("Client stopped, exiting");
+            break;
           }
         }
       }
     }
+    
+    private void reportRPCStatistics(long startTime, RpcCall currentCall) {
+      int id = currentCall.getCallId();
+      if(id % 1000 == 0) {
+        long curtm = System.currentTimeMillis();
+        long elipsetm = (curtm - startTime) /1000;
+        if(elipsetm == 0)
+          elipsetm =1;
+        long tps = id / elipsetm;
+        
+        LOG.info("response id: " + id + " time: " + elipsetm + " TPS: " + tps);
+      }
+    }
   }
-  
   /*
    * For testing purpose
    * @param args

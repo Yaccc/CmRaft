@@ -114,22 +114,24 @@ public class RpcServer {
       LOG.info(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
       //startTPSReport();
 
-      for(;;) {
+      while(true) {
         try {
           processRequest(channel);
         } catch(Exception e) {
-          e.printStackTrace(System.out);
+          LOG.info("Exception: " + e.getClass().getName());
+          if(e.getCause() != null) {
+            LOG.info("Caused by: " + e.getCause().getClass().getName() + ":"  + e.getCause().getMessage());
+          }
           try {
             channel.close();
           } catch(Exception e2) {
           }
-          LOG.info("BREAK");
+          LOG.info("Socket connection closed.");
           break;
         } 
         callCounter.incrementAndGet();
         LOG.debug("request processed");
       }
-      LOG.info("BREAK OUT");
     }
     @Override
     public void failed(Throwable throwable, AsynchronousServerSocketChannel attachment) {
@@ -188,30 +190,9 @@ public class RpcServer {
       call.setTimestamp(System.currentTimeMillis());
       requestQueue.put(call);
       
-      //Message response = getService().callBlockingMethod(call.getMd(), null, call.getMessage());
-      //sendResponse(channel, call, response);
-      
     } catch (InterruptedException | ExecutionException e) {
-      e.printStackTrace(System.out);
+      LOG.error("Exception", e);
       throw e;
-    } /*catch(ServiceException e2) {
-      e2.printStackTrace(System.out);
-      LOG.info("EXCEPTION");
-      throw e2;
-    } */
-  }
-  
-  private void sendResponse(AsynchronousSocketChannel channel, RpcCall call, Message response) {
-    ResponseHeader.Builder builder = ResponseHeader.newBuilder();
-    builder.setId(call.getCallId()); 
-    builder.setResponseName(call.getMd().getName());
-    ResponseHeader header = builder.build();
-    
-    try {
-        PacketUtils.writeRpc(channel, header, response);
-        
-    } catch(Exception e) {
-      e.printStackTrace(System.out);
     }
   }
   

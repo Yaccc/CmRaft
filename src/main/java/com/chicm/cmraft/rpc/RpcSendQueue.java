@@ -36,6 +36,7 @@ public class RpcSendQueue {
   private AsynchronousSocketChannel channel;
   private CappedPriorityBlockingQueue<RpcCall> callQueue; 
   private ExecutorService executor;
+  private volatile boolean stop = false;
   
   private static int MAX_SEND_CALL_QUEUE_SIZE = 100*1024;
    
@@ -59,6 +60,7 @@ public class RpcSendQueue {
   }
   
   public void stop() {
+    stop = true;
     executor.shutdownNow();
   }
   
@@ -95,9 +97,12 @@ public class RpcSendQueue {
           }
           
         } catch (InterruptedException e) {
-          LOG.error("InterruptedException catched", e);
+          if(stop) {
+            LOG.info("RpcSendQueue exiting");
+          } else {
+            LOG.error("InterruptedException catched", e);
+          }
           break;
-          //e.printStackTrace(System.out);
         }
       }
     }
