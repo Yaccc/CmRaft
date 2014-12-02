@@ -55,7 +55,7 @@ public class LocalCluster {
   @Test
   public void testCluster() throws Exception {
     org.apache.log4j.LogManager.getRootLogger().setLevel(Level.WARN);
-    RaftNode[] nodes = createCluster(2, 12888);
+    RaftNode[] nodes = createCluster(10, 12888);
     Thread.sleep(10000);
     
     checkNodesState(nodes);

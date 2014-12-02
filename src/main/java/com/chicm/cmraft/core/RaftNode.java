@@ -134,7 +134,7 @@ public class RaftNode {
     this.conf = conf;
     serverInfo = ServerInfo.parseFromString(conf.getString("raft.server.local"));
     raftService = RaftRpcService.create(this);
-    logManager= new LogManager(this);
+    logManager= new LogManager(this, conf);
     fsm = new StateMachine(stateChangeListener);
     rpcServer = new RpcServer(conf, raftService);
     rpcClientManager = new RpcClientManager(conf, this);
@@ -269,7 +269,7 @@ public class RaftNode {
   private void voteMySelf() {
     LOG.info(getName() + ": VOTE MYSELF!**");
     if( voteRequest(getServerInfo(), getCurrentTerm(), 
-      logManager.getCurrentIndex(), logManager.getCurrentTerm())) {
+      logManager.getLastApplied(), logManager.getLastLogTerm())) {
       voteReceived(getServerInfo(), getCurrentTerm());
     } else {
       LOG.error("voteMySelf failed!");
@@ -325,7 +325,7 @@ public class RaftNode {
   
   public void testHearBeat() {
     rpcClientManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
-      logManager.getCurrentIndex(), logManager.getCurrentTerm());
+      logManager.getLastApplied(), logManager.getLastLogTerm());
   }
   
   private class RaftStateChangeListenerImpl implements RaftStateChangeListener {
@@ -335,6 +335,7 @@ public class RaftNode {
       
       //restart timer when state change.
       restartTimer();
+      logManager.stateChange(State oldState, State newState);
       
       switch(newState) {
         case FOLLOWER:
@@ -347,7 +348,7 @@ public class RaftNode {
           setCurrentLeader(getServerInfo());
           //send heartbeat right away after becoming leader, then send out heartbeat every timeout 
           rpcClientManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
-            logManager.getCurrentIndex(), logManager.getCurrentTerm());
+            logManager.getLastApplied(), logManager.getLastLogTerm());
           break;
       }
     }
@@ -372,13 +373,13 @@ public class RaftNode {
       if(fsm.getState() == State.LEADER) {
         //leader send heartbeat to all servers every timeout
         rpcClientManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
-          logManager.getCurrentIndex(), logManager.getCurrentTerm());
+          logManager.getLastApplied(), logManager.getLastLogTerm());
         
       } else if(fsm.getState() == State.CANDIDATE) {
         //every timeout period, candidates start up new election
         increaseTerm();
         voteMySelf();
-        rpcClientManager.collectVote(currentTerm.get(), logManager.getCurrentIndex(), logManager.getCurrentTerm());
+        rpcClientManager.collectVote(currentTerm.get(), logManager.getLastApplied(), logManager.getLastLogTerm());
       } else if( fsm.getState() == State.FOLLOWER ) {
         
       }

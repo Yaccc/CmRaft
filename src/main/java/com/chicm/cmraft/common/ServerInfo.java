@@ -1,5 +1,8 @@
 package com.chicm.cmraft.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -73,6 +76,15 @@ public class ServerInfo {
       return null;
     }
     return new ServerInfo(results[0], port);
+  }
+  
+  public static List<ServerInfo> getRemoteServersFromConfiguration(Configuration conf) {
+    List<ServerInfo> servers = new ArrayList<ServerInfo>();
+    for (String key: conf.getKeys("raft.server.remote")) {
+      ServerInfo server = ServerInfo.parseFromString(conf.getString(key));
+      servers.add(server);
+    }
+    return servers;
   }
   
   public ServerId toServerId() {
