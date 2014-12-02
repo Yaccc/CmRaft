@@ -335,7 +335,7 @@ public class RaftNode {
       
       //restart timer when state change.
       restartTimer();
-      logManager.stateChange(State oldState, State newState);
+      logManager.stateChange(oldState, newState);
       
       switch(newState) {
         case FOLLOWER:

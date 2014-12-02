@@ -30,5 +30,20 @@ public class TestConnectionManager {
     for(byte[] b: r.keySet()) {
       System.out.println(new String(b));
     }
+    
+    for(int i = 0; i < nodes.length; i++) {
+      if(nodes[i].isLeader()) {
+        System.out.println("KILLING leader");
+        nodes[i].kill();
+      }
+    }
+    
+    Thread.sleep(10000);
+    
+    Connection conn2 = ConnectionManager.getConnection(cluster.getConf(0));
+    Result r2 = conn.list("");
+    for(byte[] b: r2.keySet()) {
+      System.out.println(new String(b));
+    }
   }
 }

@@ -8,12 +8,14 @@ public class LogEntry {
   private long term;
   private byte[] key;
   private byte[] value;
+  private LogMutationType logType;
   
-  public LogEntry(long index, long term, byte[] key, byte[] value) {
+  public LogEntry(long index, long term, byte[] key, byte[] value, LogMutationType logType) {
     this.index = index;
     this.term = term;
     this.key = key;
     this.value = value;
+    this.logType = logType;
   }
   
   /**
@@ -64,6 +66,20 @@ public class LogEntry {
    */
   public void setValue(byte[] value) {
     this.value = value;
+  }
+  
+  /**
+   * @return the logType
+   */
+  public LogMutationType getLogType() {
+    return logType;
+  }
+
+  /**
+   * @param logType the logType to set
+   */
+  public void setLogType(LogMutationType logType) {
+    this.logType = logType;
   }
   
   public RaftEntry toRaftEntry() {

@@ -197,7 +197,8 @@ public class RpcClient {
     builder.setPrevLogTerm(prevLogTerm);
     if(entries != null) {
       for(int i = 0; i< entries.length; i++) {
-        builder.setEntries(i, entries[i].toRaftEntry());
+        //builder.setEntries(i, entries[i].toRaftEntry());
+        builder.addEntries(entries[i].toRaftEntry());
       }
     }
     try {

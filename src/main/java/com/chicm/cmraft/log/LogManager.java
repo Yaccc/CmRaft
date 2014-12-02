@@ -1,6 +1,8 @@
 package com.chicm.cmraft.log;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -14,9 +16,12 @@ import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.core.RaftNode;
 import com.chicm.cmraft.core.State;
+import com.chicm.cmraft.util.BlockingHashMap;
 
 public class LogManager {
   static final Log LOG = LogFactory.getLog(LogManager.class);
+  
+  private final static int DEFAULT_COMMIT_TIMEOUT = 5000;
   private Configuration conf;
   private SortedMap<Long, LogEntry> entries = new TreeMap<>();
   private final static long INITIAL_TERM = 0;
@@ -35,16 +40,35 @@ public class LogManager {
    */
   private Map<ServerInfo, FollowerIndexes> followerIndexes = new ConcurrentHashMap<>();
   
+  /** AppendEntries RPC response counter, to convert entry from applied to commit 
+   *  once get more than half success response */
+  private ResponseBag<Long> responseBag = new ResponseBag<Long>();
+  
+  private BlockingHashMap<Long, Boolean> rpcResults = new BlockingHashMap<>();
+  
+  private int nTotalServers = 0;
+  
+  private ServerInfo thisServer;
+  
   public LogManager(RaftNode node, Configuration conf) {
     this.node = node;
     this.conf = conf;
+    thisServer = ServerInfo.parseFromString(conf.getString("raft.server.local"));
+  }
+  
+  public String getServerName() {
+    return thisServer.toString();
   }
   
   private void leaderInit() {
+    LOG.warn(getServerName() + ": LEADER INIT");
+    
     for(ServerInfo remoteServer: ServerInfo.getRemoteServersFromConfiguration(conf)) {
       FollowerIndexes fIndexes = new FollowerIndexes(getLastApplied() +1, 0);
       followerIndexes.put(remoteServer, fIndexes);
     }
+    
+    nTotalServers = followerIndexes.size();
   }
   
   private void cleanupLeaderWorker() {
@@ -52,11 +76,36 @@ public class LogManager {
   }
   
   public void stateChange(State oldState, State newState) {
+    LOG.warn(getServerName() + ": STATE CHANGE");
     if(oldState == State.LEADER && newState != State.LEADER) {
       cleanupLeaderWorker();
     } else if(newState == State.LEADER && oldState != State.LEADER) {
       leaderInit();
     }
+  }
+  
+  public long getFollowerMatchIndex(ServerInfo follower) {
+    return followerIndexes.get(follower).getMatchIndex();
+  }
+  
+  public long getFollowerNextIndex(ServerInfo follower) {
+    return followerIndexes.get(follower).getNextIndex();
+  }
+  
+  public long getLogTerm(long index) {
+    if(entries.get(index) == null)
+      return 0;
+    return entries.get(index).getTerm();
+  }
+  
+  public List<LogEntry> getLogEntries(long startIndex, long endIndex) {
+    if(startIndex < 1 || endIndex > getLastApplied())
+      return null;
+    List<LogEntry> result = new ArrayList<LogEntry>();
+    for(long key = startIndex; key <= endIndex; key++) {
+      result.add(entries.get(key)); 
+    }
+    return result;
   }
   
   /**
@@ -91,15 +140,88 @@ public class LogManager {
   }
   
   // for followers
-  public void appendEntries(long term, ServerInfo leaderId, long leaderCommit,
-      long prevLogIndex, long prevLogTerm, LogEntry[] entries) {
+  public boolean appendEntries(long term, ServerInfo leaderId, long leaderCommit,
+      long prevLogIndex, long prevLogTerm, List<LogEntry> leaderEntries) {
+    LOG.warn(getServerName() + "follower appending entry...");
+    if(leaderEntries == null || leaderEntries.size() < 1)
+      return false;
+    if(prevLogIndex > 0) {
+      if(!this.entries.containsKey(prevLogIndex)) {
+        return false;
+      }
+      if(this.entries.get(prevLogIndex).getTerm() != prevLogTerm) {
+        return false;
+      }
+    }
+    //append entries
+    //need to assure that the entries are sorted before hand.
+    for(LogEntry entry: leaderEntries) {
+      entries.put(entry.getIndex(), entry);
+      if(entry.getIndex() > getLastApplied()) {
+        setLastApplied(entry.getIndex());
+      }
+    } 
     
+    if(leaderCommit > getCommitIndex()) {
+      setCommitIndex(Math.min(getLastApplied(), leaderCommit));
+    }
+    LOG.warn(getServerName() + "follower appending entry... done");
+    return true;
   }
   // for leaders
-  public void set(byte[] key, byte[] value) {
+  public void onAppendEntriesResponse(ServerInfo follower, long followerTerm, boolean success, long followerLastApplied) {
+    LOG.warn(getServerName() + ": onAppendEntriesResponse");
+    updateFollowerMatchIndexes(follower, followerLastApplied);
+    if(!success) {
+      return;
+    }
+    responseBag.add(followerLastApplied, 1);
+    checkAndCommit(followerLastApplied);
+  }
+  
+  private void checkAndCommit(long index) {
+    LOG.warn(getServerName() + ": checkAndCommit");
+    if(index <= getCommitIndex()) {
+      return;
+    }
+    
+    if(responseBag.get(index) > nTotalServers/2) {
+      LOG.warn(getServerName() + ": committed");
+      setCommitIndex(index);
+      rpcResults.put(index, true);
+    }
+  }
+  
+  private void updateFollowerMatchIndexes(ServerInfo follower, long lastApplied) {
+    if(followerIndexes.get(follower) == null) {
+      LOG.error("FOLLOWER INDEXES MAP SHOULD BE INITIALIZED BEFORE HERE.");
+    }
+    
+    if(followerIndexes.get(follower).getMatchIndex() < lastApplied) {
+      followerIndexes.get(follower).setMatchIndex(lastApplied);
+    }
+  }
+  
+  public boolean set(byte[] key, byte[] value) {
+    LOG.warn(getServerName() + ": set request received");
     //lastApplied initialized as 0, and the first time increase it to 1,
     //so the first index is 1
-    LogEntry entry = new LogEntry(lastApplied.incrementAndGet(), node.getCurrentTerm(), key, value);
+    LogEntry entry = new LogEntry(lastApplied.incrementAndGet(), node.getCurrentTerm(), key, value, LogMutationType.SET);
+    entries.put(entry.getIndex(), entry);
+    
+    //making rpc call to followers
+    node.getRpcClientManager().appendEntries(this, getLastApplied());
+    //waiting for results
+    boolean committed = false;
+    committed = rpcResults.take(getLastApplied(), DEFAULT_COMMIT_TIMEOUT, 1);
+    LOG.warn(getServerName() + ": set committed, sending response");
+    return committed;
+  }
+  
+  public void delete(byte[] key) {
+    //lastApplied initialized as 0, and the first time increase it to 1,
+    //so the first index is 1
+    LogEntry entry = new LogEntry(lastApplied.incrementAndGet(), node.getCurrentTerm(), key, null, LogMutationType.DELETE);
     entries.put(entry.getIndex(), entry);
   }
   

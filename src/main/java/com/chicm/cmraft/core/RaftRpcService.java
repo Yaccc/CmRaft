@@ -20,13 +20,16 @@
 
 package com.chicm.cmraft.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.log.LogEntry;
+import com.chicm.cmraft.log.LogMutationType;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
@@ -40,6 +43,7 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest;
@@ -113,14 +117,33 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     }
     
     AppendEntriesResponse.Builder builder = AppendEntriesResponse.newBuilder();
-    if(request.getEntriesCount() == 0) {
+    if(request.getEntriesCount() <= 0) {
       LOG.info(getRaftNode().getName() + ": HEARTBEAT CALLED**!");
       node.resetTimer();
+    } else { // entry number >0
+      node.getLogManager().appendEntries(request.getTerm(), 
+        ServerInfo.parseFromServerId(request.getLeaderId()), 
+        request.getLeaderCommit(), request.getPrevLogIndex(), 
+        request.getPrevLogTerm(), 
+        buildLogEntriesFromRaftEntries(request.getEntriesList(), request.getTerm()));
     }
     builder.setTerm(node.getCurrentTerm());
     builder.setSuccess(request.getTerm() >= node.getCurrentTerm());
     
     return builder.build();
+  }
+  
+  private List<LogEntry> buildLogEntriesFromRaftEntries(List<RaftEntry> raftEntries, long term) {
+    if(raftEntries == null) {
+      return null;
+    }
+    List<LogEntry> result = new ArrayList<LogEntry>();
+    for(RaftEntry r: raftEntries) {
+      LogEntry logEntry = new LogEntry(r.getIndex(), term, r.getKey().toByteArray(), 
+        r.getValue().toByteArray(), LogMutationType.SET); //todo: add type to raft entry
+      result.add(logEntry);
+    }
+    return result;
   }
 
   @Override
@@ -177,8 +200,9 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   public SetResponse set(RpcController controller, SetRequest request) throws ServiceException {
     LOG.info(node.getName() + ": set request responded");
     SetResponse.Builder builder = SetResponse.newBuilder();
-    builder.setSuccess(true);
-    node.getLogManager().set(request.getKey().toByteArray(), request.getValue().toByteArray());
+    
+    boolean success = node.getLogManager().set(request.getKey().toByteArray(), request.getValue().toByteArray());
+    builder.setSuccess(success);
     
     return builder.build();
   }
