@@ -266,9 +266,14 @@ public class RaftNode {
     }
   }
   
-  private boolean voteMySelf() {
+  private void voteMySelf() {
     LOG.info(getName() + ": VOTE MYSELF!**");
-    return voteRequest(getServerInfo(), getCurrentTerm(), logManager.getCurrentIndex(), logManager.getCurrentTerm());
+    if( voteRequest(getServerInfo(), getCurrentTerm(), 
+      logManager.getCurrentIndex(), logManager.getCurrentTerm())) {
+      voteReceived(getServerInfo(), getCurrentTerm());
+    } else {
+      LOG.error("voteMySelf failed!");
+    }
   }
   
   public synchronized boolean voteRequest(ServerInfo candidate, long term, long lastLogIndex, long lastLogTerm) {

@@ -75,6 +75,10 @@ public class RpcClientManager {
   public void appendEntries(long term, ServerInfo leaderId, long leaderCommit,
       long prevLogIndex, long prevLogTerm, LogEntry[] entries) {
     int nServers = getOtherServers().size();
+    if(nServers <= 0) {
+      return;
+    }
+    
     ExecutorService executor = Executors.newFixedThreadPool(nServers,
       new ThreadFactory() {
         @Override
@@ -97,6 +101,9 @@ public class RpcClientManager {
   
   public void collectVote(long term, long lastLogIndex, long lastLogTerm) {
     int nServers = getOtherServers().size();
+    if(nServers <= 0) {
+      return;
+    }
     ExecutorService executor = Executors.newFixedThreadPool(nServers,
       new ThreadFactory() {
         @Override

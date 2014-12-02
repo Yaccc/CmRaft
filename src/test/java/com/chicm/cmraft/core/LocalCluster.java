@@ -1,5 +1,6 @@
 package com.chicm.cmraft.core;
 
+import org.apache.log4j.Level;
 import org.junit.Test;
 
 import com.chicm.cmraft.common.CmRaftConfiguration;
@@ -28,7 +29,10 @@ public class LocalCluster {
     int nLeader = 0;
     int nFollower = 0;
     
+    System.out.println("******************");
     for (int i =0; i < nodeNumber; i++) {
+      System.out.println(nodes[i].getName() + ":" + nodes[i].getState() 
+        + "(" + nodes[i].getCurrentTerm() + ")");
       if(nodes[i].getState() == State.LEADER) {
         nLeader++;
       } else if(nodes[i].getState() == State.FOLLOWER) {
@@ -50,13 +54,14 @@ public class LocalCluster {
   
   @Test
   public void testCluster() throws Exception {
-    RaftNode[] nodes = createCluster(8, 12888);
+    org.apache.log4j.LogManager.getRootLogger().setLevel(Level.WARN);
+    RaftNode[] nodes = createCluster(2, 12888);
     Thread.sleep(10000);
     
     checkNodesState(nodes);
     
     for(RaftNode node: nodes) {
-      System.out.println(node.getName() + ":" + node.getState() + ":" + node.getCurrentTerm());
+      
       if(node.isLeader()) {
         System.out.println(node.getServerInfo() + " is leader, killing it");
         node.kill();
