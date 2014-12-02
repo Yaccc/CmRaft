@@ -17,15 +17,37 @@ public class LocalCluster {
   private int startPort = START_PORT;
   
   private Configuration[] confs;
+  private RaftNode[] nodes;
 
-  public LocalCluster() {
+  private LocalCluster() {
+  }
+  public static LocalCluster create(int n, int startPort) {
+    LocalCluster cluster = new LocalCluster();
+    cluster.createCluster(n, startPort);
+    return cluster;
   }
   
   public Configuration getConf(int index) {
     return confs[index];
   }
   
-  public void checkNodesState(RaftNode[] nodes) {
+  public RaftNode[] getNodes() {
+    return nodes;
+  }
+  
+  private void createCluster(int n, int startPort) {
+    this.nodeNumber = n;
+    this.startPort = startPort;
+    
+    createConfiguration();
+    
+    nodes = new RaftNode[nodeNumber];
+    for(int i = 0; i < nodeNumber; i++) {
+      nodes[i] = new RaftNode(confs[i]);
+    }
+  }
+  
+  public void checkNodesState() {
     int nLeader = 0;
     int nFollower = 0;
     
@@ -52,13 +74,23 @@ public class LocalCluster {
     }
   }
   
+  public void killLeader() {
+    for(RaftNode node: nodes) {
+      //System.out.println(node.getName() + ":" + node.getState() + ":" + node.getCurrentTerm());
+      if(node.isLeader()) {
+        System.out.println(node.getServerInfo() + " is leader, killing it");
+        node.kill();
+      }
+    }
+  }
+  
   @Test
   public void testCluster() throws Exception {
     org.apache.log4j.LogManager.getRootLogger().setLevel(Level.WARN);
-    RaftNode[] nodes = createCluster(10, 12888);
+    RaftNode[] nodes = LocalCluster.create(10, 12888).getNodes();
     Thread.sleep(10000);
     
-    checkNodesState(nodes);
+    checkNodesState();
     
     for(RaftNode node: nodes) {
       
@@ -69,22 +101,9 @@ public class LocalCluster {
     }
     for(int i=0; i < 5; i++) {
       Thread.sleep(8000);
-      checkNodesState(nodes);
+      checkNodesState();
       checkGetCurrentLeader(nodes);
     }
-  }
-  
-  public RaftNode[] createCluster(int n, int startPort) {
-    this.nodeNumber = n;
-    this.startPort = startPort;
-    
-    createConfiguration();
-    
-    RaftNode[] nodes = new RaftNode[nodeNumber];
-    for(int i = 0; i < nodeNumber; i++) {
-      nodes[i] = new RaftNode(confs[i]);
-    }
-    return nodes;
   }
   
   private void createConfiguration() {
@@ -103,9 +122,8 @@ public class LocalCluster {
   }
   
   public static void main(String[] args) throws Exception {
-    LocalCluster clu = new LocalCluster();
     
-    RaftNode[] nodes = clu.createCluster(8, 12888);
+    RaftNode[] nodes = LocalCluster.create(8, 12888).getNodes();
     
     Thread.sleep(10000);
     for(RaftNode node: nodes) {

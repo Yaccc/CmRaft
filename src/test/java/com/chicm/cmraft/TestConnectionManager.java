@@ -16,10 +16,12 @@ public class TestConnectionManager {
   @Test
   public void testGetConnection() throws Exception {
     org.apache.log4j.LogManager.getRootLogger().setLevel(Level.WARN);
-    LocalCluster cluster = new LocalCluster();
-    RaftNode[] nodes = cluster.createCluster(3, 12888);
+    LocalCluster cluster = LocalCluster.create(5, 12888);
+    RaftNode[] nodes = cluster.getNodes(); 
     
     Thread.sleep(10000);
+    
+    cluster.checkNodesState();
     
     Connection conn = ConnectionManager.getConnection(cluster.getConf(0));
     conn.set("key1", "value1");
@@ -31,19 +33,16 @@ public class TestConnectionManager {
       System.out.println(new String(b));
     }
     
-    for(int i = 0; i < nodes.length; i++) {
-      if(nodes[i].isLeader()) {
-        System.out.println("KILLING leader");
-        nodes[i].kill();
-      }
-    }
+    cluster.killLeader();
     
     Thread.sleep(10000);
+    cluster.checkNodesState();
     
     Connection conn2 = ConnectionManager.getConnection(cluster.getConf(0));
     Result r2 = conn.list("");
     for(byte[] b: r2.keySet()) {
       System.out.println(new String(b));
     }
+    cluster.checkNodesState();
   }
 }

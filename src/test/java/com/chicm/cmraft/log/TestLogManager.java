@@ -18,8 +18,7 @@ public class TestLogManager {
   @Test
   public void test() throws Exception {
     org.apache.log4j.LogManager.getRootLogger().setLevel(Level.FATAL);
-    LocalCluster cluster = new LocalCluster();
-    RaftNode[] nodes = cluster.createCluster(3, 12888);
+    RaftNode[] nodes =LocalCluster.create(3, 12888).getNodes();
     
     Thread.sleep(10000);
     for(int i = 0; i < nodes.length; i++) {
