@@ -1,5 +1,5 @@
 /**
-* Copyright 2014 The Apache Software Foundation
+* Copyright 2014 The CmRaft Project
 *
 * Licensed to the Apache Software Foundation (ASF) under one
 * or more contributor license agreements.  See the NOTICE file
@@ -25,7 +25,6 @@ import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.ReadPendingException;
-import java.nio.channels.WritePendingException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -59,9 +58,10 @@ import com.google.protobuf.ServiceException;
 import com.google.protobuf.Descriptors.MethodDescriptor;
 
 /**
- * RpcClient implements the BlockingRpcChannel interface. It translate RPC method calls to 
+ * RpcClient implements the BlockingRpcChannel interface with inner class. It translate RPC method calls to 
  * RPC request packets and send them to RPC server. Then translate RPC response packets from
  * RPC server to returned objects for RPC method calls.
+ * 
  * @author chicm
  *
  */

@@ -1,5 +1,5 @@
 /**
-* Copyright 2014 The Apache Software Foundation
+* Copyright 2014 The CmRaft Project
 *
 * Licensed to the Apache Software Foundation (ASF) under one
 * or more contributor license agreements.  See the NOTICE file
@@ -29,6 +29,18 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+/**
+ * A hash table supports blocking method like a blocking queue, except that
+ * user thread blocks only on specified keys. If a user thread trying to get
+ * a value with specified key which does not exist in the hash table, user thread
+ * is blocked until the key is put into the table. 
+ * 
+ * @author chicm
+ *
+ * @param <K>
+ * @param <V>
+ */
 
 public class BlockingHashMap <K,V> {
   static final Log LOG = LogFactory.getLog(BlockingHashMap.class);
@@ -65,6 +77,15 @@ public class BlockingHashMap <K,V> {
     return take(key, 0, 0);
   }
   
+  /**
+   * Take and remove a value from the hash table, if specified key not in
+   * the hash table, it blocks until specified timeout and retries condition 
+   * meet. 
+   * @param key : key of the value
+   * @param timeout: timeout in milliseconds
+   * @param retries: total times of retries
+   * @return null if it does not get the value at specified timeout and retries
+   */
   public V take(K key, int timeout, int retries) {
     V ret = null;
     KeyLock lock = locks.get(key);

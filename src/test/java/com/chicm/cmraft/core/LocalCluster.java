@@ -1,7 +1,24 @@
-package com.chicm.cmraft.core;
+/**
+* Copyright 2014 The CmRaft Project
+*
+* Licensed to the Apache Software Foundation (ASF) under one
+* or more contributor license agreements.  See the NOTICE file
+* distributed with this work for additional information
+* regarding copyright ownership.  The ASF licenses this file
+* to you under the Apache License, Version 2.0 (the
+* "License"); you may not use this file except in compliance
+* with the License.  You may obtain a copy of the License at:
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+* WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+* License for the specific language governing permissions and limitations
+* under the License.
+*/
 
-import org.apache.log4j.Level;
-import org.junit.Test;
+package com.chicm.cmraft.core;
 
 import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
@@ -19,8 +36,9 @@ public class LocalCluster {
   private Configuration[] confs;
   private RaftNode[] nodes;
 
-  private LocalCluster() {
+  public LocalCluster() {
   }
+  
   public static LocalCluster create(int n, int startPort) {
     LocalCluster cluster = new LocalCluster();
     cluster.createCluster(n, startPort);
@@ -65,7 +83,7 @@ public class LocalCluster {
     assertTrue(nFollower == (nodeNumber -1));
   }
   
-  public void checkGetCurrentLeader(RaftNode[] nodes) {
+  public void checkGetCurrentLeader() {
 
     for (int i =0; i < nodeNumber; i++) {
       if(i != 0) {
@@ -84,28 +102,6 @@ public class LocalCluster {
     }
   }
   
-  @Test
-  public void testCluster() throws Exception {
-    org.apache.log4j.LogManager.getRootLogger().setLevel(Level.WARN);
-    RaftNode[] nodes = LocalCluster.create(10, 12888).getNodes();
-    Thread.sleep(10000);
-    
-    checkNodesState();
-    
-    for(RaftNode node: nodes) {
-      
-      if(node.isLeader()) {
-        System.out.println(node.getServerInfo() + " is leader, killing it");
-        node.kill();
-      }
-    }
-    for(int i=0; i < 5; i++) {
-      Thread.sleep(8000);
-      checkNodesState();
-      checkGetCurrentLeader(nodes);
-    }
-  }
-  
   private void createConfiguration() {
     confs = new Configuration[nodeNumber];
     for(int i = 0; i < nodeNumber; i++) {
@@ -120,18 +116,5 @@ public class LocalCluster {
       System.out.println("confs[" + i + "]:\n" + confs[i].toString());
     }
   }
-  
-  public static void main(String[] args) throws Exception {
-    
-    RaftNode[] nodes = LocalCluster.create(8, 12888).getNodes();
-    
-    Thread.sleep(10000);
-    for(RaftNode node: nodes) {
-      System.out.println(node.getName() + ":" + node.getState() + ":" + node.getCurrentTerm());
-      if(node.isLeader()) {
-        System.out.println(node.getServerInfo() + " is leader, killing it");
-        //node.kill();
-      }
-    }
-  }
+
 }

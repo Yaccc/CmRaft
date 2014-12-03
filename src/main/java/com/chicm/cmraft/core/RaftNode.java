@@ -1,5 +1,5 @@
 /**
-* Copyright 2014 The Apache Software Foundation
+* Copyright 2014 The CmRaft Project
 *
 * Licensed to the Apache Software Foundation (ASF) under one
 * or more contributor license agreements.  See the NOTICE file
@@ -20,11 +20,6 @@
 
 package com.chicm.cmraft.core;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -38,7 +33,12 @@ import com.chicm.cmraft.log.LogManager;
 import com.chicm.cmraft.rpc.RpcServer;
 
 /**
- * This class represents a Raft node in a cluster.
+ * This class represents a Raft node in a cluster. This class
+ * maintains a state machine, and implements the leader election
+ * process, once a node is elected as leader, it handles user 
+ * requests and AppendEntries RPCs, which is implemented in LogManager
+ * class.
+ *  
  * Rule of Raft servers:
  * All Servers:
  * If commitIndex > lastApplied: increment lastApplied, apply
@@ -79,33 +79,7 @@ import com.chicm.cmraft.rpc.RpcServer;
  * of matchIndex[i] >= N, and log[N].term == currentTerm:
  * set commitIndex = N 
  * 
- * Persistent state on all servers:
- * (Updated on stable storage before responding to RPCs)
- * currentTerm latest term server has seen (initialized to 0
- * on first boot, increases monotonically)
- * votedFor candidateId that received vote in current
- * term (or null if none)
- * log[] log entries; each entry contains command
- * for state machine, and term when entry
- * was received by leader (first index is 1)
- * 
- * Volatile state on all servers:
- * commitIndex index of highest log entry known to be
- * committed (initialized to 0, increases
- * monotonically)
- * lastApplied index of highest log entry applied to state
- * machine (initialized to 0, increases
- * monotonically)
- * 
- * Volatile state on leaders:
- * (Reinitialized after election)
- * nextIndex[] for each server, index of the next log entry
- * to send to that server (initialized to leader
- * last log index + 1)
- * matchIndex[] for each server, index of highest log entry
- * known to be replicated on server
- * (initialized to 0, increases monotonically)
- * 
+ *
  * @author chicm
  *
  */

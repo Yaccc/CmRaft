@@ -1,5 +1,5 @@
 /**
-* Copyright 2014 The Apache Software Foundation
+* Copyright 2014 The CmRaft Project
 *
 * Licensed to the Apache Software Foundation (ASF) under one
 * or more contributor license agreements.  See the NOTICE file
@@ -24,6 +24,13 @@ import java.nio.channels.AsynchronousSocketChannel;
 
 import com.google.protobuf.Descriptors.MethodDescriptor;
 import com.google.protobuf.Message;
+
+/**
+ * Encapsulate RPC calls
+ * 
+ * @author chicm
+ *
+ */
 
 public class RpcCall implements Comparable<RpcCall>{
   private int callId;

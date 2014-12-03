@@ -1,5 +1,5 @@
 /**
-* Copyright 2014 The Apache Software Foundation
+* Copyright 2014 The CmRaft Project
 *
 * Licensed to the Apache Software Foundation (ASF) under one
 * or more contributor license agreements.  See the NOTICE file
@@ -106,8 +106,8 @@ public class StateMachine {
   
   public State electionTimeout() {
     State oldState = getState();
-    if(accepting(StateEventType.ELECTION_TIMEOUT)) {
-        state = transitionMap.get(state).get(StateEventType.ELECTION_TIMEOUT);
+    if(accepting(StateEventType.TIMEOUT)) {
+        state = transitionMap.get(state).get(StateEventType.TIMEOUT);
     }
     notifyIfStateChange(oldState, state);
 
@@ -146,7 +146,7 @@ public class StateMachine {
     HashMap<StateEventType, State> candidateMap = new HashMap<>(); 
     HashMap<StateEventType, State> leaderMap = new HashMap<>(); 
     
-    followerMap.put(StateEventType.ELECTION_TIMEOUT, State.CANDIDATE);
+    followerMap.put(StateEventType.TIMEOUT, State.CANDIDATE);
     
     candidateMap.put(StateEventType.VOTE_RECEIVED_MAJORITY, State.LEADER);
     candidateMap.put(StateEventType.DISCOVERD_LEADER, State.FOLLOWER);

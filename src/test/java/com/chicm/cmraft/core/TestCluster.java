@@ -18,33 +18,27 @@
 * under the License.
 */
 
-package com.chicm.cmraft.rpc;
+package com.chicm.cmraft.core;
 
-
+import org.apache.log4j.Level;
 import org.junit.Test;
 
-import com.chicm.cmraft.common.CmRaftConfiguration;
-import com.chicm.cmraft.common.Configuration;
-import com.chicm.cmraft.common.ServerInfo;
-import com.chicm.cmraft.core.RaftRpcService;
+public class TestCluster {
 
-public class TestRpcClient {
-
-  public static void main(String[] args) throws Exception {
-    //RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create());
-    //server.startRpcServer();
-    //server.startTPSReport();
-    Configuration conf = CmRaftConfiguration.create();
-    int port = ServerInfo.parseFromString(conf.getString("raft.server.local")).getPort();
-      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), "localhost", port);
-
-      client.testRpc();
-      Thread.sleep(3000);
-      System.out.println("closing");
-      //client.close();
-      System.out.println("closed");
+  @Test
+  public void test() throws Exception {
+    org.apache.log4j.LogManager.getRootLogger().setLevel(Level.WARN);
+    LocalCluster clu = LocalCluster.create(10, 12888);
+    Thread.sleep(10000);
+    
+    clu.checkNodesState();
+    
+    clu.killLeader();
+    
+    for(int i=0; i < 5; i++) {
+      Thread.sleep(8000);
+      clu.checkNodesState();
+      clu.checkGetCurrentLeader();
+    }
   }
-
 }
-
-
