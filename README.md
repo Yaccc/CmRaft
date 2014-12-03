@@ -10,18 +10,18 @@ Build
 ------
 
 ### Prerequisites: <br />
-JDK 1.7
-Maven 3.x
+>JDK 1.7
+>Maven 3.x
 
 ### Download source code: <br />
-git clone https://github.com/chicm/CmRaft.git
+		git clone https://github.com/chicm/CmRaft.git
 
 ### Compile and make tar ball: <br />
-mvn package
+		mvn package -DskipTests
 
 ### Import to eclipse: <br />
-mvn eclispe:eclipse
+		mvn eclispe:eclipse
 Then use eclipse to open the project.
 
-To run a unit test, which will create a local cluster and test the basic functions in command line console:
+>To run a unit test, which will create a local cluster and test the basic functions in command line console:
 maven test
