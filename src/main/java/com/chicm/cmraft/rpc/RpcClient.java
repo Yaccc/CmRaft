@@ -38,14 +38,8 @@ import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.core.RaftRpcService;
-import com.chicm.cmraft.log.LogEntry;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService.BlockingInterface;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest;
 import com.chicm.cmraft.util.BlockingHashMap;
@@ -85,11 +79,11 @@ public class RpcClient {
   private volatile boolean stop = false;
   
   
-  public RpcClient(Configuration conf, String serverHost, int serverPort) {
+  public RpcClient(Configuration conf, ServerInfo remoteServer) {
     this.conf = conf;
     rpcTimeout = conf.getInt("rpc.call.timeout", DEFAULT_RPC_TIMEOUT);
     rpcRetries = conf.getInt("rpc.call.retries", DEFAULT_RPC_RETRIES);
-    this.remoteServer = new ServerInfo(serverHost, serverPort);
+    this.remoteServer = remoteServer;
   }
   
   private boolean isInitialized() {
@@ -149,10 +143,6 @@ public class RpcClient {
       init();
     return stub;
   }
-  
-  public AsynchronousSocketChannel getChannel() {
-    return this.socketChannel;
-  }
  
   public void testRpc() throws ServiceException {
     TestRpcRequest.Builder builder = TestRpcRequest.newBuilder();
@@ -160,54 +150,6 @@ public class RpcClient {
     builder.setData(ByteString.copyFrom(bytes));
     
     getStub().testRpc(null, builder.build());
-  }
-  
-  public CollectVoteResponse collectVote(ServerInfo candidate, long term, long lastLogIndex,
-      long lastLogTerm) throws ServiceException  {
-    ServerId.Builder sbuilder = ServerId.newBuilder();
-    sbuilder.setHostName(candidate.getHost());
-    sbuilder.setPort(candidate.getPort());
-    sbuilder.setStartCode(candidate.getStartCode());
-    
-    CollectVoteRequest.Builder builder = CollectVoteRequest.newBuilder();
-    builder.setCandidateId(sbuilder.build());
-    builder.setTerm(term);
-    builder.setLastLogIndex(lastLogIndex);
-    builder.setLastLogTerm(lastLogTerm);
-    
-    return (CollectVoteResponse)(getStub().collectVote(null, builder.build()));
-  }
-  
-  public void testHeartBeat() {
-    try {
-      appendEntries(0, new ServerInfo("aaa", 111), 0, 0, 0, null);
-    } catch(Exception e ) {
-      LOG.error("testHeartBeat", e);
-    }
-  }
-  
-  public AppendEntriesResponse appendEntries(long term, ServerInfo leaderId, long leaderCommit,
-      long prevLogIndex, long prevLogTerm, LogEntry[] entries) throws ServiceException {
-
-    AppendEntriesRequest.Builder builder = AppendEntriesRequest.newBuilder();
-    builder.setTerm(term);
-    builder.setLeaderId(leaderId.toServerId());
-    builder.setLeaderCommit(leaderCommit);
-    builder.setPrevLogIndex(prevLogIndex);
-    builder.setPrevLogTerm(prevLogTerm);
-    if(entries != null) {
-      for(int i = 0; i< entries.length; i++) {
-        //builder.setEntries(i, entries[i].toRaftEntry());
-        builder.addEntries(entries[i].toRaftEntry());
-      }
-    }
-    try {
-      LOG.info(leaderId + "making appendEntries call to: " + this.socketChannel.getRemoteAddress());
-    } catch(Exception e) {LOG.error("exception", e);}
-    
-    AppendEntriesResponse response = getStub().appendEntries(null, builder.build());
-    
-    return response;
   }
   
   private AsynchronousSocketChannel openConnection(InetSocketAddress isa) {
@@ -365,7 +307,7 @@ public class RpcClient {
       PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[4]);
     }
     for(int j =0; j < nclients; j++ ) {
-      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), host, port);
+      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), new ServerInfo(host, port));
       
       for(int i = 0; i < nThreads; i++) {
         new Thread(new Runnable() {

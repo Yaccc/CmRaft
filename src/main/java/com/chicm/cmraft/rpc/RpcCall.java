@@ -40,6 +40,13 @@ public class RpcCall implements Comparable<RpcCall>{
   private AsynchronousSocketChannel channel;
   private long timestamp;
   
+  public RpcCall(int callId, Message header, Message msg, MethodDescriptor md) {
+    this.message = msg;
+    this.header = header;
+    this.md = md;
+    this.callId = callId;
+  }
+  
   public long getTimestamp() {
     return timestamp;
   }
@@ -80,13 +87,6 @@ public class RpcCall implements Comparable<RpcCall>{
   public void setMd(MethodDescriptor md) {
     this.md = md;
   }
-
-  public RpcCall(int callId, Message header, Message msg, MethodDescriptor md) {
-    this.message = msg;
-    this.header = header;
-    this.md = md;
-    this.callId = callId;
-  }
   
   public int getCallId() {
     return callId;
@@ -120,6 +120,11 @@ public class RpcCall implements Comparable<RpcCall>{
   }
   
   @Override
+  public String toString() {
+    return "RpcCall{callId=" + callId + "\n" + message.toString() + "}";
+  }
+  
+  @Override
   public int compareTo(RpcCall otherCall) {
     if(this.priority < otherCall.getPriority())
       return -1;
@@ -133,6 +138,5 @@ public class RpcCall implements Comparable<RpcCall>{
       return 1;
     else 
         return 0;
-    
   }
 }

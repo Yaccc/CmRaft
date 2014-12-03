@@ -22,6 +22,7 @@
 package com.chicm.cmraft.core;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,17 +39,16 @@ import com.chicm.cmraft.log.LogEntry;
 import com.chicm.cmraft.log.LogManager;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
-import com.chicm.cmraft.rpc.RpcClient;
 import com.google.protobuf.ServiceException;
 
-public class RpcClientManager {
-  static final Log LOG = LogFactory.getLog(RpcClientManager.class);
+public class NodeConnectionManager {
+  static final Log LOG = LogFactory.getLog(NodeConnectionManager.class);
   private Configuration conf;
-  private Map<ServerInfo, RpcClient> rpcClients;
+  private Map<ServerInfo, NodeConnection> connections;
   private ServerInfo thisServer;
   private RaftNode raftNode;
   
-  public RpcClientManager(Configuration conf, RaftNode node) {
+  public NodeConnectionManager(Configuration conf, RaftNode node) {
     this.conf = conf;
     this.raftNode = node;
     initServerList(this.conf);
@@ -59,13 +59,13 @@ public class RpcClientManager {
   }
   
   private void initServerList(Configuration conf) {
-    rpcClients = new ConcurrentHashMap<>();
+    connections = new ConcurrentHashMap<>();
     
     thisServer = ServerInfo.parseFromString(conf.getString("raft.server.local"));
-    for (String key: conf.getKeys("raft.server.remote")) {
-      ServerInfo server = ServerInfo.parseFromString(conf.getString(key));
-      RpcClient client = new RpcClient(conf, server.getHost(), server.getPort());
-      rpcClients.put(server, client);
+    
+    for (ServerInfo remote : ServerInfo.getRemoteServersFromConfiguration(conf)) {
+      NodeConnection client = new DefaultNodeConnection(conf, remote);
+      connections.put(remote, client);
     }
   }
   
@@ -74,7 +74,7 @@ public class RpcClientManager {
   }
   
   public Set<ServerInfo> getOtherServers() {
-    return rpcClients.keySet();
+    return connections.keySet();
   }
   
   public Set<ServerInfo> getAllServers() {
@@ -84,13 +84,9 @@ public class RpcClientManager {
     return s;
   }
   
-  public RpcClient getRpcClient(ServerInfo server) {
-    return rpcClients.get(server);
-  }
-  
   public void beatHeart(long term, ServerInfo leaderId, long leaderCommit,
       long prevLogIndex, long prevLogTerm) {
-    appendEntries(term, leaderId, leaderCommit, prevLogIndex, prevLogTerm, null);
+    appendEntries(term, leaderId, leaderCommit, prevLogIndex, prevLogTerm, null, 0);
     
   }
   
@@ -111,22 +107,20 @@ public class RpcClientManager {
     });
     
     for(ServerInfo server: getOtherServers()) {
-      RpcClient client = rpcClients.get(server);
+      NodeConnection conn = connections.get(server);
       long startIndex = logMgr.getFollowerMatchIndex(server) + 1;
-      LogEntry[] entries = new LogEntry[(int)(lastApplied - startIndex) + 1];
-      logMgr.getLogEntries(startIndex, lastApplied).toArray(entries);
           
       LOG.info(getRaftNode().getName() + ": SENDING appendEntries Request TO: " + server);
-      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), client, getRaftNode().getLogManager(), 
+      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), conn, getRaftNode().getLogManager(), 
         thisServer, getRaftNode().getCurrentTerm(), logMgr.getCommitIndex(), startIndex-1, 
-        logMgr.getLogTerm(startIndex-1), entries));
+        logMgr.getLogTerm(startIndex-1), logMgr.getLogEntries(startIndex, lastApplied), lastApplied));
       t.setDaemon(true);
       executor.execute(t);
     }
   }
   
-  public void appendEntries(long term, ServerInfo leaderId, long leaderCommit,
-      long prevLogIndex, long prevLogTerm, LogEntry[] entries) {
+  private void appendEntries(long term, ServerInfo leaderId, long leaderCommit,
+      long prevLogIndex, long prevLogTerm, List<LogEntry> entries, long maxIndex) {
     int nServers = getOtherServers().size();
     if(nServers <= 0) {
       return;
@@ -143,10 +137,10 @@ public class RpcClientManager {
     });
     
     for(ServerInfo server: getOtherServers()) {
-      RpcClient client = rpcClients.get(server);
+      NodeConnection connection = connections.get(server);
       LOG.info(getRaftNode().getName() + ": SENDING appendEntries Request TO: " + server);
-      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), client, getRaftNode().getLogManager(), thisServer, term,
-        leaderCommit, prevLogIndex, prevLogTerm, entries));
+      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), connection, getRaftNode().getLogManager(), thisServer, term,
+        leaderCommit, prevLogIndex, prevLogTerm, entries, maxIndex));
       t.setDaemon(true);
       executor.execute(t);
     }
@@ -168,9 +162,9 @@ public class RpcClientManager {
     });
     
     for(ServerInfo server: getOtherServers()) {
-      RpcClient client = rpcClients.get(server);
+      NodeConnection conn = connections.get(server);
       LOG.info(getRaftNode().getName() + ": SENDING COLLECTVOTE Request TO: " + server);
-      Thread t = new Thread(new AsynchronousVoteWorker(getRaftNode(), client, thisServer, term,
+      Thread t = new Thread(new AsynchronousVoteWorker(getRaftNode(), conn, thisServer, term,
         lastLogIndex, lastLogTerm));
       t.setDaemon(true);
       executor.execute(t);
@@ -183,11 +177,11 @@ public class RpcClientManager {
     private long lastLogIndex;
     private long lastLogTerm;
     private RaftNode node;
-    private RpcClient client;
+    private NodeConnection connection;
     
-    public AsynchronousVoteWorker(RaftNode node, RpcClient client, ServerInfo thisServer, long term,
+    public AsynchronousVoteWorker(RaftNode node, NodeConnection connnection, ServerInfo thisServer, long term,
         long lastLogIndex, long lastLogTerm) {
-      this.client = client;
+      this.connection = connnection;
       this.node = node;
       this.candidate = thisServer;
       this.term = term;
@@ -199,7 +193,7 @@ public class RpcClientManager {
     public void run () {
       CollectVoteResponse response = null;
       try {
-        response = client.collectVote(candidate, term, lastLogIndex, lastLogTerm);
+        response = connection.collectVote(candidate, term, lastLogIndex, lastLogTerm);
         if(response != null && response.getGranted()) {
           node.voteReceived(ServerInfo.parseFromServerId(response.getFromHost()), response.getTerm());
         } else if( response == null) {
@@ -209,10 +203,8 @@ public class RpcClientManager {
             + ":" + response.getFromHost().getPort());
         }
       } catch(ServiceException e) {
-        try {
         LOG.error("RPC: collectVote failed: from " + getRaftNode().getName() + 
-          ", to: " + client.getChannel().getRemoteAddress(), e);
-        } catch(Exception e2) {}
+          ", to: " + connection.getRemoteServer(), e);
       }
     }
   }
@@ -223,14 +215,15 @@ public class RpcClientManager {
     private long leaderCommit;
     private long prevLogIndex;
     private long prevLogTerm;
-    private LogEntry[] entries;
+    private List<LogEntry> entries;
+    private long maxIndex;
     private RaftNode node;
-    private RpcClient client;
+    private NodeConnection connection;
     private LogManager logManager;
     
-    public AsynchronousAppendEntriesWorker(RaftNode node, RpcClient client, LogManager logMgr, ServerInfo thisServer, long term,
-        long leaderCommit, long prevLogIndex, long prevLogTerm, LogEntry[] entries) {
-      this.client = client;
+    public AsynchronousAppendEntriesWorker(RaftNode node, NodeConnection connection, LogManager logMgr, ServerInfo thisServer, long term,
+        long leaderCommit, long prevLogIndex, long prevLogTerm, List<LogEntry> entries, Long maxIndex) {
+      this.connection = connection;
       this.node = node;
       this.logManager = logMgr;
       this.leader = thisServer;
@@ -239,24 +232,21 @@ public class RpcClientManager {
       this.prevLogIndex = prevLogIndex;
       this.prevLogTerm = prevLogTerm;
       this.entries = entries;
+      this.maxIndex = maxIndex;
     }
     
     @Override
     public void run () {
       try {
-        AppendEntriesResponse response = client.appendEntries(term, leader, leaderCommit, prevLogIndex, prevLogTerm, entries);
+        AppendEntriesResponse response = connection.appendEntries(term, leader, leaderCommit, prevLogIndex, prevLogTerm, entries);
         
-        //todo: set commit status for entries
         if(response != null && entries != null && logManager != null) {
-          //make sure the entries is sorted, largest index at end
-          logManager.onAppendEntriesResponse(client.getRemoteServer(), response.getTerm(),
-            response.getSuccess(), entries[entries.length-1].getIndex()); 
+          logManager.onAppendEntriesResponse(connection.getRemoteServer(), response.getTerm(),
+            response.getSuccess(), maxIndex); 
         }
       } catch(ServiceException e) {
-        try {
         LOG.error("RPC: collectVote failed: from " + getRaftNode().getName() + 
-          ", to: " + client.getChannel().getRemoteAddress(), e);
-        } catch(Exception e2) {}
+          ", to: " + connection.getRemoteServer(), e);
       }
     }
   }

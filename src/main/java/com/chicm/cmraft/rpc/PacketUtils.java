@@ -99,7 +99,7 @@ public class PacketUtils {
   private static int writeRpc(AsynchronousSocketChannel channel, Message header, Message body, 
       int totalSize) throws IOException, InterruptedException, ExecutionException {
     // writing total size so that server can read all request data in one read
-    LOG.debug("total size:" + totalSize);
+    //LOG.debug("total size:" + totalSize);
     long t = System.currentTimeMillis();
     byte btest[] = null;
     if(TEST_PADDING_LEN > 0)  {
@@ -123,8 +123,9 @@ public class PacketUtils {
     }
     buf.flip();
     channel.write(buf).get();
-    LOG.debug("2222: " + (System.currentTimeMillis() -t) + " ms");
-    LOG.debug("flushed:" + totalSize);
+    
+    LOG.debug("Write Rpc message to socket, takes " + (System.currentTimeMillis() -t) + " ms, size " + totalSize);
+    LOG.debug("message:" + body);
     return totalSize;
   }
   
@@ -159,7 +160,6 @@ public class PacketUtils {
       for ( ;len < nDataSize; ) {
         len += channel.read(buf).get();
       }
-      LOG.debug("len:" + len);
       if(len < nDataSize) {
         LOG.error("SOCKET READ FAILED, len:" + len);
         return call;
@@ -178,17 +178,18 @@ public class PacketUtils {
       cis.resetSizeCounter();
       int bodySize = cis.readRawVarint32();
       offset += cis.getTotalBytesRead();
-      LOG.debug("header parsed:" + header.toString());
+      //LOG.debug("header parsed:" + header.toString());
       
       MethodDescriptor md = service.getDescriptorForType().findMethodByName(header.getRequestName());
       Builder builder = service.getRequestPrototype(md).newBuilderForType();
       Message body = null;
       if (builder != null) {
         body = builder.mergeFrom(data, offset, bodySize).build();
-        LOG.debug("server : request parsed:" + body.toString());
+        //LOG.debug("server : request parsed:" + body.toString());
       }
       call = new RpcCall(header.getId(), header, body, md);
-      LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+      LOG.debug("Parse Rpc request from socket: " + call.getCallId() 
+        + ", takes" + (System.currentTimeMillis() -t) + " ms");
 
     return call;
   }
@@ -209,8 +210,6 @@ public class PacketUtils {
         for ( ;len < nDataSize; ) {
           len += channel.read(buf).get();
         }
-        LOG.debug("len:" + len);
-        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
         if(len < nDataSize) {
           LOG.error("SOCKET READ FAILED, len:" + len);
           return call;
@@ -229,8 +228,6 @@ public class PacketUtils {
         cis.resetSizeCounter();
         int bodySize = cis.readRawVarint32();
         offset += cis.getTotalBytesRead();
-        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
-        LOG.debug("header parsed:" + header.toString());
         
         MethodDescriptor md = service.getDescriptorForType().findMethodByName(header.getResponseName());
         Builder builder = service.getResponsePrototype(md).newBuilderForType();
@@ -239,7 +236,8 @@ public class PacketUtils {
           body = builder.mergeFrom(data, offset, bodySize).build();
         }
         call = new RpcCall(header.getId(), header, body, md);
-        LOG.debug("1111: " + (System.currentTimeMillis() -t) + " ms");
+        LOG.debug("Parse Rpc response from socket: " + call.getCallId() 
+          + ", takes" + (System.currentTimeMillis() -t) + " ms");
 
       return call;
     }

@@ -45,7 +45,7 @@ public class ConnectionManager {
   private UserConnectionImpl userConnection;
   
   private ConnectionManager(Configuration conf, ServerInfo server) {
-    rpcClient = new RpcClient(conf, server.getHost(), server.getPort());
+    rpcClient = new RpcClient(conf, server);
     userConnection = new UserConnectionImpl();
   }
   

@@ -24,6 +24,7 @@ package com.chicm.cmraft.rpc;
 import org.junit.Test;
 
 import com.chicm.cmraft.common.CmRaftConfiguration;
+import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.core.RaftRpcService;
 
 public class TestRpcServer {
@@ -34,7 +35,8 @@ public class TestRpcServer {
     server.startTPSReport();
     
     for (int i =0; i < 2; i++) {
-      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), "localhost", server.getServerPort());
+      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), 
+        new ServerInfo("localhost", server.getServerPort()));
     
       for(int j = 0; j < 10; j++) {
         new Thread(new Runnable() {

@@ -28,12 +28,9 @@ public class TimeoutWorker implements Runnable {
   private RaftTimeoutListener listener = null;
   private int timeout = 0;
   private final Object sleepLock = new Object();
-  private boolean reset = false;
+  private volatile boolean reset = false;
   private volatile boolean isStopped = false;
   private Thread thread = null;
-  
-  public TimeoutWorker() {
-  }
   
   public void start(String name, int timeout, RaftTimeoutListener listener) {
     this.timeout = timeout;

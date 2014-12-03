@@ -33,7 +33,7 @@ import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.rpc.RpcClient;
 
 public class TestRpcClientManager {
-  private static RpcClientManager mgr;
+  private static NodeConnectionManager mgr;
   
   @BeforeClass
   public static void init() {
@@ -42,7 +42,7 @@ public class TestRpcClientManager {
     conf.set("raft.server.remote.1", "chicm2:2222");
     conf.set("raft.server.remote.2", "chicm3:3333");
     
-    mgr = new RpcClientManager(conf, null);
+    mgr = new NodeConnectionManager(conf, null);
   }
   
   @Test
@@ -67,14 +67,14 @@ public class TestRpcClientManager {
       e.printStackTrace(System.out);
     }
     for(int i = 0; i < nodes.length; i++) {
-      RpcClientManager mgr = nodes[i].getRpcClientManager();
+      NodeConnectionManager mgr = nodes[i].getRpcClientManager();
       
       System.out.println(mgr.getThisServer());
       for(ServerInfo server: mgr.getOtherServers()) {
         System.out.println(server);
-        RpcClient client = mgr.getRpcClient(server);
-        AsynchronousChannel channel = client.getChannel();
-        System.out.println("channel:" + channel);
+        //RpcClient client = mgr.getRpcClient(server);
+        //AsynchronousChannel channel = client.getChannel();
+        //System.out.println("channel:" + channel);
       }
     }
     

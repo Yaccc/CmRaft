@@ -88,7 +88,7 @@ public class RaftNode {
   private Configuration conf = null;
   private StateMachine fsm = null;
   private RpcServer rpcServer = null;
-  private RpcClientManager rpcClientManager = null;
+  private NodeConnectionManager rpcClientManager = null;
   private TimeoutWorker timeoutWorker = new TimeoutWorker();
   private RaftTimeoutListener timeoutListener = new TimeoutHandler();
   private RaftStateChangeListener stateChangeListener = new RaftStateChangeListenerImpl();
@@ -111,7 +111,7 @@ public class RaftNode {
     logManager= new LogManager(this, conf);
     fsm = new StateMachine(stateChangeListener);
     rpcServer = new RpcServer(conf, raftService);
-    rpcClientManager = new RpcClientManager(conf, this);
+    rpcClientManager = new NodeConnectionManager(conf, this);
     rpcServer.startRpcServer();
     timeoutWorker.start(getName() + "-" + fsm.getState(), getElectionTimeout(), timeoutListener);
     
@@ -141,7 +141,7 @@ public class RaftNode {
     return raftService;
   }
   
-  public RpcClientManager getRpcClientManager() {
+  public NodeConnectionManager getRpcClientManager() {
     return this.rpcClientManager;
   }
   
