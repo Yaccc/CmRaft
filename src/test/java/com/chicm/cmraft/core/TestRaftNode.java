@@ -24,17 +24,14 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Method;
 
+import org.apache.log4j.Level;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.chicm.cmraft.common.CmRaftConfiguration;
-import com.chicm.cmraft.common.Configuration;
 
 public class TestRaftNode {
-  
-  private static RaftNode node1;
-  private static Configuration conf1;
-  private static RaftNode node2;
+  private static LocalCluster cluster;
+  private static RaftNode[] nodes;
   
   public static void main(String[] args) throws Exception {
     init();
@@ -43,43 +40,36 @@ public class TestRaftNode {
   
   @BeforeClass
   public static void init() {
-    conf1 = CmRaftConfiguration.create();
-    //conf1.clear();
-    conf1.set("raft.server.local", "localhost:12888");
-    conf1.set("raft.server.remote.1", "localhost:13888");
-    //conf1.set("raft.election.timeout", "2500");
-    //conf1.set("raft.heartbeat.interval", "2500");
+    org.apache.log4j.LogManager.getRootLogger().setLevel(Level.ERROR);
+    cluster = LocalCluster.create(3, 13555);
+    nodes = cluster.getNodes();
     
-    Configuration conf2 = CmRaftConfiguration.create();
-    //conf2.clear();
-    conf2.set("raft.server.local", "localhost:13888");
-    conf2.set("raft.server.remote.1", "localhost:12888");
-    //conf2.set("raft.election.timeout", "2500");
-    //conf2.set("raft.heartbeat.interval", "2500");
-    
-    node1 = new RaftNode(conf1);
-    node2 = new RaftNode(conf2);
   }
   
   @Test
-  public void testRaftNode() {
-    for(int i =0; i< 1000; i++) { 
-      node1.testHearBeat();
-      node2.testHearBeat();
+  public void testRaftNode() throws Exception{
+    Thread.sleep(10000);
+    cluster.printNodesState();
+    
+    for(int i =0; i< 100; i++) { 
+      for(RaftNode n :nodes)
+      n.testHearBeat();
+      
     }
+    cluster.printNodesState();
+    Thread.sleep(10000);
+    cluster.printNodesState();
   }
   
   @Test
   public void testGetElectionTimeout() throws Exception {
-    int confTimeout = conf1.getInt("raft.election.timeout");
-    Method m = node1.getClass().getDeclaredMethod("getElectionTimeout", new Class[] {});
+    int confTimeout = cluster.getConf(0).getInt("raft.election.timeout");
+    Method m = nodes[0].getClass().getDeclaredMethod("getElectionTimeout", new Class[] {});
     m.setAccessible(true);
     
     for(int i = 0; i < 100; i++) {
-      Object result = m.invoke(node1, null);
-      
+      Object result = m.invoke(nodes[0], null);
       int resultInt = ((Integer)result).intValue();
-      System.out.println(result);
       assertTrue(resultInt >= confTimeout);
       assertTrue(resultInt <= confTimeout*2);
     }

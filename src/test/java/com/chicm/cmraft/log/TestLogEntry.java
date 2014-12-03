@@ -14,8 +14,8 @@ public class TestLogEntry {
     
     System.out.println(re);
     
-    Exception e = new Exception("aaa");
-    e.printStackTrace(System.out);
+    //Exception e = new Exception("aaa");
+    //e.printStackTrace(System.out);
   }
 
 }

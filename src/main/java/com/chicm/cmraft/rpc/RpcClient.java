@@ -207,7 +207,8 @@ public class RpcClient {
         RpcCall call = new RpcCall(callId, header, request, md);
         long tm = System.currentTimeMillis();
         this.sendQueue.put(call);
-        response = this.responseMap.take(callId, rpcTimeout, rpcRetries).getMessage();
+        RpcCall result = this.responseMap.take(callId, rpcTimeout, rpcRetries);
+        response = result != null? result.getMessage() : null;
         if(response != null) {
           LOG.debug("response taken: " + callId);
           LOG.debug(String.format("RPC[%d] round trip takes %d ms", header.getId(), (System.currentTimeMillis() - tm)));

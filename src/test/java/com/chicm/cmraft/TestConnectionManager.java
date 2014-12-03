@@ -34,8 +34,8 @@ public class TestConnectionManager {
 
   @Test
   public void testGetConnection() throws Exception {
-    org.apache.log4j.LogManager.getRootLogger().setLevel(Level.DEBUG);
-    LocalCluster cluster = LocalCluster.create(5, 12888);
+    org.apache.log4j.LogManager.getRootLogger().setLevel(Level.ERROR);
+    LocalCluster cluster = LocalCluster.create(5, 22888);
     Thread.sleep(10000);
     
     cluster.checkNodesState();

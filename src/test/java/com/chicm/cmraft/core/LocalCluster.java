@@ -27,6 +27,8 @@ import static org.junit.Assert.*;
 
 public class LocalCluster {
   
+  private static LocalCluster instance = null;
+  
   private static final int NODE_NUMBER = 3;
   private static final int START_PORT = 12888;
   
@@ -36,13 +38,15 @@ public class LocalCluster {
   private Configuration[] confs;
   private RaftNode[] nodes;
 
-  public LocalCluster() {
+  private LocalCluster() {
   }
   
-  public static LocalCluster create(int n, int startPort) {
-    LocalCluster cluster = new LocalCluster();
-    cluster.createCluster(n, startPort);
-    return cluster;
+  public static synchronized LocalCluster create(int n, int startPort) {
+    if(instance == null) {
+      instance = new LocalCluster();
+      instance.createCluster(n, startPort);
+    }
+    return instance;
   }
   
   public Configuration getConf(int index) {
@@ -81,6 +85,14 @@ public class LocalCluster {
     }
     assertTrue(nLeader == 1);
     assertTrue(nFollower == (nodeNumber -1));
+  }
+  
+  public void printNodesState() {
+    System.out.println("******************");
+    for (int i =0; i < nodeNumber; i++) {
+      System.out.println(nodes[i].getName() + ":" + nodes[i].getState() 
+        + "(" + nodes[i].getCurrentTerm() + ")");
+    }
   }
   
   public void checkGetCurrentLeader() {

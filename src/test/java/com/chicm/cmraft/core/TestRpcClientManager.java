@@ -60,14 +60,14 @@ public class TestRpcClientManager {
   }
   @Test
   public void testRpcClientMap() {
-    RaftNode[] nodes =LocalCluster.create(3, 12888).getNodes(); 
+    RaftNode[] nodes =LocalCluster.create(3, 14888).getNodes(); 
     try {
       Thread.sleep(5000);
     } catch(Exception e) {
       e.printStackTrace(System.out);
     }
     for(int i = 0; i < nodes.length; i++) {
-      NodeConnectionManager mgr = nodes[i].getRpcClientManager();
+      NodeConnectionManager mgr = nodes[i].getNodeConnectionManager();
       
       System.out.println(mgr.getThisServer());
       for(ServerInfo server: mgr.getOtherServers()) {

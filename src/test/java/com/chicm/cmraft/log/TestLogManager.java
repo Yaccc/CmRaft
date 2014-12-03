@@ -1,7 +1,5 @@
 package com.chicm.cmraft.log;
 
-import java.util.Collection;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
@@ -18,8 +16,8 @@ public class TestLogManager {
   @Test
   public void test() throws Exception {
     org.apache.log4j.LogManager.getRootLogger().setLevel(Level.FATAL);
-    RaftNode[] nodes =LocalCluster.create(3, 12888).getNodes();
-    
+    RaftNode[] nodes =LocalCluster.create(3, 15888).getNodes();
+    /*
     Thread.sleep(10000);
     for(int i = 0; i < nodes.length; i++) {
       if(nodes[i].isLeader()) {
@@ -34,6 +32,6 @@ public class TestLogManager {
           System.out.println("value:" + new String(e.getValue()));
         }
        }
-    }
+    }*/
   }
 }

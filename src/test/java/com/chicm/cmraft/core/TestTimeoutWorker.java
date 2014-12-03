@@ -53,16 +53,12 @@ public class TestTimeoutWorker {
     p.start("test", 5000, null);
     Thread.sleep(6000);
     
-    for(int i = 0; i<7 ; i++) {
+    for(int i = 0; i<5 ; i++) {
       
       p.reset();
-      Thread.sleep(3000);
-      if(i == 5) {
-        p.stop();
-        break;
-      }
+      Thread.sleep(2000);
     }
+    p.stop();
     
-    System.exit(0);
   }
 }

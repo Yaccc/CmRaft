@@ -230,7 +230,7 @@ public class LogManager {
     entries.put(entry.getIndex(), entry);
     
     //making rpc call to followers
-    node.getRpcClientManager().appendEntries(this, getLastApplied());
+    node.getNodeConnectionManager().appendEntries(this, getLastApplied());
     //waiting for results
     boolean committed = false;
     committed = rpcResults.take(getLastApplied(), DEFAULT_COMMIT_TIMEOUT, 1);

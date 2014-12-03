@@ -88,7 +88,7 @@ public class RaftNode {
   private Configuration conf = null;
   private StateMachine fsm = null;
   private RpcServer rpcServer = null;
-  private NodeConnectionManager rpcClientManager = null;
+  private NodeConnectionManager nodeConnectionManager = null;
   private TimeoutWorker timeoutWorker = new TimeoutWorker();
   private RaftTimeoutListener timeoutListener = new TimeoutHandler();
   private RaftStateChangeListener stateChangeListener = new RaftStateChangeListenerImpl();
@@ -111,7 +111,7 @@ public class RaftNode {
     logManager= new LogManager(this, conf);
     fsm = new StateMachine(stateChangeListener);
     rpcServer = new RpcServer(conf, raftService);
-    rpcClientManager = new NodeConnectionManager(conf, this);
+    nodeConnectionManager = new NodeConnectionManager(conf, this);
     rpcServer.startRpcServer();
     timeoutWorker.start(getName() + "-" + fsm.getState(), getElectionTimeout(), timeoutListener);
     
@@ -141,8 +141,8 @@ public class RaftNode {
     return raftService;
   }
   
-  public NodeConnectionManager getRpcClientManager() {
-    return this.rpcClientManager;
+  public NodeConnectionManager getNodeConnectionManager() {
+    return this.nodeConnectionManager;
   }
   
   private int getElectionTimeout() {
@@ -152,14 +152,14 @@ public class RaftNode {
   }
   
   public String getName() {
-    if(rpcClientManager == null)
+    if(nodeConnectionManager == null)
       return "";
-    return String.format("RaftNode[%s:%d]",  rpcClientManager.getThisServer().getHost(),
-      rpcClientManager.getThisServer().getPort());
+    return String.format("RaftNode[%s:%d]",  nodeConnectionManager.getThisServer().getHost(),
+      nodeConnectionManager.getThisServer().getPort());
   }
   
   public int getTotalServerNumbers () {
-    return rpcClientManager.getOtherServers().size() + 1;
+    return nodeConnectionManager.getOtherServers().size() + 1;
   }
   
   public void resetTimer() {
@@ -298,7 +298,7 @@ public class RaftNode {
   }
   
   public void testHearBeat() {
-    rpcClientManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
+    nodeConnectionManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
       logManager.getLastApplied(), logManager.getLastLogTerm());
   }
   
@@ -321,7 +321,7 @@ public class RaftNode {
         case LEADER:
           setCurrentLeader(getServerInfo());
           //send heartbeat right away after becoming leader, then send out heartbeat every timeout 
-          rpcClientManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
+          nodeConnectionManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
             logManager.getLastApplied(), logManager.getLastLogTerm());
           break;
       }
@@ -346,14 +346,14 @@ public class RaftNode {
       //do initialization after state change
       if(fsm.getState() == State.LEADER) {
         //leader send heartbeat to all servers every timeout
-        rpcClientManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
+        nodeConnectionManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
           logManager.getLastApplied(), logManager.getLastLogTerm());
         
       } else if(fsm.getState() == State.CANDIDATE) {
         //every timeout period, candidates start up new election
         increaseTerm();
         voteMySelf();
-        rpcClientManager.collectVote(currentTerm.get(), logManager.getLastApplied(), logManager.getLastLogTerm());
+        nodeConnectionManager.collectVote(currentTerm.get(), logManager.getLastApplied(), logManager.getLastLogTerm());
       } else if( fsm.getState() == State.FOLLOWER ) {
         
       }
