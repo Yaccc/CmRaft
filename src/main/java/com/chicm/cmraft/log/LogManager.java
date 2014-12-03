@@ -81,7 +81,7 @@ public class LogManager {
   }
   
   private void leaderInit() {
-    LOG.warn(getServerName() + ": LEADER INIT");
+    LOG.info(getServerName() + ": LEADER INIT");
     
     for(ServerInfo remoteServer: ServerInfo.getRemoteServersFromConfiguration(conf)) {
       FollowerIndexes fIndexes = new FollowerIndexes(getLastApplied() +1, 0);
@@ -96,7 +96,7 @@ public class LogManager {
   }
   
   public void stateChange(State oldState, State newState) {
-    LOG.warn(getServerName() + ": STATE CHANGE");
+    LOG.info(getServerName() + ": STATE CHANGE");
     if(oldState == State.LEADER && newState != State.LEADER) {
       cleanupLeaderWorker();
     } else if(newState == State.LEADER && oldState != State.LEADER) {
@@ -162,7 +162,7 @@ public class LogManager {
   // for followers
   public boolean appendEntries(long term, ServerInfo leaderId, long leaderCommit,
       long prevLogIndex, long prevLogTerm, List<LogEntry> leaderEntries) {
-    LOG.warn(getServerName() + "follower appending entry...");
+    LOG.debug(getServerName() + "follower appending entry...");
     if(leaderEntries == null || leaderEntries.size() < 1)
       return false;
     if(prevLogIndex > 0) {
@@ -185,12 +185,12 @@ public class LogManager {
     if(leaderCommit > getCommitIndex()) {
       setCommitIndex(Math.min(getLastApplied(), leaderCommit));
     }
-    LOG.warn(getServerName() + "follower appending entry... done");
+    LOG.debug(getServerName() + "follower appending entry... done");
     return true;
   }
   // for leaders
   public void onAppendEntriesResponse(ServerInfo follower, long followerTerm, boolean success, long followerLastApplied) {
-    LOG.warn(getServerName() + ": onAppendEntriesResponse");
+    LOG.debug(getServerName() + ": onAppendEntriesResponse");
     updateFollowerMatchIndexes(follower, followerLastApplied);
     if(!success) {
       return;
@@ -200,13 +200,13 @@ public class LogManager {
   }
   
   private void checkAndCommit(long index) {
-    LOG.warn(getServerName() + ": checkAndCommit");
+    LOG.debug(getServerName() + ": checkAndCommit");
     if(index <= getCommitIndex()) {
       return;
     }
     
     if(responseBag.get(index) > nTotalServers/2) {
-      LOG.warn(getServerName() + ": committed");
+      LOG.info(getServerName() + ": committed");
       setCommitIndex(index);
       rpcResults.put(index, true);
     }
@@ -223,7 +223,7 @@ public class LogManager {
   }
   
   public boolean set(byte[] key, byte[] value) {
-    LOG.warn(getServerName() + ": set request received");
+    LOG.debug(getServerName() + ": set request received");
     //lastApplied initialized as 0, and the first time increase it to 1,
     //so the first index is 1
     LogEntry entry = new LogEntry(lastApplied.incrementAndGet(), node.getCurrentTerm(), key, value, LogMutationType.SET);
@@ -234,7 +234,7 @@ public class LogManager {
     //waiting for results
     boolean committed = false;
     committed = rpcResults.take(getLastApplied(), DEFAULT_COMMIT_TIMEOUT, 1);
-    LOG.warn(getServerName() + ": set committed, sending response");
+    LOG.debug(getServerName() + ": set committed, sending response");
     return committed;
   }
   

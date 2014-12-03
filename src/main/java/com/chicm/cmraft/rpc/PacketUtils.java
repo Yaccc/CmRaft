@@ -124,8 +124,10 @@ public class PacketUtils {
     buf.flip();
     channel.write(buf).get();
     
-    LOG.debug("Write Rpc message to socket, takes " + (System.currentTimeMillis() -t) + " ms, size " + totalSize);
-    LOG.debug("message:" + body);
+    if(LOG.isTraceEnabled()) {
+      LOG.trace("Write Rpc message to socket, takes " + (System.currentTimeMillis() -t) + " ms, size " + totalSize);
+      LOG.trace("message:" + body);
+    }
     return totalSize;
   }
   
@@ -188,8 +190,10 @@ public class PacketUtils {
         //LOG.debug("server : request parsed:" + body.toString());
       }
       call = new RpcCall(header.getId(), header, body, md);
-      LOG.debug("Parse Rpc request from socket: " + call.getCallId() 
-        + ", takes" + (System.currentTimeMillis() -t) + " ms");
+      if(LOG.isTraceEnabled()) {
+        LOG.trace("Parse Rpc request from socket: " + call.getCallId() 
+          + ", takes" + (System.currentTimeMillis() -t) + " ms");
+      }
 
     return call;
   }
@@ -236,8 +240,10 @@ public class PacketUtils {
           body = builder.mergeFrom(data, offset, bodySize).build();
         }
         call = new RpcCall(header.getId(), header, body, md);
-        LOG.debug("Parse Rpc response from socket: " + call.getCallId() 
-          + ", takes" + (System.currentTimeMillis() -t) + " ms");
+        if(LOG.isTraceEnabled()) {
+          LOG.trace("Parse Rpc response from socket: " + call.getCallId() 
+            + ", takes" + (System.currentTimeMillis() -t) + " ms");
+        }
 
       return call;
     }
