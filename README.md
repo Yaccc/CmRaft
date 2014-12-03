@@ -7,19 +7,19 @@ Check this link for more detailed information about Raft algorithm: https://raft
 CmRaft strictly follows Raft protocol to implement Raft functions, includes state machine, leader election, leader failure detection, log replication, etc. The core functions of CmRaft are ready, user APIs, management tools, monitor facilities, log compaction functions are still under construction.
 
 Build 
-======
+------
 
-Prerequisites:
+### Prerequisites: <br />
 JDK 1.7
 Maven 3.x
 
-Download source code:
+### Download source code: <br />
 git clone https://github.com/chicm/CmRaft.git
 
-Compile and make tar ball:
+### Compile and make tar ball: <br />
 mvn package
 
-Import to eclipse:
+### Import to eclipse: <br />
 mvn eclispe:eclipse
 Then use eclipse to open the project.
 

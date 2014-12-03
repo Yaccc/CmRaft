@@ -35,7 +35,7 @@ public class TestConnectionManager {
   @Test
   public void testGetConnection() throws Exception {
     org.apache.log4j.LogManager.getRootLogger().setLevel(Level.ERROR);
-    LocalCluster cluster = LocalCluster.create(5, 22888);
+    LocalCluster cluster = LocalCluster.create(5, 14688);
     Thread.sleep(10000);
     
     cluster.checkNodesState();
@@ -50,7 +50,7 @@ public class TestConnectionManager {
       System.out.println(new String(b));
     }
     
-    cluster.killLeader();
+    //cluster.killLeader();
     
     Thread.sleep(10000);
     cluster.checkNodesState();
