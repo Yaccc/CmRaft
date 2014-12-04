@@ -1,11 +1,16 @@
 package com.chicm.cmraft.rpc;
 
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
 import java.util.List;
 
 import com.chicm.cmraft.core.RaftRpcService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse;
 import com.google.protobuf.BlockingService;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.Message;
 import com.google.protobuf.MessageLite;
@@ -15,11 +20,14 @@ import com.google.protobuf.Message.Builder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
+import io.netty.channel.ChannelPromise;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -27,10 +35,13 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.MessageToMessageDecoder;
+import io.netty.handler.codec.MessageToMessageEncoder;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.EventExecutorGroup;
 
 public class TestNettyServer {
-
+  static final EventExecutorGroup rpcgroup = new DefaultEventExecutorGroup(16);
   private int port;
 
   public TestNettyServer(int port) {
@@ -38,6 +49,7 @@ public class TestNettyServer {
   }
 
   public void run() throws Exception {
+    
       EventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
       EventLoopGroup workerGroup = new NioEventLoopGroup();
       try {
@@ -51,7 +63,9 @@ public class TestNettyServer {
                    ch.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(100000000,0,4,0,4)); 
                    ch.pipeline().addLast("encoder", new LengthFieldPrepender(4));  
                    ch.pipeline().addLast("msgDecoder", new MyProtobufDecoder() );
-                   ch.pipeline().addLast("handler", new MyRcpCallHandler());
+                   
+                   ch.pipeline().addLast("msgencoder", new MyRpcEncoder());
+                   ch.pipeline().addLast(rpcgroup, "handler", new MyRcpCallHandler());
                    
                    /*
                     * static final EventExecutorGroup group = new DefaultEventExecutorGroup(16);
@@ -81,10 +95,11 @@ public class TestNettyServer {
           // In this example, this does not happen, but you can do that to gracefully
           // shut down your server.
           System.out.println("server started");
-          //f.channel().closeFuture().sync();
+          f.channel().closeFuture().sync();
       } finally {
-         // workerGroup.shutdownGracefully();
-         // bossGroup.shutdownGracefully();
+        System.out.println("shutdown");
+        //  workerGroup.shutdownGracefully();
+        //  bossGroup.shutdownGracefully();
       }
   }
 
@@ -103,10 +118,10 @@ public class TestNettyServer {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
         // Discard the received data silently.
-     System.out.println("msg:" +  ((ByteBuf) msg).capacity());
-     System.out.println("isdirect:" +  ((ByteBuf) msg).isDirect());
+    // System.out.println("msg:" +  ((ByteBuf) msg).capacity());
+     //System.out.println("isdirect:" +  ((ByteBuf) msg).isDirect());
         ((ByteBuf) msg).release(); // (3)
-      System.out.println("channel read");
+     // System.out.println("channel read");
     }
 
     @Override
@@ -122,8 +137,28 @@ public class TestNettyServer {
     public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
         // Discard the received data silently.
       RpcCall call = (RpcCall)msg;
-      System.out.println("rpccall parsed:" + call);
+     // System.out.println("MyRcpCallHandler: callid:" + call.getCallId() );
+      
+      ctx.writeAndFlush(buildResponse(call));
+      //System.out.println("WRITE done");
+    }
     
+    public RpcCall buildResponse(RpcCall requestCall) {
+      ResponseHeader.Builder builder = ResponseHeader.newBuilder();
+      builder.setId(requestCall.getCallId()); 
+      builder.setResponseName(requestCall.getMd().getName());
+      ResponseHeader header = builder.build();
+      requestCall.setHeader(header);
+      //call.setMessage(response);
+      
+      TestRpcResponse.Builder tbuilder = TestRpcResponse.newBuilder();
+      byte[] bytes = new byte[50];
+      tbuilder.setResult( ByteString.copyFrom(bytes));
+      
+      requestCall.setMessage(tbuilder.build());    
+      
+      //RpcCall call = new RpcCall();
+      return requestCall;
     }
 
     @Override
@@ -139,7 +174,7 @@ public class TestNettyServer {
    
     protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out)       
         throws Exception {
-      System.out.println("size:" + msg.capacity());
+      //System.out.println("size:" + msg.capacity());
       long t = System.currentTimeMillis();
       
       ByteBufInputStream in = new ByteBufInputStream(msg);
@@ -147,7 +182,7 @@ public class TestNettyServer {
       RequestHeader.Builder hbuilder = RequestHeader.newBuilder();
       hbuilder.mergeDelimitedFrom(in);
       RequestHeader header = hbuilder.build();
-      System.out.println("header:" + header);
+      //System.out.println("header:" + header);
 
       BlockingService service = RaftRpcService.create().getService();
       
@@ -157,17 +192,79 @@ public class TestNettyServer {
       if (builder != null) {
         if(builder.mergeDelimitedFrom(in)) {
           body = builder.build();
-          System.out.println("body parsed:" + body);
+          //System.out.println("body parsed");
           
         } else {
-          System.out.println("parse failed");
+          //System.out.println("parse failed");
         }
       }
       RpcCall call = new RpcCall(header.getId(), header, body, md);
-        System.out.println("Parse Rpc request from socket: " + call.getCallId() 
-          + ", takes" + (System.currentTimeMillis() -t) + " ms");
+      //  System.out.println("Parse Rpc request from socket: " + call.getCallId() 
+      //    + ", takes" + (System.currentTimeMillis() -t) + " ms");
 
       out.add(call);
+    }
+  }
+  
+  public class MyOutboundHandler extends ChannelOutboundHandlerAdapter {
+    @Override
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
+      
+     // System.out.println("MyOutboundHandler: ENCODING");
+        RpcCall call = (RpcCall) msg;
+        int totalSize = PacketUtils.getTotalSizeofMessages(call.getHeader(), call.getMessage());
+        ByteBuf encoded = ctx.alloc().buffer(totalSize);
+        //encoded.writeInt((int)m.value());
+       // (1)
+        ////////////
+        //System.out.debug("total size:" + totalSize);
+        long t = System.currentTimeMillis();
+        ByteBufOutputStream os = new ByteBufOutputStream(encoded);
+        //writeIntToStream(totalSize, os);
+        try {
+          call.getHeader().writeDelimitedTo(os);
+          if (call.getMessage() != null) 
+            call.getMessage().writeDelimitedTo(os);
+          ctx.write(encoded, promise); 
+        } catch(Exception e) {
+          e.printStackTrace(System.out);
+        }
+        
+        //System.out.println("MyOutboundHandler: DONE");
+        
+        
+    }
+  }
+  
+  public class MyRpcEncoder extends MessageToMessageEncoder<RpcCall> {
+    @Override
+    //public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
+      protected  void encode(ChannelHandlerContext ctx,  RpcCall call, List<Object> out) throws Exception {
+      
+     // System.out.println("MyOutboundHandler: ENCODING");
+        //RpcCall call = (RpcCall) msg;
+        int totalSize = PacketUtils.getTotalSizeofMessages(call.getHeader(), call.getMessage());
+        ByteBuf encoded = ctx.alloc().buffer(totalSize);
+        //encoded.writeInt((int)m.value());
+       // (1)
+        ////////////
+        //System.out.debug("total size:" + totalSize);
+        long t = System.currentTimeMillis();
+        ByteBufOutputStream os = new ByteBufOutputStream(encoded);
+        //writeIntToStream(totalSize, os);
+        try {
+          call.getHeader().writeDelimitedTo(os);
+          if (call.getMessage() != null) 
+            call.getMessage().writeDelimitedTo(os);
+          //ctx.write(encoded, promise); 
+          out.add(encoded);
+        } catch(Exception e) {
+          e.printStackTrace(System.out);
+        }
+        
+        //System.out.println("MyOutboundHandler: DONE");
+        
+        
     }
   }
 }

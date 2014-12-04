@@ -38,8 +38,11 @@ public class TestRpcClient {
     int port = ServerInfo.parseFromString(conf.getString("raft.server.local")).getPort();
       final RpcClient client = new RpcClient(CmRaftConfiguration.create(), new ServerInfo( "localhost", 18080));
 
-      client.testRpc(1024);
-      Thread.sleep(3000);
+      for(int i =0; i < 10000; i++) {
+      client.sendRequest(20);
+  
+      Thread.sleep(1000);
+  }
       System.out.println("closing");
       //client.close();
       System.out.println("closed");

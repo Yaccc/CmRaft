@@ -20,6 +20,17 @@
 
 package com.chicm.cmraft.rpc;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.AsynchronousChannelGroup;
@@ -45,6 +56,9 @@ import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.core.RaftRpcService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
+import com.chicm.cmraft.rpc.TestNettyServer.MyProtobufDecoder;
+import com.chicm.cmraft.rpc.TestNettyServer.MyRcpCallHandler;
+import com.chicm.cmraft.rpc.TestNettyServer.MyRpcEncoder;
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.Message;
 import com.google.protobuf.ServiceException;
@@ -65,7 +79,8 @@ public class RpcServer {
   private final static int DEFAULT_RPC_LISTEN_THREADS = 10;
   private final static int DEFAULT_REQUEST_WORKER = 10;
   private final static int DEFAULT_RESPONSE_WOKER = 10;
-  private SocketListener socketListener = null;
+  private final static int MAX_PACKET_SIZE = 1024*1024*100;
+  //private SocketListener socketListener = null;
   private int rpcListenThreads = 0;
   private RaftRpcService service = null;
   private PriorityBlockingQueue<RpcCall> requestQueue = new PriorityBlockingQueue<RpcCall>();
@@ -76,7 +91,7 @@ public class RpcServer {
   
   public RpcServer (Configuration conf, RaftRpcService service) {
     this.conf = conf;
-    socketListener = new SocketListener();
+    //socketListener = new SocketListener();
     rpcListenThreads = conf.getInt("rpcserver.listen.threads", DEFAULT_RPC_LISTEN_THREADS);
     this.service = service;
     this.serverInfo = ServerInfo.parseFromString(conf.getString(LOCAL_SERVER_ADDRESS_KEY));
@@ -92,10 +107,11 @@ public class RpcServer {
   
   public boolean startRpcServer() {
     try {
-      socketListener.start();
-      startRequestWorker(conf.getInt("rpcserver.request.workers", DEFAULT_REQUEST_WORKER));
-      startResponseWorker(conf.getInt("rpcserver.response.workers", DEFAULT_RESPONSE_WOKER));
-    } catch(IOException e) {
+      //socketListener.start();
+      new NettyListener().start();
+      //startRequestWorker(conf.getInt("rpcserver.request.workers", DEFAULT_REQUEST_WORKER));
+      //startResponseWorker(conf.getInt("rpcserver.response.workers", DEFAULT_RESPONSE_WOKER));
+    } catch(InterruptedException e) {
       e.printStackTrace(System.out);
       return false;
     }
@@ -137,6 +153,37 @@ public class RpcServer {
     @Override
     public void failed(Throwable throwable, AsynchronousServerSocketChannel attachment) {
       LOG.error("Exception", throwable);
+    }
+  }
+  
+  class NettyListener {
+    public void start() throws InterruptedException {
+      EventLoopGroup bossGroup = new NioEventLoopGroup(); 
+      EventLoopGroup workerGroup = new NioEventLoopGroup();
+      
+      ServerBootstrap boot = new ServerBootstrap(); 
+      boot.group(bossGroup, workerGroup)
+          .channel(NioServerSocketChannel.class)
+          .childHandler(new ChannelInitializer<SocketChannel>() {
+             @Override
+             public void initChannel(SocketChannel ch) throws Exception {
+               ch.pipeline().addLast("FrameDecoder", new LengthFieldBasedFrameDecoder(MAX_PACKET_SIZE,0,4,0,4)); 
+               ch.pipeline().addLast("FrameEncoder", new LengthFieldPrepender(4));
+               ch.pipeline().addLast("MessageDecoder", new RpcMessageDecoder() );
+               ch.pipeline().addLast("MessageEncoder", new RpcMessageEncoder());
+               ch.pipeline().addLast("RpcHandler", new RpcCallInboundHandler(getService()));
+               LOG.info("initChannel");
+             }
+          })
+         .option(ChannelOption.SO_BACKLOG, 128)          
+         .childOption(ChannelOption.SO_KEEPALIVE, true); 
+
+      // Bind and start to accept incoming connections.
+      ChannelFuture f = boot.bind(getServerInfo().getPort()).sync(); 
+
+      // Wait until the server socket is closed.
+      System.out.println("server started");        
+      //f.channel().closeFuture().sync();
     }
   }
   
