@@ -60,7 +60,8 @@ public class RpcServer {
   static final Log LOG = LogFactory.getLog(RpcServer.class);
   
   private Configuration conf = null;
-  private static int DEFAULT_SERVER_PORT = 12888;
+  private static final String LOCAL_SERVER_ADDRESS_KEY = "raft.server.local";
+  private static final String RPCSERVER_LISTEN_THREADS_KEY = "rpcserver.listen.threads";
   private final static int DEFAULT_RPC_LISTEN_THREADS = 10;
   private final static int DEFAULT_REQUEST_WORKER = 10;
   private final static int DEFAULT_RESPONSE_WOKER = 10;
@@ -71,27 +72,22 @@ public class RpcServer {
   private PriorityBlockingQueue<RpcCall> responseQueue = new PriorityBlockingQueue<RpcCall>();
   private final static AtomicLong callCounter = new AtomicLong(0);
   private boolean tpsReportStarted = false;
+  private ServerInfo serverInfo;
   
   public RpcServer (Configuration conf, RaftRpcService service) {
     this.conf = conf;
     socketListener = new SocketListener();
     rpcListenThreads = conf.getInt("rpcserver.listen.threads", DEFAULT_RPC_LISTEN_THREADS);
     this.service = service;
+    this.serverInfo = ServerInfo.parseFromString(conf.getString(LOCAL_SERVER_ADDRESS_KEY));
   }
   
   public BlockingService getService() {
     return service.getService();
   }
   
-  public int getServerPort() {
-    int port = 0;
-    try {
-      port = ServerInfo.parseFromString(conf.getString("raft.server.local")).getPort();
-    } catch (Exception e) {
-      LOG.error("get port from config", e);
-      port = DEFAULT_SERVER_PORT;
-    }
-    return port;
+  public ServerInfo getServerInfo() {
+    return this.serverInfo;
   }
   
   public boolean startRpcServer() {
@@ -111,7 +107,12 @@ public class RpcServer {
     public void completed(AsynchronousSocketChannel channel, AsynchronousServerSocketChannel serverChannel) {
       
       serverChannel.accept(serverChannel, this);
-      LOG.info(String.format("SERVER[%d] accepted\n", Thread.currentThread().getId()));
+      try {
+        LOG.info(String.format("SERVER[%s] accepted, remote host:[%s]\n", 
+          getServerInfo(), channel.getRemoteAddress().toString()));
+      } catch(IOException e) {
+        LOG.error("accept exception", e);
+      }
       //startTPSReport();
 
       while(true) {
@@ -164,13 +165,13 @@ public class RpcServer {
       AsynchronousChannelGroup group = AsynchronousChannelGroup.withCachedThreadPool(executor, rpcListenThreads);
       */
       
-      LOG.info("Server binding to:" + getServerPort());
+      LOG.info("Server binding to:" + getServerInfo().getPort());
       final AsynchronousServerSocketChannel serverChannel = AsynchronousServerSocketChannel.open(group)
-          .bind(new InetSocketAddress(getServerPort()));
+          .bind(new InetSocketAddress(getServerInfo().getPort()));
       
       serverChannel.accept(serverChannel, new SocketHandler());
       
-      LOG.info("Server started");
+      LOG.info("Server started, listen threads: " + rpcListenThreads );
     }
   }
   
@@ -334,19 +335,18 @@ public class RpcServer {
   public static void main(String[] args) throws Exception {
     
     if(args.length < 2) {
-      System.out.println("usage: RpcServer <listening port> <listen threads number> [padding length]");
+      System.out.println("usage: RpcServer <listening port> <listen threads number>");
       return;
     }
-    DEFAULT_SERVER_PORT = Integer.parseInt(args[0]);
-    int nListenThreads = Integer.parseInt(args[1]);
+    int port = Integer.parseInt(args[0]);
     
-    if(args.length == 3) {
-      PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[2]);
-    }
+    Configuration conf = CmRaftConfiguration.create();
+    conf.set(LOCAL_SERVER_ADDRESS_KEY, "localhost:" + port);
+    conf.set(RPCSERVER_LISTEN_THREADS_KEY, args[1]);
     
-    RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create());
+    RpcServer server = new RpcServer(conf, RaftRpcService.create());
     LOG.info("starting server");
     server.startRpcServer();
-    
+    server.startTPSReport();
   }
 }

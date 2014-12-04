@@ -52,8 +52,6 @@ public class PacketUtils {
   static final int DEFAULT_BYTEBUFFER_SIZE = 1000;
   static final int MESSAGE_LENGHT_FIELD_SIZE = 4;
   static final int DEFAULT_CHANNEL_READ_RETRIES = 5;
-  public static int TEST_PADDING_LEN = 0;
-  
     
   public static byte[] int2Bytes(int val) {
     byte [] b = new byte[4];
@@ -101,11 +99,7 @@ public class PacketUtils {
     // writing total size so that server can read all request data in one read
     //LOG.debug("total size:" + totalSize);
     long t = System.currentTimeMillis();
-    byte btest[] = null;
-    if(TEST_PADDING_LEN > 0)  {
-      btest = new byte[TEST_PADDING_LEN];
-      totalSize += btest.length;
-    }
+    
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     writeIntToStream(totalSize, bos);
 
@@ -118,9 +112,6 @@ public class PacketUtils {
     ByteBuffer buf = ByteBuffer.allocateDirect(totalSize + 4);
     buf.put(b);
     
-    if(TEST_PADDING_LEN > 0)  {
-        buf.put(btest);
-    }
     buf.flip();
     channel.write(buf).get();
     
@@ -149,7 +140,6 @@ public class PacketUtils {
 
   public static RpcCall parseRpcRequestFromChannel (AsynchronousSocketChannel channel, BlockingService service) 
     throws InterruptedException, ExecutionException, IOException {
-    
     RpcCall call = null;
       long t = System.currentTimeMillis();
       InputStream in = Channels.newInputStream(channel);

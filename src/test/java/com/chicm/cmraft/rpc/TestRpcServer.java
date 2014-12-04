@@ -32,16 +32,15 @@ public class TestRpcServer {
   public static void main(String[] args) {
     RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create());
     server.startRpcServer();
-    server.startTPSReport();
+    //server.startTPSReport();
     
-    for (int i =0; i < 2; i++) {
-      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), 
-        new ServerInfo("localhost", server.getServerPort()));
+    for (int i =0; i < 5; i++) {
+      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), server.getServerInfo());
     
       for(int j = 0; j < 10; j++) {
         new Thread(new Runnable() {
           public void run() {
-            client.sendRequest();
+            client.sendRequest(1024);
             
           }
         }).start();

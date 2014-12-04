@@ -90,7 +90,9 @@ public class RpcClient {
     return initialized;
   }
   
-  private synchronized boolean init() {
+  private synchronized boolean init() 
+      throws IOException, InterruptedException, ExecutionException {
+    
     if(isInitialized())
       return true;
     
@@ -139,31 +141,30 @@ public class RpcClient {
   }
   
   public BlockingInterface getStub() {
-    if(!isInitialized())
-      init();
+    if(!isInitialized()) {
+      try { 
+        init();
+      } catch(Exception e) {
+        LOG.error("RpcClient Initialization exception", e);
+        return null;
+      }
+    }
     return stub;
   }
- 
-  public void testRpc() throws ServiceException {
-    TestRpcRequest.Builder builder = TestRpcRequest.newBuilder();
-    byte[] bytes = new byte[1024];
-    builder.setData(ByteString.copyFrom(bytes));
-    
-    getStub().testRpc(null, builder.build());
-  }
   
-  private AsynchronousSocketChannel openConnection(InetSocketAddress isa) {
+  private AsynchronousSocketChannel openConnection(InetSocketAddress isa)
+    throws IOException, InterruptedException, ExecutionException {
     AsynchronousSocketChannel channel = null;
-    try  {
+   // try  {
       LOG.info("opening connection to:" + isa);
       
       channel = AsynchronousSocketChannel.open();
       channel.connect(isa).get();
       
       LOG.info("client connected:" + isa);
-    } catch(Exception e) {
-      e.printStackTrace(System.out);
-    }
+    //} //catch(Exception e) {
+      //e.printStackTrace(System.out);
+    //}
     return channel;
   }
   
@@ -295,30 +296,48 @@ public class RpcClient {
    */
   public static void main(String[] args) throws Exception {
     if(args.length < 3) {
-      System.out.println("usage: RpcServer <server host> <server port> <clients number> <threads number> [padding length]");
+      System.out.println("usage: RpcClient <server host> <server port> <clients number> <threads number> <packetsize>");
       return;
     }
     String host = args[0];
     int port = Integer.parseInt(args[1]);
     int nclients = Integer.parseInt(args[2]);
     int nThreads = Integer.parseInt(args[3]);
-    
+    int nPacketSize = 1024;
 
     if(args.length >= 5) {
-      PacketUtils.TEST_PADDING_LEN = Integer.parseInt(args[4]);
+      nPacketSize = Integer.parseInt(args[4]);
     }
+    
     for(int j =0; j < nclients; j++ ) {
-      final RpcClient client = new RpcClient(CmRaftConfiguration.create(), new ServerInfo(host, port));
+      RpcClient client = new RpcClient(CmRaftConfiguration.create(), new ServerInfo(host, port));
       
       for(int i = 0; i < nThreads; i++) {
-        new Thread(new Runnable() {
-          public void run() {
-            client.sendRequest();
-            
-          }
-        }).start();
+        new Thread(new TestRpcWorker(client, nPacketSize)).start();
       }
     }
+  }
+  
+  static class TestRpcWorker implements Runnable{
+    private RpcClient client;
+    private int packetSize;
+    
+    public TestRpcWorker(RpcClient client, int size) {
+      this.client = client;
+      this.packetSize = size;
+    }
+    @Override
+    public void run() {
+      client.sendRequest(packetSize);
+    }
+  }
+  
+  public void testRpc(int packetSize) throws ServiceException {
+    TestRpcRequest.Builder builder = TestRpcRequest.newBuilder();
+    byte[] bytes = new byte[packetSize];
+    builder.setData(ByteString.copyFrom(bytes));
+    
+    getStub().testRpc(null, builder.build());
   }
   
   private ThreadLocal<Long> startTime = new ThreadLocal<>();
@@ -326,17 +345,22 @@ public class RpcClient {
   /*
    * For testing purpose
    */
-  public void sendRequest() {
+  public void sendRequest(int packetSize) {
     
     if(!this.isInitialized()) {
-      init();
+      try {
+        init();
+      } catch(Exception e) {
+        LOG.error("RpcClient init exception", e);
+        return;
+      }
     }
     
     LOG.info("client thread started");
     try {
       for(int i = 0; i < 5000000 ;i++) {
         startTime.set(System.currentTimeMillis());
-        testRpc();
+        testRpc(packetSize);
         //testHeartBeat();
         if(i != 0 && i %1000 == 0 ) {
           long ms = System.currentTimeMillis() - startTime.get();
