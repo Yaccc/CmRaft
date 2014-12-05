@@ -39,7 +39,7 @@ public class TestRpcClient {
       final RpcClient client = new RpcClient(CmRaftConfiguration.create(), new ServerInfo( "localhost", 18080));
 
       for(int i =0; i < 10000; i++) {
-      client.sendRequest(20);
+      client.sendRequest(1024*1024);
   
       Thread.sleep(1000);
   }

@@ -56,9 +56,6 @@ import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.core.RaftRpcService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
-import com.chicm.cmraft.rpc.TestNettyServer.MyProtobufDecoder;
-import com.chicm.cmraft.rpc.TestNettyServer.MyRcpCallHandler;
-import com.chicm.cmraft.rpc.TestNettyServer.MyRpcEncoder;
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.Message;
 import com.google.protobuf.ServiceException;
@@ -171,7 +168,7 @@ public class RpcServer {
                ch.pipeline().addLast("FrameEncoder", new LengthFieldPrepender(4));
                ch.pipeline().addLast("MessageDecoder", new RpcMessageDecoder() );
                ch.pipeline().addLast("MessageEncoder", new RpcMessageEncoder());
-               ch.pipeline().addLast("RpcHandler", new RpcCallInboundHandler(getService()));
+               ch.pipeline().addLast("RpcHandler", new RpcCallInboundHandler(getService(), RpcServer.callCounter));
                LOG.info("initChannel");
              }
           })

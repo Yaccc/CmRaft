@@ -21,6 +21,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -65,7 +66,7 @@ public class TestNettyServer {
                    ch.pipeline().addLast("msgDecoder", new MyProtobufDecoder() );
                    
                    ch.pipeline().addLast("msgencoder", new MyRpcEncoder());
-                   ch.pipeline().addLast(rpcgroup, "handler", new MyRcpCallHandler());
+                   ch.pipeline().addLast("handler", new MyRcpCallHandler());
                    
                    /*
                     * static final EventExecutorGroup group = new DefaultEventExecutorGroup(16);
@@ -86,7 +87,9 @@ public class TestNettyServer {
                }
            })
            .option(ChannelOption.SO_BACKLOG, 128)          // (5)
+           //.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
            .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
+           
 
           // Bind and start to accept incoming connections.
           ChannelFuture f = b.bind(port).sync(); // (7)
@@ -138,8 +141,11 @@ public class TestNettyServer {
         // Discard the received data silently.
       RpcCall call = (RpcCall)msg;
      // System.out.println("MyRcpCallHandler: callid:" + call.getCallId() );
-      
+      try {
+        Thread.sleep(50);
+      } catch(Exception e){};
       ctx.writeAndFlush(buildResponse(call));
+      //ctx.write(buildResponse(call));
       //System.out.println("WRITE done");
     }
     
@@ -164,7 +170,8 @@ public class TestNettyServer {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) { // (4)
         // Close the connection when an exception is raised.
-        cause.printStackTrace(System.out);
+      System.out.println("catched:" + cause.getMessage());
+        //cause.printStackTrace(System.out);
         ctx.close();
     }
   }
@@ -176,7 +183,7 @@ public class TestNettyServer {
         throws Exception {
       //System.out.println("size:" + msg.capacity());
       long t = System.currentTimeMillis();
-      
+     // System.out.println("ispooled:" + msg.)
       ByteBufInputStream in = new ByteBufInputStream(msg);
 
       RequestHeader.Builder hbuilder = RequestHeader.newBuilder();
@@ -209,7 +216,6 @@ public class TestNettyServer {
   public class MyOutboundHandler extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
-      
      // System.out.println("MyOutboundHandler: ENCODING");
         RpcCall call = (RpcCall) msg;
         int totalSize = PacketUtils.getTotalSizeofMessages(call.getHeader(), call.getMessage());
@@ -229,10 +235,13 @@ public class TestNettyServer {
         } catch(Exception e) {
           e.printStackTrace(System.out);
         }
-        
         //System.out.println("MyOutboundHandler: DONE");
-        
-        
+    }
+    
+    @Override
+    public void close(ChannelHandlerContext ctx, ChannelPromise promise) {
+      System.out.println("MyOutboundHandler:Closing ..");
+      ctx.close(promise);
     }
   }
   

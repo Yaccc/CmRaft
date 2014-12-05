@@ -1,5 +1,7 @@
 package com.chicm.cmraft.rpc;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ResponseHeader;
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.Message;
@@ -10,9 +12,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 
 public class RpcCallInboundHandler extends ChannelInboundHandlerAdapter {
   private BlockingService service;
+  private AtomicLong callCounter;
   
-  RpcCallInboundHandler(BlockingService service) {
+  RpcCallInboundHandler(BlockingService service, AtomicLong counter) {
     this.service = service;
+    this.callCounter = counter;
   }
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object msg) { 
@@ -31,6 +35,7 @@ public class RpcCallInboundHandler extends ChannelInboundHandlerAdapter {
         call.setHeader(header);
         call.setMessage(response);
         ctx.writeAndFlush(call);
+        callCounter.getAndIncrement();
       }
     } catch(ServiceException e) {
       e.printStackTrace(System.out);
