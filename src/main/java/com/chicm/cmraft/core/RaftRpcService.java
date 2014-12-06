@@ -59,7 +59,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   static final Log LOG = LogFactory.getLog(RaftRpcService.class);
   
   private RaftNode node = null;
-  //private RaftTimeoutListener listener = null;
+  //private TimeoutListener listener = null;
   
   // While created from RpcClient, node and listener will be null
   public static RaftRpcService create() {

@@ -24,7 +24,7 @@ package com.chicm.cmraft.core;
  * @author chicm
  *
  */
-public interface RaftTimeoutListener {
+public interface TimeoutListener {
   
   void timeout();
  

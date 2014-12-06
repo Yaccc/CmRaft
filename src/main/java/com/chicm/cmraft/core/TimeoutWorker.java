@@ -23,32 +23,90 @@ package com.chicm.cmraft.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * A thread provides time out service, it calls listener's timeout() method on every timeout.
+ * If the reset method is called before timeout, the timer will be restart.
+ * @author chicm
+ *
+ */
 public class TimeoutWorker implements Runnable {
   static final Log LOG = LogFactory.getLog(TimeoutWorker.class);
-  private RaftTimeoutListener listener = null;
+  private TimeoutListener listener = null;
   private int timeout = 0;
   private final Object sleepLock = new Object();
   private volatile boolean reset = false;
   private volatile boolean isStopped = false;
   private Thread thread = null;
   
-  public void start(String name, int timeout, RaftTimeoutListener listener) {
-    this.timeout = timeout;
-    this.listener = listener;
-    
-    //Thread object can not be reused, need to create new object every time
-    this.thread = new Thread(this);
-    this.thread.setName(name);
-    isStopped = false;
-    this.thread.start();
+  // It is not allowed to create new instance with new operator, can only be created
+  // from create method.
+  private TimeoutWorker() {
   }
+  
+  public static TimeoutWorker create(String name, int timeout, TimeoutListener listener) {
+    TimeoutWorker worker = new TimeoutWorker();
+    worker.setTimeout(timeout);
+    worker.setListener(listener);
     
+    worker.setThread(new Thread(worker));
+    worker.getThread().setName(name);
+    worker.getThread().start();
+    return worker;
+  }
+  
+  /**
+   * @return the listener
+   */
+  private TimeoutListener getListener() {
+    return listener;
+  }
+
+  /**
+   * @param listener the listener to set
+   */
+  private void setListener(TimeoutListener listener) {
+    this.listener = listener;
+  }
+
+  /**
+   * @return the timeout
+   */
+  private int getTimeout() {
+    return timeout;
+  }
+
+  /**
+   * @param timeout the timeout to set
+   */
+  private void setTimeout(int timeout) {
+    this.timeout = timeout;
+  }
+
+  /**
+   * @return the thread
+   */
+  private Thread getThread() {
+    return thread;
+  }
+
+  /**
+   * @param thread the thread to set
+   */
+  private void setThread(Thread thread) {
+    this.thread = thread;
+  }
+  
   public void reset() {
     LOG.info(thread.getName() + " RESET");
     synchronized (sleepLock) {
       reset = true;
       sleepLock.notifyAll();
     }   
+  }
+  
+  public void reset(int timeout) {
+    setTimeout(timeout);
+    reset();
   }
   
   public boolean isStopped() {
@@ -72,7 +130,7 @@ public class TimeoutWorker implements Runnable {
       while(!isStopped()) {
         reset = false;
         synchronized (sleepLock) {
-          sleepLock.wait(this.timeout);
+          sleepLock.wait(getTimeout());
         }
         if(reset)
           continue;
@@ -109,13 +167,10 @@ public class TimeoutWorker implements Runnable {
   private void doTimeOut() {
     LOG.info(thread.getName() + " TIMEOUT");
     if(listener != null) {
-      listener.timeout();
+      getListener().timeout();
       LOG.info(thread.getName() + " listener timeout is called");
     } else {
       LOG.info(thread.getName() + " listener is null");
     }
   }
-
-
- 
 }

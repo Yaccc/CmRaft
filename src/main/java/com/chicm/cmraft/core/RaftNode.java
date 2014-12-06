@@ -89,8 +89,8 @@ public class RaftNode {
   private StateMachine fsm = null;
   private RpcServer rpcServer = null;
   private NodeConnectionManager nodeConnectionManager = null;
-  private TimeoutWorker timeoutWorker = new TimeoutWorker();
-  private RaftTimeoutListener timeoutListener = new TimeoutHandler();
+  private TimeoutWorker timeoutWorker = null;
+  private TimeoutListener timeoutListener = new TimeoutHandler();
   private RaftStateChangeListener stateChangeListener = new RaftStateChangeListenerImpl();
   private RaftRpcService raftService = null;
   private LogManager logManager= null;
@@ -113,7 +113,7 @@ public class RaftNode {
     rpcServer = new RpcServer(conf, raftService);
     nodeConnectionManager = new NodeConnectionManager(conf, this);
     rpcServer.startRpcServer();
-    timeoutWorker.start(getName() + "-" + fsm.getState(), getElectionTimeout(), timeoutListener);
+    timeoutWorker = TimeoutWorker.create(getName()+ "-timeout-worker", getElectionTimeout(), timeoutListener);
     
     LOG.info(String.format("%s initialized", getName()));
   }
@@ -181,7 +181,6 @@ public class RaftNode {
   //For testing only
   public void kill() {
     timeoutWorker.stop();
-    timeoutWorker = null;
   }
   
   public void increaseTerm() {
@@ -292,9 +291,8 @@ public class RaftNode {
       case LEADER:
         timeout = conf.getInt("raft.heartbeat.interval");
     }
-    String threadName = getName() + "-" + fsm.getState() + "-timeoutWorker";
-    timeoutWorker.stop();
-    timeoutWorker.start(threadName, timeout, timeoutListener);
+    
+    timeoutWorker.reset(timeout);
   }
   
   public void testHearBeat() {
@@ -328,7 +326,7 @@ public class RaftNode {
     }
   }
   
-  private class TimeoutHandler implements RaftTimeoutListener, Runnable {
+  private class TimeoutHandler implements TimeoutListener, Runnable {
     @Override
     public void timeout() {
       Thread t = new Thread(new TimeoutHandler());

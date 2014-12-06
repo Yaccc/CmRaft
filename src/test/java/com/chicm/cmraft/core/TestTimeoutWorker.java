@@ -19,46 +19,33 @@
 */
 
 package com.chicm.cmraft.core;
-
+import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class TestTimeoutWorker {
-  private static TimeoutWorker threads[] = null;
+  private static TimeoutWorker worker;
+  
+  static class MyListener implements TimeoutListener {
+    @Override
+    public void timeout() {
+      System.out.println("timeout called");
+      assertTrue(false);
+    }
+    
+  }
   
   @BeforeClass
   public static void init() {
-    threads = new TimeoutWorker[10];
-    for(int i = 0; i < 10; i++) {
-      threads[i] = new TimeoutWorker();
-    }
+    worker = TimeoutWorker.create("test", 1000, new MyListener());
   }
   
   @Test
-  public void test() throws Exception {
+  public void testReset() throws Exception {
     for(int i = 0; i < 5; i++) {
-       threads[0].start("start0" + i, 1000, null);
-       threads[1].start("start1"+ i, 1000, null);
-       
-       Thread.sleep(3000);
-       
-       threads[0].stop();
-       threads[1].stop();
+       worker.reset();
+       Thread.sleep(300);
     }
   }
-  
-  @Test
-  public void test2() throws Exception {
-    TimeoutWorker p = new TimeoutWorker();
-    p.start("test", 5000, null);
-    Thread.sleep(6000);
-    
-    for(int i = 0; i<5 ; i++) {
-      
-      p.reset();
-      Thread.sleep(2000);
-    }
-    p.stop();
-    
-  }
+
 }
