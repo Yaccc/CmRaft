@@ -109,6 +109,8 @@ public class RaftNode {
     serverInfo = ServerInfo.parseFromString(conf.getString("raft.server.local"));
     raftService = RaftRpcService.create(this);
     logManager= new LogManager(this, conf);
+    //initialize the term value to be the saved term of last run
+    currentTerm.set(logManager.getLogTerm(logManager.getCommitIndex()));
     fsm = new StateMachine(stateChangeListener);
     rpcServer = new RpcServer(conf, raftService);
     nodeConnectionManager = new NodeConnectionManager(conf, this);

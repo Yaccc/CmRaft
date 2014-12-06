@@ -89,7 +89,14 @@ public class RpcClient {
     try {
       ctx = connect();
     } catch(Exception e) {
-      e.printStackTrace(System.out);
+      LOG.error("Failed connecting to:" + getRemoteServer(), e);
+      try {
+        if(ctx != null && ctx.channel().isOpen()) {
+          ctx.close().sync();
+        }
+      } catch(Exception e2) {
+        LOG.error("Failed closing ctx, " + e2.getMessage());
+      }
       return false;
     }
     

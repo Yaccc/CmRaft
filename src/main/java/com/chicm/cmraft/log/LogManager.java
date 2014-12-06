@@ -20,6 +20,16 @@
 
 package com.chicm.cmraft.log;
 
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -40,14 +50,14 @@ import com.chicm.cmraft.util.BlockingHashMap;
 
 public class LogManager {
   static final Log LOG = LogFactory.getLog(LogManager.class);
-  
-  private final static int DEFAULT_COMMIT_TIMEOUT = 5000;
+  private static final String RAFT_ROOT_DIR_KEY = "raft.root.dir";
+  private static final int DEFAULT_COMMIT_TIMEOUT = 5000;
   private Configuration conf;
   private SortedMap<Long, LogEntry> entries = new TreeMap<>();
   private final static long INITIAL_TERM = 0;
   private RaftNode node;
   private final AtomicLong commitIndex = new AtomicLong(0);
-
+  private final AtomicLong flushedIndex = new AtomicLong(0);
   /**lastApplied initialized as 0, and the first time increase it to 1,
      so the first index is 1. */
   private final AtomicLong lastApplied = new AtomicLong(0);
@@ -74,10 +84,16 @@ public class LogManager {
     this.node = node;
     this.conf = conf;
     thisServer = ServerInfo.parseFromString(conf.getString("raft.server.local"));
+    
+    loadPersistentData();
   }
   
   public String getServerName() {
     return thisServer.toString();
+  }
+  
+  public ServerInfo getServerInfo() {
+    return thisServer;
   }
   
   private void leaderInit() {
@@ -159,6 +175,14 @@ public class LogManager {
     this.lastApplied.set(lastApplied);;
   }
   
+  public long getFlushedIndex() {
+    return this.flushedIndex.get();
+  }
+  
+  public void setFlushedIndex(long index) {
+    flushedIndex.set(index);
+  }
+  
   // for followers
   public boolean appendEntries(long term, ServerInfo leaderId, long leaderCommit,
       long prevLogIndex, long prevLogTerm, List<LogEntry> leaderEntries) {
@@ -184,6 +208,8 @@ public class LogManager {
     
     if(leaderCommit > getCommitIndex()) {
       setCommitIndex(Math.min(getLastApplied(), leaderCommit));
+      //to-do: need to be done asynchronously
+      flushCommitted();
     }
     LOG.debug(getServerName() + "follower appending entry... done");
     return true;
@@ -209,6 +235,8 @@ public class LogManager {
       LOG.info(getServerName() + ": committed");
       setCommitIndex(index);
       rpcResults.put(index, true);
+      flushCommitted();
+      //to-do: need to notify followers after commit
     }
   }
   
@@ -248,6 +276,81 @@ public class LogManager {
   public Collection<LogEntry> list(byte[] pattern) {
     return entries.values();
   }
+  
+  private Path dataFile;
+  
+  private Path getStorageFilePath() {
+    if(dataFile != null)
+      return dataFile;
+    
+    String rootDir = conf.getString(RAFT_ROOT_DIR_KEY).trim();
+    String node = getServerInfo().getHost() + "-" + getServerInfo().getPort();
+    dataFile = Paths.get(rootDir).resolve(node).resolve("data");
+
+    return dataFile;
+  }
+  private volatile boolean persistentDataLoaded = false;
+  
+  private void loadPersistentData() {
+    if(persistentDataLoaded) {
+      return;
+    }
+    try ( ObjectInputStream ois = new ObjectInputStream(new FileInputStream(getStorageFilePath().toFile()))) {
+      long maxIndex = 0;
+      while(true) {
+        try {
+          LogEntry entry = (LogEntry)ois.readObject();
+          entries.put(entry.getIndex(), entry);
+          if(entry.getIndex() > maxIndex) {
+            maxIndex = entry.getIndex();
+          }
+          
+          setCommitIndex(maxIndex);
+          setLastApplied(maxIndex);
+          setFlushedIndex(maxIndex);
+          
+        } catch(EOFException e) {
+          break;
+        }
+      }
+    } catch(FileNotFoundException e) {
+      LOG.warn("no persistant data to load");
+    } catch(IOException | ClassNotFoundException e) {
+      LOG.error("ERROR loadPersistentData" + e.getMessage(), e);
+      //Will not try to load again if exception occurs.
+      //so still set loaded mark persistentDataLoaded
+    }
+    persistentDataLoaded = true;
+  }
+  
+  private synchronized void flushCommitted() {
+    if(getFlushedIndex() >= getCommitIndex()) {
+      return;
+    }
+    
+    Path path = getStorageFilePath();
+    boolean append = path.toFile().exists();
+    if(!path.getParent().toFile().exists()) {
+      try {
+        Files.createDirectories(path.getParent());
+      } catch(IOException e) {
+        LOG.error("ERROR flushCommitted", e);
+        return;
+      }
+    } 
+    try ( ObjectOutputStream oos = AppendableObjectOutputStream.create(
+                  new FileOutputStream(path.toFile(), append), append)) {
+      for(long index = flushedIndex.get() + 1; index <= commitIndex.get(); index++) {
+        LogEntry entry = entries.get(index);
+        oos.writeObject(entry);
+        setFlushedIndex(index);
+      }
+    } catch(IOException e) {
+      LOG.error("ERROR flushCommitted", e);
+      return;
+    }
+  }
+  
   
   class FollowerIndexes {
     /** for each server, index of the next log entry

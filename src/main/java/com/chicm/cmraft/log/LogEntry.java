@@ -20,10 +20,13 @@
 
 package com.chicm.cmraft.log;
 
+import java.io.Serializable;
+
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry;
 import com.google.protobuf.ByteString;
 
-public class LogEntry {
+public class LogEntry implements Serializable{
+  private static final long serialVersionUID = -5622235668354720569L;
   private long index;
   private long term;
   private byte[] key;
@@ -113,5 +116,17 @@ public class LogEntry {
     }
     
     return builder.build();
+  }
+  
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("{index: [" + getIndex());
+    sb.append("], term: [" + getTerm());
+    sb.append("], logType: [" + getLogType());
+    sb.append("], key: [" + new String(getKey()));
+    sb.append("], value: [" + new String(getValue()) + "]}");
+    
+    return sb.toString();
   }
 }

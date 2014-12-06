@@ -30,13 +30,14 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 
 public class ServerInfo {
   static final Log LOG = LogFactory.getLog(ServerInfo.class);
-  private String host;
-  private int port;
-  private long startCode;
+  private final String host;
+  private final int port;
+  private final long startCode;
   
   public ServerInfo(String host, int port) {
     this.host = host;
     this.port = port;
+    this.startCode = 0;
   }
   
   public ServerInfo(String host, int port, long startCode) {
@@ -51,35 +52,19 @@ public class ServerInfo {
   public String getHost() {
     return host;
   }
-  /**
-   * @param host the host to set
-   */
-  public void setHost(String host) {
-    this.host = host;
-  }
+
   /**
    * @return the port
    */
   public int getPort() {
     return port;
   }
-  /**
-   * @param port the port to set
-   */
-  public void setPort(int port) {
-    this.port = port;
-  }
+ 
   /**
    * @return the startCode
    */
   public long getStartCode() {
     return startCode;
-  }
-  /**
-   * @param startCode the startCode to set
-   */
-  public void setStartCode(long startCode) {
-    this.startCode = startCode;
   }
   
   public static ServerInfo parseFromString(String hostAddress) {

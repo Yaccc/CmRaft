@@ -24,6 +24,7 @@ import org.apache.log4j.Level;
 import org.junit.Test;
 
 import com.chicm.cmraft.core.LocalCluster;
+import com.chicm.cmraft.core.RaftNode;
 
 public class TestConnectionManager {
   
@@ -41,10 +42,19 @@ public class TestConnectionManager {
     cluster.checkNodesState();
     
     Connection conn = ConnectionManager.getConnection(cluster.getConf(0));
-    for(int i = 0; i < 100; i++) {
+    
+    for(int i = 1; i < 50; i++) {
       conn.set("key" + i, "value"+i);
     }
-    
+    RaftNode[] nodes = cluster.getNodes();
+    for(int i = 0; i < nodes.length; i++) {
+      System.out.println("commit:" + nodes[i].getLogManager().getCommitIndex());
+      System.out.println("lastapplied:" + nodes[i].getLogManager().getLastApplied());
+      System.out.println("lastapplied:" + nodes[i].getLogManager().getFlushedIndex());
+      System.out.println("log term:" + nodes[i].getLogManager().getLogTerm(nodes[i].getLogManager().getCommitIndex()));
+      System.out.println("current term:" + nodes[i].getCurrentTerm());
+    }
+    /*
     Result r = conn.list("");
     for(byte[] b: r.keySet()) {
       System.out.println(new String(b));
@@ -60,6 +70,6 @@ public class TestConnectionManager {
     for(byte[] b: r2.keySet()) {
       System.out.println(new String(b));
     }
-    cluster.checkNodesState();
+    cluster.checkNodesState();*/
   }
 }
