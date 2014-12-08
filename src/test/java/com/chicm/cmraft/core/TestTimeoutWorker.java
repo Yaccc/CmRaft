@@ -24,7 +24,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class TestTimeoutWorker {
-  private static TimeoutWorker worker;
+  private static RaftNodeTimer worker;
   
   static class MyListener implements TimeoutListener {
     @Override
@@ -37,7 +37,7 @@ public class TestTimeoutWorker {
   
   @BeforeClass
   public static void init() {
-    worker = TimeoutWorker.create("test", 1000, new MyListener());
+    worker = RaftNodeTimer.create("test", 1000, new MyListener());
   }
   
   @Test

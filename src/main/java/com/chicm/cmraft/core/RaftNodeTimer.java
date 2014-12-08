@@ -29,8 +29,8 @@ import org.apache.commons.logging.LogFactory;
  * @author chicm
  *
  */
-public class TimeoutWorker implements Runnable {
-  static final Log LOG = LogFactory.getLog(TimeoutWorker.class);
+public class RaftNodeTimer implements Runnable {
+  static final Log LOG = LogFactory.getLog(RaftNodeTimer.class);
   private TimeoutListener listener = null;
   private int timeout = 0;
   private final Object sleepLock = new Object();
@@ -40,11 +40,11 @@ public class TimeoutWorker implements Runnable {
   
   // It is not allowed to create new instance with new operator, can only be created
   // from create method.
-  private TimeoutWorker() {
+  private RaftNodeTimer() {
   }
   
-  public static TimeoutWorker create(String name, int timeout, TimeoutListener listener) {
-    TimeoutWorker worker = new TimeoutWorker();
+  public static RaftNodeTimer create(String name, int timeout, TimeoutListener listener) {
+    RaftNodeTimer worker = new RaftNodeTimer();
     worker.setTimeout(timeout);
     worker.setListener(listener);
     
@@ -97,7 +97,7 @@ public class TimeoutWorker implements Runnable {
   }
   
   public void reset() {
-    LOG.info(thread.getName() + " RESET");
+    LOG.debug(thread.getName() + " RESET");
     synchronized (sleepLock) {
       reset = true;
       sleepLock.notifyAll();
@@ -143,7 +143,7 @@ public class TimeoutWorker implements Runnable {
 
   @Override
   public void run() {
-    LOG.info(thread.getName() + " started, timeout=" + this.timeout);
+    LOG.debug(thread.getName() + " started, timeout=" + this.timeout);
     try {
       while (!isStopped()) {
         sleep();
@@ -158,19 +158,19 @@ public class TimeoutWorker implements Runnable {
         }        
       }
     } catch (Throwable t) {
-      LOG.error("TimeoutWorker exception", t);
+      LOG.error("RaftNodeTimer exception", t);
     } finally {
       LOG.info(thread.getName() + " STOPPED");
     }
   }
 
   private void doTimeOut() {
-    LOG.info(thread.getName() + " TIMEOUT");
+    LOG.debug(thread.getName() + " TIMEOUT");
     if(listener != null) {
       getListener().timeout();
-      LOG.info(thread.getName() + " listener timeout is called");
+      LOG.debug(thread.getName() + " listener timeout is called");
     } else {
-      LOG.info(thread.getName() + " listener is null");
+      LOG.warn(thread.getName() + " listener is null");
     }
   }
 }

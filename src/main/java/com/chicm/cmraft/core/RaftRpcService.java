@@ -100,7 +100,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   @Override
   public AppendEntriesResponse appendEntries(RpcController controller, AppendEntriesRequest request)
       throws ServiceException {
-    LOG.info(getRaftNode().getName() + "appendEntries CALLED, FROM:" + ServerInfo.copyFrom(request.getLeaderId()));
+    LOG.debug(getRaftNode().getName() + "appendEntries CALLED, FROM:" + ServerInfo.copyFrom(request.getLeaderId()));
     if(node == null) {
       LOG.error("RaftNode is null");
       return null;
@@ -163,7 +163,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     boolean granted = getRaftNode().voteRequest(new ServerInfo(request.getCandidateId().getHostName(), 
       request.getCandidateId().getPort()), request.getTerm(), request.getLastLogIndex(), request.getLastLogTerm());
     
-    LOG.info(getRaftNode().getName() + ": voted: " + granted + " candidate: " 
+    LOG.debug(getRaftNode().getName() + ": voted: " + granted + " candidate: " 
       + request.getCandidateId().getHostName() + ":" + request.getCandidateId().getPort());
     
     CollectVoteResponse.Builder builder = CollectVoteResponse.newBuilder();
@@ -181,10 +181,10 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     LookupLeaderResponse.Builder builder = LookupLeaderResponse.newBuilder();
     if(leader != null) {
       builder.setLeader(leader);
-      LOG.info(getRaftNode().getName() + ": lookupLeader responded: [" + leader.getHostName() 
+      LOG.debug(getRaftNode().getName() + ": lookupLeader responded: [" + leader.getHostName() 
         + ":" + leader.getPort() + "]");
     } else {
-      LOG.info(getRaftNode().getName() + ": lookupLeader responded: null");
+      LOG.debug(getRaftNode().getName() + ": lookupLeader responded: null");
     }
     
     return builder.build();
@@ -198,7 +198,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
 
   @Override
   public SetResponse set(RpcController controller, SetRequest request) throws ServiceException {
-    LOG.info(node.getName() + ": set request responded");
+    LOG.debug(node.getName() + ": set request responded");
     SetResponse.Builder builder = SetResponse.newBuilder();
     
     boolean success = node.getLogManager().set(request.getKey().toByteArray(), request.getValue().toByteArray());

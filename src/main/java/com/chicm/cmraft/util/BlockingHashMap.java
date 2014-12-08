@@ -30,6 +30,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.chicm.cmraft.rpc.RpcTimeoutException;
+
 /**
  * A hash table supports blocking method like a blocking queue, except that
  * user thread blocks only on specified keys. If a user thread trying to get
@@ -74,19 +76,22 @@ public class BlockingHashMap <K,V> {
   }
   
   public V take(K key) {
-    return take(key, 0, 0);
+    try {
+    return take(key, 0);
+    } catch (RpcTimeoutException e) {
+      LOG.error("Timeout", e);
+      return null;
+    }
   }
   
   /**
    * Take and remove a value from the hash table, if specified key not in
-   * the hash table, it blocks until specified timeout and retries condition 
-   * meet. 
+   * the hash table, it blocks until timeout  
    * @param key : key of the value
    * @param timeout: timeout in milliseconds
-   * @param retries: total times of retries
    * @return null if it does not get the value at specified timeout and retries
    */
-  public V take(K key, int timeout, int retries) {
+  public V take(K key, int timeout) throws RpcTimeoutException {
     V ret = null;
     KeyLock lock = locks.get(key);
     if(lock == null) {
@@ -100,23 +105,15 @@ public class BlockingHashMap <K,V> {
         remove(key);
         return ret;
       }
-      int retried = 0;
-      while(ret == null) {
-        if(timeout==0) {
-          lock.await();
-        } else {
-          lock.await(timeout);
-        }
-        ret = map.get(key);
-        if(ret == null) {
-          LOG.error("RPC TIMEOUT! KEY=" + key);
-          retried++;
-          if(retried >= retries) {
-            return null;
-          }
-        }
+      if(timeout==0) {
+        lock.await();
+      } else {
+        lock.await(timeout);
       }
-      LOG.debug("wait done: " + key + ": " + ret);
+      ret = map.get(key);
+      if(ret == null) {
+        throw new RpcTimeoutException("Rpc Timeout");
+      }
     } catch (InterruptedException ex) {
       LOG.error("InterruptedException", ex);
       return ret;

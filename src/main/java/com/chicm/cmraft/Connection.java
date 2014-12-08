@@ -24,9 +24,10 @@ package com.chicm.cmraft;
  * @author chicm
  *
  */
-public interface Connection {
+public interface Connection extends AutoCloseable{
   
   KeyValueStore getKeyValueStore();
   
+  @Override
   void close();
 }

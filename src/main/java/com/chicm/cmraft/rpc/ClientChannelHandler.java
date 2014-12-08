@@ -43,7 +43,7 @@ public class ClientChannelHandler extends ChannelInitializer<Channel>  {
     ch.pipeline().addLast("MessageDecoder", new RpcResponseDecoder() );
     ch.pipeline().addLast("MessageEncoder", new RpcRequestEncoder());
     ch.pipeline().addLast("ClientHandler", new RpcResponseHandler());
-    LOG.info("initChannel");
+    LOG.debug("initChannel");
   }
   
   public ChannelHandlerContext getCtx() {
@@ -60,14 +60,29 @@ public class ClientChannelHandler extends ChannelInitializer<Channel>  {
       responseMap.put(call.getCallId(), call);
     }
     
+    /* (non-Javadoc)
+     * @see io.netty.channel.ChannelStateHandlerAdapter#channelActive(io.netty.channel.ChannelHandlerContext)
+     */
     @Override
     public void channelActive(final ChannelHandlerContext ctx) { // (1)
       activeCtx = ctx;
-      LOG.info("Client Channel Active");
+      LOG.debug("Client Channel Active");
     }
+    
+    /* (non-Javadoc)
+     * @see io.netty.channel.ChannelStateHandlerAdapter#channelInactive(io.netty.channel.ChannelHandlerContext)
+     */
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+      super.channelInactive(ctx);
+    }
+    
+    /* (non-Javadoc)
+     * @see io.netty.channel.ChannelStateHandlerAdapter#exceptionCaught(io.netty.channel.ChannelHandlerContext)
+     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        LOG.error("Socket Exception: " + cause.getMessage(), cause);
         ctx.close();
     }
   }

@@ -25,7 +25,7 @@ Then use eclipse to open the project. To run a unit test, which will create a lo
 		
 		maven test
 ### Key value store APIs usage:
-Key value store APIs provides operation against key value paires, including adding, updating, deleting, listing, etc. It's very simple to use key value store APIs:
+Key value store APIs allow users to manipulate key value pairs against a replicated key value store inside CmRaft cluster, including adding, updating, deleting, listing, etc. It's very simple to use key value store APIs:
 
 		try(Connection conn = ConnectionManager.getConnection()) { 
 			KeyValueStore kvs = conn.getKeyValueStore();

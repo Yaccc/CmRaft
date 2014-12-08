@@ -46,6 +46,7 @@ import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.core.RaftNode;
 import com.chicm.cmraft.core.State;
+import com.chicm.cmraft.rpc.RpcTimeoutException;
 import com.chicm.cmraft.util.BlockingHashMap;
 
 public class LogManager {
@@ -261,7 +262,12 @@ public class LogManager {
     node.getNodeConnectionManager().appendEntries(this, getLastApplied());
     //waiting for results
     boolean committed = false;
-    committed = rpcResults.take(getLastApplied(), DEFAULT_COMMIT_TIMEOUT, 1);
+    try {
+      committed = rpcResults.take(getLastApplied(), DEFAULT_COMMIT_TIMEOUT);
+    } catch(RpcTimeoutException e) {
+      LOG.error(e.getMessage());
+      return false;
+    }
     LOG.debug(getServerName() + ": set committed, sending response");
     return committed;
   }

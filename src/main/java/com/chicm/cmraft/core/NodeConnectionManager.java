@@ -163,7 +163,7 @@ public class NodeConnectionManager {
     
     for(ServerInfo server: getOtherServers()) {
       NodeConnection conn = connections.get(server);
-      LOG.info(getRaftNode().getName() + ": SENDING COLLECTVOTE Request TO: " + server);
+      LOG.debug(getRaftNode().getName() + ": SENDING COLLECTVOTE Request TO: " + server);
       Thread t = new Thread(new AsynchronousVoteWorker(getRaftNode(), conn, thisServer, term,
         lastLogIndex, lastLogTerm));
       t.setDaemon(true);

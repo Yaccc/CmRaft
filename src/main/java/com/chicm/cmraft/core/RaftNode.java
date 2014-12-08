@@ -89,7 +89,7 @@ public class RaftNode {
   private StateMachine fsm = null;
   private RpcServer rpcServer = null;
   private NodeConnectionManager nodeConnectionManager = null;
-  private TimeoutWorker timeoutWorker = null;
+  private RaftNodeTimer timer = null;
   private TimeoutListener timeoutListener = new TimeoutHandler();
   private RaftStateChangeListener stateChangeListener = new RaftStateChangeListenerImpl();
   private RaftRpcService raftService = null;
@@ -115,7 +115,7 @@ public class RaftNode {
     rpcServer = new RpcServer(conf, raftService);
     nodeConnectionManager = new NodeConnectionManager(conf, this);
     rpcServer.startRpcServer();
-    timeoutWorker = TimeoutWorker.create(getName()+ "-timeout-worker", getElectionTimeout(), timeoutListener);
+    timer = RaftNodeTimer.create(getName()+ "-timeout-worker", getElectionTimeout(), timeoutListener);
     
     LOG.info(String.format("%s initialized", getName()));
   }
@@ -165,8 +165,8 @@ public class RaftNode {
   }
   
   public void resetTimer() {
-    if(timeoutWorker != null) { 
-      timeoutWorker.reset();
+    if(timer != null) { 
+      timer.reset();
     } else {
       LOG.error(getName() + ":resetTimer ERROR: timeoutWork==null");
     }
@@ -182,7 +182,7 @@ public class RaftNode {
   
   //For testing only
   public void kill() {
-    timeoutWorker.stop();
+    timer.stop();
   }
   
   public void increaseTerm() {
@@ -242,12 +242,12 @@ public class RaftNode {
   }
   
   private void voteMySelf() {
-    LOG.info(getName() + ": VOTE MYSELF!**");
+    LOG.debug(getName() + ": VOTE MYSELF");
     if( voteRequest(getServerInfo(), getCurrentTerm(), 
       logManager.getLastApplied(), logManager.getLastLogTerm())) {
       voteReceived(getServerInfo(), getCurrentTerm());
     } else {
-      LOG.error("voteMySelf failed!");
+      LOG.info("voteMySelf failed!");
     }
   }
   
@@ -279,8 +279,8 @@ public class RaftNode {
   }
   
   private void restartTimer() {
-    if(timeoutWorker == null) {
-      LOG.error("restartTimer ERROR, timeoutWorker == null");
+    if(timer == null) {
+      LOG.error("restartTimer ERROR, timer == null");
       return;
     }
     
@@ -294,7 +294,7 @@ public class RaftNode {
         timeout = conf.getInt("raft.heartbeat.interval");
     }
     
-    timeoutWorker.reset(timeout);
+    timer.reset(timeout);
   }
   
   public void testHearBeat() {

@@ -60,20 +60,17 @@ import com.google.protobuf.Descriptors.MethodDescriptor;
  */
 public class RpcClient {
   static final Log LOG = LogFactory.getLog(RpcClient.class);
-  private final static int DEFAULT_RPC_TIMEOUT = 2000;
-  private final static int DEFAULT_RPC_RETRIES = 3;
+  private final static int DEFAULT_RPC_TIMEOUT = 3000;
   private static volatile AtomicInteger client_call_id = new AtomicInteger(0);
   private BlockingInterface stub = null;
   private ChannelHandlerContext ctx = null;
   private BlockingHashMap<Integer, RpcCall> responsesMap = new BlockingHashMap<>();
   private volatile boolean initialized = false;
   private int rpcTimeout;
-  private int rpcRetries;
   private ServerInfo remoteServer = null;
   
   public RpcClient(Configuration conf, ServerInfo remoteServer) {
     rpcTimeout = conf.getInt("rpc.call.timeout", DEFAULT_RPC_TIMEOUT);
-    rpcRetries = conf.getInt("rpc.call.retries", DEFAULT_RPC_RETRIES);
     this.remoteServer = remoteServer;
   }
   
@@ -144,7 +141,7 @@ public class RpcClient {
       b.handler(channelHandler);
 
       ChannelFuture f = b.connect(getRemoteServer().getHost(), getRemoteServer().getPort()).sync(); 
-      LOG.info("connected to: " + this.getRemoteServer() );
+      LOG.debug("connected to: " + this.getRemoteServer() );
       return channelHandler.getCtx();
         // Wait until the connection is closed.
         //f.channel().closeFuture().sync();
@@ -190,15 +187,17 @@ public class RpcClient {
         
         ctx.writeAndFlush(call);
         
-        RpcCall result = this.responseMap.take(callId, rpcTimeout, rpcRetries);
+        RpcCall result = this.responseMap.take(callId, rpcTimeout);
         
         response = result != null? result.getMessage() : null;
         if(response != null) {
           LOG.debug("response taken: " + callId);
           LOG.debug(String.format("RPC[%d] round trip takes %d ms", header.getId(), (System.currentTimeMillis() - tm)));
         }
-       } catch(Exception e) {
-        e.printStackTrace(System.out);
+       } catch(RpcTimeoutException e) {
+        LOG.error("Rpc Timeout", e);
+        ServiceException se = new ServiceException(e.getMessage(), e);
+        throw se;
       }
       return response;
     }

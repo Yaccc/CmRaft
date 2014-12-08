@@ -49,7 +49,7 @@ public class ServerChannelHandler extends ChannelInitializer<Channel> {
     ch.pipeline().addLast("MessageDecoder", new RpcRequestDecoder() );
     ch.pipeline().addLast("MessageEncoder", new RpcResponseEncoder());
     ch.pipeline().addLast(rpcGroup, "RpcHandler", new RpcRequestHandler(service, callCounter));
-    LOG.info("initChannel");
+    LOG.debug("initChannel");
   }
   
   class RpcRequestHandler extends ChannelInboundHandlerAdapter {
