@@ -8914,7 +8914,7 @@ public final class RaftProtos {
     // @@protoc_insertion_point(class_scope:GetResponse)
   }
 
-  public interface KeyValueOrBuilder
+  public interface KeyValuePairOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // optional bytes key = 1;
@@ -8938,24 +8938,24 @@ public final class RaftProtos {
     com.google.protobuf.ByteString getValue();
   }
   /**
-   * Protobuf type {@code KeyValue}
+   * Protobuf type {@code KeyValuePair}
    */
-  public static final class KeyValue extends
+  public static final class KeyValuePair extends
       com.google.protobuf.GeneratedMessage
-      implements KeyValueOrBuilder {
-    // Use KeyValue.newBuilder() to construct.
-    private KeyValue(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements KeyValuePairOrBuilder {
+    // Use KeyValuePair.newBuilder() to construct.
+    private KeyValuePair(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private KeyValue(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private KeyValuePair(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final KeyValue defaultInstance;
-    public static KeyValue getDefaultInstance() {
+    private static final KeyValuePair defaultInstance;
+    public static KeyValuePair getDefaultInstance() {
       return defaultInstance;
     }
 
-    public KeyValue getDefaultInstanceForType() {
+    public KeyValuePair getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -8965,7 +8965,7 @@ public final class RaftProtos {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private KeyValue(
+    private KeyValuePair(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -9012,28 +9012,28 @@ public final class RaftProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValue_descriptor;
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValue_fieldAccessorTable
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.class, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder.class);
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.class, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<KeyValue> PARSER =
-        new com.google.protobuf.AbstractParser<KeyValue>() {
-      public KeyValue parsePartialFrom(
+    public static com.google.protobuf.Parser<KeyValuePair> PARSER =
+        new com.google.protobuf.AbstractParser<KeyValuePair>() {
+      public KeyValuePair parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new KeyValue(input, extensionRegistry);
+        return new KeyValuePair(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<KeyValue> getParserForType() {
+    public com.google.protobuf.Parser<KeyValuePair> getParserForType() {
       return PARSER;
     }
 
@@ -9121,53 +9121,53 @@ public final class RaftProtos {
       return super.writeReplace();
     }
 
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(byte[] data)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(java.io.InputStream input)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseDelimitedFrom(java.io.InputStream input)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseDelimitedFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -9176,7 +9176,7 @@ public final class RaftProtos {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue prototype) {
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -9188,24 +9188,24 @@ public final class RaftProtos {
       return builder;
     }
     /**
-     * Protobuf type {@code KeyValue}
+     * Protobuf type {@code KeyValuePair}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder {
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValue_descriptor;
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValue_fieldAccessorTable
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.class, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder.class);
+                com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.class, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder.class);
       }
 
-      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.newBuilder()
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -9238,23 +9238,23 @@ public final class RaftProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValue_descriptor;
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_descriptor;
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue getDefaultInstanceForType() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.getDefaultInstance();
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue build() {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue result = buildPartial();
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue buildPartial() {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue result = new com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue(this);
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair result = new com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -9271,16 +9271,16 @@ public final class RaftProtos {
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue) {
-          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue)other);
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue other) {
-        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance()) return this;
         if (other.hasKey()) {
           setKey(other.getKey());
         }
@@ -9299,11 +9299,11 @@ public final class RaftProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue parsedMessage = null;
+        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue) e.getUnfinishedMessage();
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -9386,15 +9386,15 @@ public final class RaftProtos {
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:KeyValue)
+      // @@protoc_insertion_point(builder_scope:KeyValuePair)
     }
 
     static {
-      defaultInstance = new KeyValue(true);
+      defaultInstance = new KeyValuePair(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:KeyValue)
+    // @@protoc_insertion_point(class_scope:KeyValuePair)
   }
 
   public interface ListRequestOrBuilder
@@ -9809,29 +9809,29 @@ public final class RaftProtos {
      */
     boolean getSuccess();
 
-    // repeated .KeyValue results = 2;
+    // repeated .KeyValuePair results = 2;
     /**
-     * <code>repeated .KeyValue results = 2;</code>
+     * <code>repeated .KeyValuePair results = 2;</code>
      */
-    java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> 
+    java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair> 
         getResultsList();
     /**
-     * <code>repeated .KeyValue results = 2;</code>
+     * <code>repeated .KeyValuePair results = 2;</code>
      */
-    com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue getResults(int index);
+    com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getResults(int index);
     /**
-     * <code>repeated .KeyValue results = 2;</code>
+     * <code>repeated .KeyValuePair results = 2;</code>
      */
     int getResultsCount();
     /**
-     * <code>repeated .KeyValue results = 2;</code>
+     * <code>repeated .KeyValuePair results = 2;</code>
      */
-    java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder> 
+    java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder> 
         getResultsOrBuilderList();
     /**
-     * <code>repeated .KeyValue results = 2;</code>
+     * <code>repeated .KeyValuePair results = 2;</code>
      */
-    com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder getResultsOrBuilder(
+    com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder getResultsOrBuilder(
         int index);
   }
   /**
@@ -9892,10 +9892,10 @@ public final class RaftProtos {
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                results_ = new java.util.ArrayList<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue>();
+                results_ = new java.util.ArrayList<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              results_.add(input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.PARSER, extensionRegistry));
+              results_.add(input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.PARSER, extensionRegistry));
               break;
             }
           }
@@ -9957,38 +9957,38 @@ public final class RaftProtos {
       return success_;
     }
 
-    // repeated .KeyValue results = 2;
+    // repeated .KeyValuePair results = 2;
     public static final int RESULTS_FIELD_NUMBER = 2;
-    private java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> results_;
+    private java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair> results_;
     /**
-     * <code>repeated .KeyValue results = 2;</code>
+     * <code>repeated .KeyValuePair results = 2;</code>
      */
-    public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> getResultsList() {
+    public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair> getResultsList() {
       return results_;
     }
     /**
-     * <code>repeated .KeyValue results = 2;</code>
+     * <code>repeated .KeyValuePair results = 2;</code>
      */
-    public java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder> 
+    public java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder> 
         getResultsOrBuilderList() {
       return results_;
     }
     /**
-     * <code>repeated .KeyValue results = 2;</code>
+     * <code>repeated .KeyValuePair results = 2;</code>
      */
     public int getResultsCount() {
       return results_.size();
     }
     /**
-     * <code>repeated .KeyValue results = 2;</code>
+     * <code>repeated .KeyValuePair results = 2;</code>
      */
-    public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue getResults(int index) {
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getResults(int index) {
       return results_.get(index);
     }
     /**
-     * <code>repeated .KeyValue results = 2;</code>
+     * <code>repeated .KeyValuePair results = 2;</code>
      */
-    public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder getResultsOrBuilder(
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder getResultsOrBuilder(
         int index) {
       return results_.get(index);
     }
@@ -10303,23 +10303,23 @@ public final class RaftProtos {
         return this;
       }
 
-      // repeated .KeyValue results = 2;
-      private java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> results_ =
+      // repeated .KeyValuePair results = 2;
+      private java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair> results_ =
         java.util.Collections.emptyList();
       private void ensureResultsIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          results_ = new java.util.ArrayList<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue>(results_);
+          results_ = new java.util.ArrayList<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair>(results_);
           bitField0_ |= 0x00000002;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder> resultsBuilder_;
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder> resultsBuilder_;
 
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
-      public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> getResultsList() {
+      public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair> getResultsList() {
         if (resultsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(results_);
         } else {
@@ -10327,7 +10327,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
       public int getResultsCount() {
         if (resultsBuilder_ == null) {
@@ -10337,9 +10337,9 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue getResults(int index) {
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getResults(int index) {
         if (resultsBuilder_ == null) {
           return results_.get(index);
         } else {
@@ -10347,10 +10347,10 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
       public Builder setResults(
-          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue value) {
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -10364,10 +10364,10 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
       public Builder setResults(
-          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder builderForValue) {
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.set(index, builderForValue.build());
@@ -10378,9 +10378,9 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
-      public Builder addResults(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue value) {
+      public Builder addResults(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -10394,10 +10394,10 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
       public Builder addResults(
-          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue value) {
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair value) {
         if (resultsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -10411,10 +10411,10 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
       public Builder addResults(
-          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder builderForValue) {
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.add(builderForValue.build());
@@ -10425,10 +10425,10 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
       public Builder addResults(
-          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder builderForValue) {
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder builderForValue) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           results_.add(index, builderForValue.build());
@@ -10439,10 +10439,10 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
       public Builder addAllResults(
-          java.lang.Iterable<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue> values) {
+          java.lang.Iterable<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair> values) {
         if (resultsBuilder_ == null) {
           ensureResultsIsMutable();
           super.addAll(values, results_);
@@ -10453,7 +10453,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
       public Builder clearResults() {
         if (resultsBuilder_ == null) {
@@ -10466,7 +10466,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
       public Builder removeResults(int index) {
         if (resultsBuilder_ == null) {
@@ -10479,16 +10479,16 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder getResultsBuilder(
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder getResultsBuilder(
           int index) {
         return getResultsFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder getResultsOrBuilder(
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder getResultsOrBuilder(
           int index) {
         if (resultsBuilder_ == null) {
           return results_.get(index);  } else {
@@ -10496,9 +10496,9 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
-      public java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder> 
+      public java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder> 
            getResultsOrBuilderList() {
         if (resultsBuilder_ != null) {
           return resultsBuilder_.getMessageOrBuilderList();
@@ -10507,33 +10507,33 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder addResultsBuilder() {
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder addResultsBuilder() {
         return getResultsFieldBuilder().addBuilder(
-            com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.getDefaultInstance());
+            com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance());
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder addResultsBuilder(
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder addResultsBuilder(
           int index) {
         return getResultsFieldBuilder().addBuilder(
-            index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.getDefaultInstance());
+            index, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance());
       }
       /**
-       * <code>repeated .KeyValue results = 2;</code>
+       * <code>repeated .KeyValuePair results = 2;</code>
        */
-      public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder> 
+      public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder> 
            getResultsBuilderList() {
         return getResultsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder> 
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder> 
           getResultsFieldBuilder() {
         if (resultsBuilder_ == null) {
           resultsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValueOrBuilder>(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder>(
                   results_,
                   ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
@@ -12159,10 +12159,10 @@ public final class RaftProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_GetResponse_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_KeyValue_descriptor;
+    internal_static_KeyValuePair_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_KeyValue_fieldAccessorTable;
+      internal_static_KeyValuePair_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_ListRequest_descriptor;
   private static
@@ -12215,23 +12215,23 @@ public final class RaftProtos {
       "uest\022\013\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\"\036\n\013SetR" +
       "esponse\022\017\n\007success\030\001 \001(\010\"\031\n\nGetRequest\022\013" +
       "\n\003key\030\001 \001(\014\"-\n\013GetResponse\022\r\n\005value\030\001 \001(" +
-      "\014\022\017\n\007success\030\002 \001(\010\"&\n\010KeyValue\022\013\n\003key\030\001 " +
-      "\001(\014\022\r\n\005value\030\002 \001(\014\"\036\n\013ListRequest\022\017\n\007pat" +
-      "tern\030\001 \001(\014\";\n\014ListResponse\022\017\n\007success\030\001 " +
-      "\001(\010\022\032\n\007results\030\002 \003(\0132\t.KeyValue\"\034\n\rDelet" +
-      "eRequest\022\013\n\003key\030\001 \001(\014\"!\n\016DeleteResponse\022" +
-      "\017\n\007success\030\001 \001(\0102\206\003\n\013RaftService\0228\n\013coll" +
-      "ectVote\022\023.CollectVoteRequest\032\024.CollectVo",
-      "teResponse\022>\n\rappendEntries\022\025.AppendEntr" +
-      "iesRequest\032\026.AppendEntriesResponse\022,\n\007te" +
-      "stRpc\022\017.TestRpcRequest\032\020.TestRpcResponse" +
-      "\022;\n\014lookupLeader\022\024.LookupLeaderRequest\032\025" +
-      ".LookupLeaderResponse\022 \n\003get\022\013.GetReques" +
-      "t\032\014.GetResponse\022 \n\003set\022\013.SetRequest\032\014.Se" +
-      "tResponse\022)\n\006delete\022\016.DeleteRequest\032\017.De" +
-      "leteResponse\022#\n\004list\022\014.ListRequest\032\r.Lis" +
-      "tResponseB6\n#com.chicm.cmraft.protobuf.g" +
-      "eneratedB\nRaftProtosH\001\210\001\001"
+      "\014\022\017\n\007success\030\002 \001(\010\"*\n\014KeyValuePair\022\013\n\003ke" +
+      "y\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\"\036\n\013ListRequest\022\017\n" +
+      "\007pattern\030\001 \001(\014\"?\n\014ListResponse\022\017\n\007succes" +
+      "s\030\001 \001(\010\022\036\n\007results\030\002 \003(\0132\r.KeyValuePair\"" +
+      "\034\n\rDeleteRequest\022\013\n\003key\030\001 \001(\014\"!\n\016DeleteR" +
+      "esponse\022\017\n\007success\030\001 \001(\0102\206\003\n\013RaftService" +
+      "\0228\n\013collectVote\022\023.CollectVoteRequest\032\024.C",
+      "ollectVoteResponse\022>\n\rappendEntries\022\025.Ap" +
+      "pendEntriesRequest\032\026.AppendEntriesRespon" +
+      "se\022,\n\007testRpc\022\017.TestRpcRequest\032\020.TestRpc" +
+      "Response\022;\n\014lookupLeader\022\024.LookupLeaderR" +
+      "equest\032\025.LookupLeaderResponse\022 \n\003get\022\013.G" +
+      "etRequest\032\014.GetResponse\022 \n\003set\022\013.SetRequ" +
+      "est\032\014.SetResponse\022)\n\006delete\022\016.DeleteRequ" +
+      "est\032\017.DeleteResponse\022#\n\004list\022\014.ListReque" +
+      "st\032\r.ListResponseB6\n#com.chicm.cmraft.pr" +
+      "otobuf.generatedB\nRaftProtosH\001\210\001\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -12334,11 +12334,11 @@ public final class RaftProtos {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_GetResponse_descriptor,
               new java.lang.String[] { "Value", "Success", });
-          internal_static_KeyValue_descriptor =
+          internal_static_KeyValuePair_descriptor =
             getDescriptor().getMessageTypes().get(16);
-          internal_static_KeyValue_fieldAccessorTable = new
+          internal_static_KeyValuePair_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_KeyValue_descriptor,
+              internal_static_KeyValuePair_descriptor,
               new java.lang.String[] { "Key", "Value", });
           internal_static_ListRequest_descriptor =
             getDescriptor().getMessageTypes().get(17);

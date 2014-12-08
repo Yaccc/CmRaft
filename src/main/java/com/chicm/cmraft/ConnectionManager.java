@@ -20,6 +20,7 @@
 
 package com.chicm.cmraft;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -28,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest;
@@ -36,17 +37,20 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse;
 import com.chicm.cmraft.rpc.RpcClient;
+import com.google.common.base.Preconditions;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ServiceException;
 
 public class ConnectionManager {
   static final Log LOG = LogFactory.getLog(ConnectionManager.class);
   private RpcClient rpcClient;
-  private UserConnectionImpl userConnection;
+  private ConnectionImpl userConnection;
+  private KeyValueStore kvs;
   
   private ConnectionManager(Configuration conf, ServerInfo server) {
     rpcClient = new RpcClient(conf, server);
-    userConnection = new UserConnectionImpl();
+    userConnection = new ConnectionImpl();
+    kvs = new KeyValueStoreImpl();
   }
   
   public static Connection getConnection() {
@@ -80,7 +84,7 @@ public class ConnectionManager {
     try {
       LookupLeaderResponse response = rpcClient.getStub().lookupLeader(null, builder.build());
       if(response.getLeader() != null) {
-        return ServerInfo.parseFromServerId(response.getLeader());
+        return ServerInfo.copyFrom(response.getLeader());
       }
     } catch(ServiceException e) {
       LOG.error("lookupLeader failed", e);
@@ -88,7 +92,21 @@ public class ConnectionManager {
     return null;
   }
   
-  private class UserConnectionImpl implements Connection {
+  private class ConnectionImpl implements Connection {
+
+    @Override
+    public KeyValueStore getKeyValueStore() {
+      return kvs;
+    }
+
+    @Override
+    public void close() {
+      rpcClient.close();
+    }
+    
+  }
+  
+  private class KeyValueStoreImpl implements KeyValueStore {
 
     @Override
     public boolean set(byte[] key, byte[] value) {
@@ -108,9 +126,9 @@ public class ConnectionManager {
 
     @Override
     public boolean set(String key, String value) {
-      if(key == null || value == null) {
-        throw new IllegalArgumentException("key or value is null");
-      }
+      Preconditions.checkNotNull(key);
+      Preconditions.checkNotNull(value);
+      
       return set(key.getBytes(), value.getBytes());
     }
 
@@ -139,40 +157,36 @@ public class ConnectionManager {
     }
 
     @Override
-    public Result list(byte[] pattern) {
+    public List<KeyValue> list(byte[] pattern) {
       ListRequest.Builder builder = ListRequest.newBuilder();
       if(pattern != null) {
         builder.setPattern(ByteString.copyFrom(pattern));
       }
+      List<KeyValue> result = new ArrayList<>();
       
       try {
         ListResponse response = rpcClient.getStub().list(null, builder.build());
         if(response != null && response.getSuccess()) {
-          Result rs = new Result();
-          List<KeyValue> list = response.getResultsList();
-          for(KeyValue kv: list) {
-            rs.put(kv.getKey().toByteArray(), kv.getValue().toByteArray());
+          for(KeyValuePair kvp: response.getResultsList()) {
+            KeyValue kv = KeyValue.copyFrom(kvp);
+            result.add(kv);
           }
-          return rs;
         }
       } catch(ServiceException e) {
         LOG.error("list failed");
       }
-      return null;
+      return result;
     }
 
     @Override
-    public Result list(String pattern) {
+    public List<KeyValue> list(String pattern) {
       if(pattern != null)
         return list(pattern.getBytes());
       else
         return list("".getBytes());
     }
     
-    @Override
-    public void close() {
-      rpcClient.close();
-    }
+ 
   }
 }
 

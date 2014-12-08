@@ -86,7 +86,7 @@ message GetResponse {
   optional bool success = 2;
 }
 
-message KeyValue {
+message KeyValuePair {
   optional bytes key = 1;
   optional bytes value = 2;
 }
@@ -97,7 +97,7 @@ message ListRequest {
 
 message ListResponse {
   optional bool success = 1;
-  repeated KeyValue results = 2;
+  repeated KeyValuePair results = 2;
 }
 
 message DeleteRequest {

@@ -42,9 +42,10 @@ public class TestConnectionManager {
     cluster.checkNodesState();
     
     Connection conn = ConnectionManager.getConnection(cluster.getConf(0));
+    KeyValueStore kvs = conn.getKeyValueStore();
     
     for(int i = 1; i < 50; i++) {
-      conn.set("key" + i, "value"+i);
+      kvs.set("key" + i, "value"+i);
     }
     RaftNode[] nodes = cluster.getNodes();
     for(int i = 0; i < nodes.length; i++) {
@@ -55,7 +56,7 @@ public class TestConnectionManager {
       System.out.println("current term:" + nodes[i].getCurrentTerm());
     }
     /*
-    Result r = conn.list("");
+    KeyValue r = conn.list("");
     for(byte[] b: r.keySet()) {
       System.out.println(new String(b));
     }
@@ -66,7 +67,7 @@ public class TestConnectionManager {
     cluster.checkNodesState();
     
     Connection conn2 = ConnectionManager.getConnection(cluster.getConf(0));
-    Result r2 = conn.list("");
+    KeyValue r2 = conn.list("");
     for(byte[] b: r2.keySet()) {
       System.out.println(new String(b));
     }

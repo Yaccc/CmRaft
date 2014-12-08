@@ -195,7 +195,7 @@ public class NodeConnectionManager {
       try {
         response = connection.collectVote(candidate, term, lastLogIndex, lastLogTerm);
         if(response != null && response.getGranted()) {
-          node.voteReceived(ServerInfo.parseFromServerId(response.getFromHost()), response.getTerm());
+          node.voteReceived(ServerInfo.copyFrom(response.getFromHost()), response.getTerm());
         } else if( response == null) {
           LOG.error("RPC failed, response == null");
         } else if(response.getGranted() == false) {

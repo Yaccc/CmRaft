@@ -102,7 +102,7 @@ public class ServerInfo {
     return builder.build();
   }
   
-  public static ServerInfo parseFromServerId(ServerId serverId) {
+  public static ServerInfo copyFrom(ServerId serverId) {
     if(serverId == null)
       return null;
     ServerInfo server = new ServerInfo(serverId.getHostName(), serverId.getPort(), serverId.getStartCode());

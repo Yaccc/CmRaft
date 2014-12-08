@@ -20,25 +20,27 @@
 
 package com.chicm.cmraft;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-public class Result {
-  private Map<byte[], byte[]> map = new HashMap<>();
+import java.util.List;
+/**
+ * Key value store interface for clients.
+ * 
+ * example:
+ * KeyValueStore kvs = ConnectoinManager.getConnection().getKeyValueStore();
+ * kvs.set("mykey", "myvalue");
+ * 
+ * @author chicm
+ *
+ */
+public interface KeyValueStore {
+  boolean set(byte[] key, byte[] value);
+  boolean set(String key, String value);
   
-  public void put(byte[] key, byte[] value) {
-    map.put(key, value);
-  }
+  byte[] get(byte[] key);
+  String get(String key);
   
-  public byte[] get(byte[] key) {
-    return map.get(key); 
-  }
+  boolean delete(byte[] key);
+  boolean delete(String key);
   
-  public Set<byte[]> keySet() {
-    return map.keySet();
-  }
-
+  List<KeyValue> list(byte[] pattern);
+  List<KeyValue> list(String pattern);
 }

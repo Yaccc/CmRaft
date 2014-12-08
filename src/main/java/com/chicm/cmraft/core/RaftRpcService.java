@@ -38,7 +38,7 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValue;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest;
@@ -100,15 +100,15 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   @Override
   public AppendEntriesResponse appendEntries(RpcController controller, AppendEntriesRequest request)
       throws ServiceException {
-    LOG.info(getRaftNode().getName() + "appendEntries CALLED, FROM:" + ServerInfo.parseFromServerId(request.getLeaderId()));
+    LOG.info(getRaftNode().getName() + "appendEntries CALLED, FROM:" + ServerInfo.copyFrom(request.getLeaderId()));
     if(node == null) {
       LOG.error("RaftNode is null");
       return null;
     }
     
-    getRaftNode().discoverLeader(ServerInfo.parseFromServerId(request.getLeaderId()), request.getTerm());
+    getRaftNode().discoverLeader(ServerInfo.copyFrom(request.getLeaderId()), request.getTerm());
     if(request.getTerm() > node.getCurrentTerm()) {
-      getRaftNode().discoverHigherTerm(ServerInfo.parseFromServerId(request.getLeaderId()), request.getTerm());
+      getRaftNode().discoverHigherTerm(ServerInfo.copyFrom(request.getLeaderId()), request.getTerm());
     }
     
     if(node.getServerInfo().getPort() == request.getLeaderId().getPort()) {
@@ -122,7 +122,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
       node.resetTimer();
     } else { // entry number >0
       node.getLogManager().appendEntries(request.getTerm(), 
-        ServerInfo.parseFromServerId(request.getLeaderId()), 
+        ServerInfo.copyFrom(request.getLeaderId()), 
         request.getLeaderCommit(), request.getPrevLogIndex(), 
         request.getPrevLogTerm(), 
         buildLogEntriesFromRaftEntries(request.getEntriesList(), request.getTerm()));
@@ -152,7 +152,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     LOG.debug(getRaftNode().getName() + ": received vote request from: " + "{" + request + "}" );
     
     if(request.getTerm() > node.getCurrentTerm()) {
-      getRaftNode().discoverHigherTerm(ServerInfo.parseFromServerId(request.getCandidateId()), request.getTerm());
+      getRaftNode().discoverHigherTerm(ServerInfo.copyFrom(request.getCandidateId()), request.getTerm());
     }
     
     ServerId.Builder sbuilder = ServerId.newBuilder();
@@ -221,7 +221,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     Collection<LogEntry> col = node.getLogManager().list(request.getPattern().toByteArray());
     //int i=0;
     for(LogEntry entry: col) {
-      KeyValue.Builder kvbuilder = KeyValue.newBuilder();
+      KeyValuePair.Builder kvbuilder = KeyValuePair.newBuilder();
       kvbuilder.setKey(ByteString.copyFrom(entry.getKey()));
       kvbuilder.setValue(ByteString.copyFrom(entry.getValue()));
       builder.addResults(kvbuilder.build());
