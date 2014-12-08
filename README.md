@@ -37,10 +37,13 @@ Key value store APIs allow users to manipulate key value pairs against a replica
 		} finally {
 		}
 
+Contact: Chi Cheng Min, [chicm.dev@gmail.com](mailto:chicm.dev@gmail.com)
+
 CmRaft中文说明
 =============
 
-CmRaft是Raft算法的基于Java的实现
+CmRaft是Raft算法的Java的实现。CmRaft已经列在Raft官方网站的Raft实现列表中了，从官方网站首页下方的Where can I get Raft一节中可以看到CmRaft。
+[https://raftconsensus.github.io/](https://raftconsensus.github.io/)
 
 什么是Raft算法?
 ----------
