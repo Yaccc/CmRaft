@@ -116,28 +116,33 @@ public class RaftRpcService implements RaftService.BlockingInterface{
       e.printStackTrace(System.out);
     }
     
+    // always reset timer not mater whether it is a heart beat,
+    // normal appendEntries RPC can also be treated as heart beat.
+    node.resetTimer(); 
+    
     AppendEntriesResponse.Builder builder = AppendEntriesResponse.newBuilder();
     if(request.getEntriesCount() <= 0) {
-      LOG.info(getRaftNode().getName() + ": HEARTBEAT CALLED**!");
-      node.resetTimer();
-    } else { // entry number >0
-      node.getLogManager().appendEntries(request.getTerm(), 
+      LOG.debug(getRaftNode().getName() + ": HEARTBEAT CALLED**!");
+    } 
+    boolean success = node.getLogManager().appendEntries(request.getTerm(), 
         ServerInfo.copyFrom(request.getLeaderId()), 
         request.getLeaderCommit(), request.getPrevLogIndex(), 
         request.getPrevLogTerm(), 
         buildLogEntriesFromRaftEntries(request.getEntriesList(), request.getTerm()));
-    }
+    
     builder.setTerm(node.getCurrentTerm());
-    builder.setSuccess(request.getTerm() >= node.getCurrentTerm());
+    builder.setSuccess(/*request.getTerm() >= node.getCurrentTerm()*/success);
     
     return builder.build();
   }
   
   private List<LogEntry> buildLogEntriesFromRaftEntries(List<RaftEntry> raftEntries, long term) {
-    if(raftEntries == null) {
-      return null;
-    }
     List<LogEntry> result = new ArrayList<LogEntry>();
+    
+    if(raftEntries == null) {
+      return result;
+    }
+    
     for(RaftEntry r: raftEntries) {
       LogEntry logEntry = new LogEntry(r.getIndex(), term, r.getKey().toByteArray(), 
         r.getValue().toByteArray(), LogMutationType.SET); //todo: add type to raft entry

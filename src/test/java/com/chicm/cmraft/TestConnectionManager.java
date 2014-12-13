@@ -38,22 +38,32 @@ public class TestConnectionManager {
     org.apache.log4j.LogManager.getRootLogger().setLevel(Level.ERROR);
     LocalCluster cluster = LocalCluster.create(5, 14688);
     Thread.sleep(10000);
-    
+    RaftNode[] nodes = cluster.getNodes();
     cluster.checkNodesState();
     
+    for(int i = 0; i < nodes.length; i++) {
+      System.out.println(nodes[i].getServerInfo() + " commit:" + nodes[i].getLogManager().getCommitIndex());
+      System.out.println(nodes[i].getServerInfo() +" lastapplied:" + nodes[i].getLogManager().getLastApplied());
+      System.out.println(nodes[i].getServerInfo() +" flushed:" + nodes[i].getLogManager().getFlushedIndex());
+      System.out.println(nodes[i].getServerInfo() +" log term:" + nodes[i].getLogManager().getLogTerm(nodes[i].getLogManager().getCommitIndex()));
+      System.out.println(nodes[i].getServerInfo() +" current term:" + nodes[i].getCurrentTerm());
+    }
+    System.out.println("*****************************************");
     Connection conn = ConnectionManager.getConnection(cluster.getConf(0));
     KeyValueStore kvs = conn.getKeyValueStore();
     
-    for(int i = 1; i < 50; i++) {
+    for(int i = 1; i <= 50; i++) {
       kvs.set("key" + i, "value"+i);
     }
-    RaftNode[] nodes = cluster.getNodes();
+    
+    Thread.sleep(3000);
+    
     for(int i = 0; i < nodes.length; i++) {
-      System.out.println("commit:" + nodes[i].getLogManager().getCommitIndex());
-      System.out.println("lastapplied:" + nodes[i].getLogManager().getLastApplied());
-      System.out.println("lastapplied:" + nodes[i].getLogManager().getFlushedIndex());
-      System.out.println("log term:" + nodes[i].getLogManager().getLogTerm(nodes[i].getLogManager().getCommitIndex()));
-      System.out.println("current term:" + nodes[i].getCurrentTerm());
+      System.out.println(nodes[i].getServerInfo() + " commit:" + nodes[i].getLogManager().getCommitIndex());
+      System.out.println(nodes[i].getServerInfo() +" lastapplied:" + nodes[i].getLogManager().getLastApplied());
+      System.out.println(nodes[i].getServerInfo() +" flushed:" + nodes[i].getLogManager().getFlushedIndex());
+      System.out.println(nodes[i].getServerInfo() +" log term:" + nodes[i].getLogManager().getLogTerm(nodes[i].getLogManager().getCommitIndex()));
+      System.out.println(nodes[i].getServerInfo() +" current term:" + nodes[i].getCurrentTerm());
     }
     /*
     KeyValue r = conn.list("");

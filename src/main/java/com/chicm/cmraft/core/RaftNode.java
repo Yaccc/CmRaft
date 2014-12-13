@@ -224,6 +224,7 @@ public class RaftNode {
     fsm.discoverLeader();
   }
   
+  //Received one vote from a follower
   //This method need to be thread safe, otherwise it should be synchronized.
   // currently it is thread safe, be careful to modify it.
   public void voteReceived(ServerInfo server, long term) {
@@ -251,6 +252,14 @@ public class RaftNode {
     }
   }
   
+  /**
+   * For follower, handle voteRequest RPC from candidate
+   * @param candidate candidate server info
+   * @param term term of candidate
+   * @param lastLogIndex candidate's last log index
+   * @param lastLogTerm  candidate's last log term
+   * @return true if vote granted, otherwise false
+   */
   public synchronized boolean voteRequest(ServerInfo candidate, long term, long lastLogIndex, long lastLogTerm) {
     boolean ret = false;
     if(term < getCurrentTerm())
@@ -271,6 +280,10 @@ public class RaftNode {
       votedFor = candidate;
       ret = true;
       LOG.info(getName() + "voted for: " + candidate.getHost() + ":" + candidate.getPort());
+      //reset election timeout if voted for other candidate as a follower:
+      if(!candidate.equals(this.getServerInfo())) {
+        restartTimer();
+      }
     } else {
       LOG.info(getName() + "vote request rejected: " + candidate.getHost() + ":" + candidate.getPort());
     }

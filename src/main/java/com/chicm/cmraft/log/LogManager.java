@@ -38,6 +38,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,6 +50,7 @@ import com.chicm.cmraft.core.RaftNode;
 import com.chicm.cmraft.core.State;
 import com.chicm.cmraft.rpc.RpcTimeoutException;
 import com.chicm.cmraft.util.BlockingHashMap;
+import com.google.common.base.Preconditions;
 
 public class LogManager {
   static final Log LOG = LogFactory.getLog(LogManager.class);
@@ -87,6 +90,7 @@ public class LogManager {
     thisServer = ServerInfo.parseFromString(conf.getString("raft.server.local"));
     
     loadPersistentData();
+    startFlushWorker();
   }
   
   public String getServerName() {
@@ -188,8 +192,13 @@ public class LogManager {
   public boolean appendEntries(long term, ServerInfo leaderId, long leaderCommit,
       long prevLogIndex, long prevLogTerm, List<LogEntry> leaderEntries) {
     LOG.debug(getServerName() + "follower appending entry...");
-    if(leaderEntries == null || leaderEntries.size() < 1)
+    
+    Preconditions.checkNotNull(leaderEntries);
+    
+    if(term < node.getCurrentTerm()) {
       return false;
+    }
+    
     if(prevLogIndex > 0) {
       if(!this.entries.containsKey(prevLogIndex)) {
         return false;
@@ -198,6 +207,7 @@ public class LogManager {
         return false;
       }
     }
+    
     //append entries
     //need to assure that the entries are sorted before hand.
     for(LogEntry entry: leaderEntries) {
@@ -206,12 +216,17 @@ public class LogManager {
         setLastApplied(entry.getIndex());
       }
     } 
-    
+
     if(leaderCommit > getCommitIndex()) {
       setCommitIndex(Math.min(getLastApplied(), leaderCommit));
       //to-do: need to be done asynchronously
       flushCommitted();
     }
+    
+    if(leaderEntries.size() == 0) { // heart beat
+      LOG.debug("heart beat");
+    }
+    
     LOG.debug(getServerName() + "follower appending entry... done");
     return true;
   }
@@ -329,34 +344,70 @@ public class LogManager {
     persistentDataLoaded = true;
   }
   
-  private synchronized void flushCommitted() {
-    if(getFlushedIndex() >= getCommitIndex()) {
-      return;
+  /** Lock for flushing committed log */
+  private final ReentrantLock flushLock = new ReentrantLock();
+  
+  /** Wait condition for flushing committed log */
+  private final Condition needFlush = flushLock.newCondition();
+  
+  private void flushCommitted() {
+    try {
+      flushLock.lock();
+      needFlush.signal();
+    } finally {
+      flushLock.unlock();
     }
-    
-    Path path = getStorageFilePath();
-    boolean append = path.toFile().exists();
-    if(!path.getParent().toFile().exists()) {
-      try {
-        Files.createDirectories(path.getParent());
+  }
+  
+  private void startFlushWorker() {
+    Thread t = new Thread(new LogFlushWorker());
+    t.setName("LogFlushWorker");
+    t.start();
+  }
+  
+  class LogFlushWorker implements Runnable {
+    @Override
+    public void run() {
+      while(true) {
+        try {
+          flushLock.lock();
+          while (getFlushedIndex() >= getCommitIndex()) {
+            needFlush.await();
+          }
+        } catch(InterruptedException e) { 
+          LOG.info("Interrupted, LogFlushWorker exiting");
+          return;
+        } finally {
+          flushLock.unlock();
+        }
+        doFlush();
+      }
+    }
+     
+    private void doFlush() {
+      Path path = getStorageFilePath();
+      boolean append = path.toFile().exists();
+      if(!path.getParent().toFile().exists()) {
+        try {
+          Files.createDirectories(path.getParent());
+        } catch(IOException e) {
+          LOG.error("ERROR flushCommitted", e);
+          return;
+        }
+      } 
+      try ( ObjectOutputStream oos = AppendableObjectOutputStream.create(
+                    new FileOutputStream(path.toFile(), append), append)) {
+        for(long index = flushedIndex.get() + 1; index <= commitIndex.get(); index++) {
+          LogEntry entry = entries.get(index);
+          oos.writeObject(entry);
+          setFlushedIndex(index);
+        }
       } catch(IOException e) {
         LOG.error("ERROR flushCommitted", e);
         return;
       }
-    } 
-    try ( ObjectOutputStream oos = AppendableObjectOutputStream.create(
-                  new FileOutputStream(path.toFile(), append), append)) {
-      for(long index = flushedIndex.get() + 1; index <= commitIndex.get(); index++) {
-        LogEntry entry = entries.get(index);
-        oos.writeObject(entry);
-        setFlushedIndex(index);
-      }
-    } catch(IOException e) {
-      LOG.error("ERROR flushCommitted", e);
-      return;
     }
   }
-  
   
   class FollowerIndexes {
     /** for each server, index of the next log entry
