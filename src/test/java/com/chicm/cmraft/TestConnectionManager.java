@@ -42,10 +42,10 @@ public class TestConnectionManager {
     cluster.checkNodesState();
     
     for(int i = 0; i < nodes.length; i++) {
-      System.out.println(nodes[i].getServerInfo() + " commit:" + nodes[i].getLogManager().getCommitIndex());
-      System.out.println(nodes[i].getServerInfo() +" lastapplied:" + nodes[i].getLogManager().getLastApplied());
-      System.out.println(nodes[i].getServerInfo() +" flushed:" + nodes[i].getLogManager().getFlushedIndex());
-      System.out.println(nodes[i].getServerInfo() +" log term:" + nodes[i].getLogManager().getLogTerm(nodes[i].getLogManager().getCommitIndex()));
+      System.out.println(nodes[i].getServerInfo() + " commit:" + nodes[i].getRaftLog().getCommitIndex());
+      System.out.println(nodes[i].getServerInfo() +" lastapplied:" + nodes[i].getRaftLog().getLastApplied());
+      System.out.println(nodes[i].getServerInfo() +" flushed:" + nodes[i].getRaftLog().getFlushedIndex());
+      System.out.println(nodes[i].getServerInfo() +" log term:" + nodes[i].getRaftLog().getLogTerm(nodes[i].getRaftLog().getCommitIndex()));
       System.out.println(nodes[i].getServerInfo() +" current term:" + nodes[i].getCurrentTerm());
     }
     System.out.println("*****************************************");
@@ -59,10 +59,10 @@ public class TestConnectionManager {
     Thread.sleep(3000);
     
     for(int i = 0; i < nodes.length; i++) {
-      System.out.println(nodes[i].getServerInfo() + " commit:" + nodes[i].getLogManager().getCommitIndex());
-      System.out.println(nodes[i].getServerInfo() +" lastapplied:" + nodes[i].getLogManager().getLastApplied());
-      System.out.println(nodes[i].getServerInfo() +" flushed:" + nodes[i].getLogManager().getFlushedIndex());
-      System.out.println(nodes[i].getServerInfo() +" log term:" + nodes[i].getLogManager().getLogTerm(nodes[i].getLogManager().getCommitIndex()));
+      System.out.println(nodes[i].getServerInfo() + " commit:" + nodes[i].getRaftLog().getCommitIndex());
+      System.out.println(nodes[i].getServerInfo() +" lastapplied:" + nodes[i].getRaftLog().getLastApplied());
+      System.out.println(nodes[i].getServerInfo() +" flushed:" + nodes[i].getRaftLog().getFlushedIndex());
+      System.out.println(nodes[i].getServerInfo() +" log term:" + nodes[i].getRaftLog().getLogTerm(nodes[i].getRaftLog().getCommitIndex()));
       System.out.println(nodes[i].getServerInfo() +" current term:" + nodes[i].getCurrentTerm());
     }
     /*

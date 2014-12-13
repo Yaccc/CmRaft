@@ -29,14 +29,15 @@ import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
-import com.chicm.cmraft.log.LogManager;
+import com.chicm.cmraft.log.DefaultRaftLog;
+import com.chicm.cmraft.log.RaftLog;
 import com.chicm.cmraft.rpc.RpcServer;
 
 /**
  * This class represents a Raft node in a cluster. This class
  * maintains a state machine, and implements the leader election
  * process, once a node is elected as leader, it handles user 
- * requests and AppendEntries RPCs, which is implemented in LogManager
+ * requests and AppendEntries RPCs, which is implemented in DefaultRaftLog
  * class.
  *  
  * Rule of Raft servers:
@@ -93,7 +94,7 @@ public class RaftNode {
   private TimeoutListener timeoutListener = new TimeoutHandler();
   private RaftStateChangeListener stateChangeListener = new RaftStateChangeListenerImpl();
   private RaftRpcService raftService = null;
-  private LogManager logManager= null;
+  private RaftLog raftLog= null;
 
   private ServerInfo serverInfo = null;
   private ServerInfo currentLeader = null;
@@ -108,9 +109,9 @@ public class RaftNode {
     this.conf = conf;
     serverInfo = ServerInfo.parseFromString(conf.getString("raft.server.local"));
     raftService = RaftRpcService.create(this);
-    logManager= new LogManager(this, conf);
+    raftLog= new DefaultRaftLog(this, conf);
     //initialize the term value to be the saved term of last run
-    currentTerm.set(logManager.getLogTerm(logManager.getCommitIndex()));
+    currentTerm.set(raftLog.getLogTerm(raftLog.getCommitIndex()));
     fsm = new StateMachine(stateChangeListener);
     rpcServer = new RpcServer(conf, raftService);
     nodeConnectionManager = new NodeConnectionManager(conf, this);
@@ -135,8 +136,8 @@ public class RaftNode {
     return currentLeader;
   }
   
-  public LogManager getLogManager() {
-    return this.logManager;
+  public RaftLog getRaftLog() {
+    return this.raftLog;
   }
   
   public RaftRpcService getRaftService() {
@@ -245,7 +246,7 @@ public class RaftNode {
   private void voteMySelf() {
     LOG.debug(getName() + ": VOTE MYSELF");
     if( voteRequest(getServerInfo(), getCurrentTerm(), 
-      logManager.getLastApplied(), logManager.getLastLogTerm())) {
+      raftLog.getLastApplied(), raftLog.getLastLogTerm())) {
       voteReceived(getServerInfo(), getCurrentTerm());
     } else {
       LOG.info("voteMySelf failed!");
@@ -311,8 +312,8 @@ public class RaftNode {
   }
   
   public void testHearBeat() {
-    nodeConnectionManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
-      logManager.getLastApplied(), logManager.getLastLogTerm());
+    nodeConnectionManager.beatHeart(getCurrentTerm(), getServerInfo(), raftLog.getCommitIndex(),
+      raftLog.getLastApplied(), raftLog.getLastLogTerm());
   }
   
   private class RaftStateChangeListenerImpl implements RaftStateChangeListener {
@@ -322,7 +323,7 @@ public class RaftNode {
       
       //restart timer when state change.
       restartTimer();
-      logManager.stateChange(oldState, newState);
+      raftLog.stateChange(oldState, newState);
       
       switch(newState) {
         case FOLLOWER:
@@ -334,8 +335,8 @@ public class RaftNode {
         case LEADER:
           setCurrentLeader(getServerInfo());
           //send heartbeat right away after becoming leader, then send out heartbeat every timeout 
-          nodeConnectionManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
-            logManager.getLastApplied(), logManager.getLastLogTerm());
+          nodeConnectionManager.beatHeart(getCurrentTerm(), getServerInfo(), raftLog.getCommitIndex(),
+            raftLog.getLastApplied(), raftLog.getLastLogTerm());
           break;
       }
     }
@@ -359,14 +360,14 @@ public class RaftNode {
       //do initialization after state change
       if(fsm.getState() == State.LEADER) {
         //leader send heartbeat to all servers every timeout
-        nodeConnectionManager.beatHeart(getCurrentTerm(), getServerInfo(), logManager.getCommitIndex(),
-          logManager.getLastApplied(), logManager.getLastLogTerm());
+        nodeConnectionManager.beatHeart(getCurrentTerm(), getServerInfo(), raftLog.getCommitIndex(),
+          raftLog.getLastApplied(), raftLog.getLastLogTerm());
         
       } else if(fsm.getState() == State.CANDIDATE) {
         //every timeout period, candidates start up new election
         increaseTerm();
         voteMySelf();
-        nodeConnectionManager.collectVote(currentTerm.get(), logManager.getLastApplied(), logManager.getLastLogTerm());
+        nodeConnectionManager.collectVote(currentTerm.get(), raftLog.getLastApplied(), raftLog.getLastLogTerm());
       } else if( fsm.getState() == State.FOLLOWER ) {
         
       }

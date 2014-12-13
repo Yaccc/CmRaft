@@ -52,8 +52,8 @@ import com.chicm.cmraft.rpc.RpcTimeoutException;
 import com.chicm.cmraft.util.BlockingHashMap;
 import com.google.common.base.Preconditions;
 
-public class LogManager {
-  static final Log LOG = LogFactory.getLog(LogManager.class);
+public class DefaultRaftLog implements RaftLog {
+  static final Log LOG = LogFactory.getLog(DefaultRaftLog.class);
   private static final String RAFT_ROOT_DIR_KEY = "raft.root.dir";
   private static final int DEFAULT_COMMIT_TIMEOUT = 5000;
   private Configuration conf;
@@ -84,7 +84,7 @@ public class LogManager {
   
   private ServerInfo thisServer;
   
-  public LogManager(RaftNode node, Configuration conf) {
+  public DefaultRaftLog(RaftNode node, Configuration conf) {
     this.node = node;
     this.conf = conf;
     thisServer = ServerInfo.parseFromString(conf.getString("raft.server.local"));
@@ -116,6 +116,7 @@ public class LogManager {
     
   }
   
+  @Override
   public void stateChange(State oldState, State newState) {
     LOG.info(getServerName() + ": STATE CHANGE");
     if(oldState == State.LEADER && newState != State.LEADER) {
@@ -125,20 +126,24 @@ public class LogManager {
     }
   }
   
+  @Override
   public long getFollowerMatchIndex(ServerInfo follower) {
     return followerIndexes.get(follower).getMatchIndex();
   }
   
+  // todo - implemnet nextIndex logic on appendEntries failure
   public long getFollowerNextIndex(ServerInfo follower) {
     return followerIndexes.get(follower).getNextIndex();
   }
   
+  @Override
   public long getLogTerm(long index) {
     if(entries.get(index) == null)
       return 0;
     return entries.get(index).getTerm();
   }
   
+  @Override
   public List<LogEntry> getLogEntries(long startIndex, long endIndex) {
     if(startIndex < 1 || endIndex > getLastApplied())
       return null;
@@ -152,6 +157,7 @@ public class LogManager {
   /**
    * @return the commitIndex
    */
+  @Override
   public long getCommitIndex() {
     return commitIndex.get();
   }
@@ -164,10 +170,12 @@ public class LogManager {
   /**
    * @return the lastApplied
    */
+  @Override
   public long getLastApplied() {
     return lastApplied.get();
   }
   
+  @Override
   public long getLastLogTerm() {
     if(entries == null || entries.size() < 1)
       return INITIAL_TERM;
@@ -180,6 +188,7 @@ public class LogManager {
     this.lastApplied.set(lastApplied);;
   }
   
+  @Override
   public long getFlushedIndex() {
     return this.flushedIndex.get();
   }
@@ -189,6 +198,7 @@ public class LogManager {
   }
   
   // for followers
+  @Override
   public boolean appendEntries(long term, ServerInfo leaderId, long leaderCommit,
       long prevLogIndex, long prevLogTerm, List<LogEntry> leaderEntries) {
     LOG.debug(getServerName() + "follower appending entry...");
@@ -231,7 +241,9 @@ public class LogManager {
     return true;
   }
   // for leaders
-  public void onAppendEntriesResponse(ServerInfo follower, long followerTerm, boolean success, long followerLastApplied) {
+  @Override
+  public void onAppendEntriesResponse(ServerInfo follower, long followerTerm, boolean success, 
+      long followerLastApplied) {
     LOG.debug(getServerName() + ": onAppendEntriesResponse");
     updateFollowerMatchIndexes(follower, followerLastApplied);
     if(!success) {
@@ -266,6 +278,7 @@ public class LogManager {
     }
   }
   
+  @Override
   public boolean set(byte[] key, byte[] value) {
     LOG.debug(getServerName() + ": set request received");
     //lastApplied initialized as 0, and the first time increase it to 1,
@@ -287,6 +300,7 @@ public class LogManager {
     return committed;
   }
   
+  @Override
   public void delete(byte[] key) {
     //lastApplied initialized as 0, and the first time increase it to 1,
     //so the first index is 1
@@ -294,6 +308,7 @@ public class LogManager {
     entries.put(entry.getIndex(), entry);
   }
   
+  @Override
   public Collection<LogEntry> list(byte[] pattern) {
     return entries.values();
   }

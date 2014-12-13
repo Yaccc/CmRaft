@@ -124,7 +124,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     if(request.getEntriesCount() <= 0) {
       LOG.debug(getRaftNode().getName() + ": HEARTBEAT CALLED**!");
     } 
-    boolean success = node.getLogManager().appendEntries(request.getTerm(), 
+    boolean success = node.getRaftLog().appendEntries(request.getTerm(), 
         ServerInfo.copyFrom(request.getLeaderId()), 
         request.getLeaderCommit(), request.getPrevLogIndex(), 
         request.getPrevLogTerm(), 
@@ -206,7 +206,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     LOG.debug(node.getName() + ": set request responded");
     SetResponse.Builder builder = SetResponse.newBuilder();
     
-    boolean success = node.getLogManager().set(request.getKey().toByteArray(), request.getValue().toByteArray());
+    boolean success = node.getRaftLog().set(request.getKey().toByteArray(), request.getValue().toByteArray());
     builder.setSuccess(success);
     
     return builder.build();
@@ -223,7 +223,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   public ListResponse list(RpcController controller, ListRequest request) throws ServiceException {
     LOG.info(node.getName() + ": list request responded");
     ListResponse.Builder builder = ListResponse.newBuilder();
-    Collection<LogEntry> col = node.getLogManager().list(request.getPattern().toByteArray());
+    Collection<LogEntry> col = node.getRaftLog().list(request.getPattern().toByteArray());
     //int i=0;
     for(LogEntry entry: col) {
       KeyValuePair.Builder kvbuilder = KeyValuePair.newBuilder();

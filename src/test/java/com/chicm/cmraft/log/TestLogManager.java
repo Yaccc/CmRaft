@@ -21,7 +21,7 @@ public class TestLogManager {
     Thread.sleep(10000);
     for(int i = 0; i < nodes.length; i++) {
       if(nodes[i].isLeader()) {
-        LogManager mgr = nodes[i].getLogManager();
+        DefaultRaftLog mgr = nodes[i].getLogManager();
         mgr.set("11111".getBytes(), "VVVVV1".getBytes());
         mgr.set("11112".getBytes(), "VVVVV2".getBytes());
         mgr.set("11113".getBytes(), "VVVVV3".getBytes());

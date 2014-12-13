@@ -36,7 +36,8 @@ import org.apache.commons.logging.LogFactory;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.log.LogEntry;
-import com.chicm.cmraft.log.LogManager;
+import com.chicm.cmraft.log.DefaultRaftLog;
+import com.chicm.cmraft.log.RaftLog;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
 import com.google.protobuf.ServiceException;
@@ -90,7 +91,7 @@ public class NodeConnectionManager {
     
   }
   
-  public void appendEntries(LogManager logMgr, long lastApplied) {
+  public void appendEntries(RaftLog logMgr, long lastApplied) {
     int nServers = getOtherServers().size();
     if(nServers <= 0) {
       return;
@@ -111,7 +112,7 @@ public class NodeConnectionManager {
       long startIndex = logMgr.getFollowerMatchIndex(server) + 1;
           
       LOG.info(getRaftNode().getName() + ": SENDING appendEntries Request TO: " + server);
-      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), conn, getRaftNode().getLogManager(), 
+      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), conn, getRaftNode().getRaftLog(), 
         thisServer, getRaftNode().getCurrentTerm(), logMgr.getCommitIndex(), startIndex-1, 
         logMgr.getLogTerm(startIndex-1), logMgr.getLogEntries(startIndex, lastApplied), lastApplied));
       t.setDaemon(true);
@@ -139,7 +140,7 @@ public class NodeConnectionManager {
     for(ServerInfo server: getOtherServers()) {
       NodeConnection connection = connections.get(server);
       LOG.info(getRaftNode().getName() + ": SENDING appendEntries Request TO: " + server);
-      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), connection, getRaftNode().getLogManager(), thisServer, term,
+      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), connection, getRaftNode().getRaftLog(), thisServer, term,
         leaderCommit, prevLogIndex, prevLogTerm, entries, maxIndex));
       t.setDaemon(true);
       executor.execute(t);
@@ -219,9 +220,9 @@ public class NodeConnectionManager {
     private long maxIndex;
     private RaftNode node;
     private NodeConnection connection;
-    private LogManager logManager;
+    private RaftLog logManager;
     
-    public AsynchronousAppendEntriesWorker(RaftNode node, NodeConnection connection, LogManager logMgr, ServerInfo thisServer, long term,
+    public AsynchronousAppendEntriesWorker(RaftNode node, NodeConnection connection, RaftLog logMgr, ServerInfo thisServer, long term,
         long leaderCommit, long prevLogIndex, long prevLogTerm, List<LogEntry> entries, Long maxIndex) {
       this.connection = connection;
       this.node = node;
