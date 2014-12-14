@@ -20,16 +20,12 @@
 
 package com.chicm.cmraft.core;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.ServerInfo;
-import com.chicm.cmraft.log.LogEntry;
-import com.chicm.cmraft.log.LogMutationType;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
@@ -38,12 +34,11 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderResponse;
-import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest;
@@ -128,7 +123,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
         ServerInfo.copyFrom(request.getLeaderId()), 
         request.getLeaderCommit(), request.getPrevLogIndex(), 
         request.getPrevLogTerm(), 
-        buildLogEntriesFromRaftEntries(request.getEntriesList(), request.getTerm()));
+        request.getEntriesList());
     
     builder.setTerm(node.getCurrentTerm());
     builder.setSuccess(/*request.getTerm() >= node.getCurrentTerm()*/success);
@@ -136,6 +131,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     return builder.build();
   }
   
+  /*
   private List<LogEntry> buildLogEntriesFromRaftEntries(List<RaftEntry> raftEntries, long term) {
     List<LogEntry> result = new ArrayList<LogEntry>();
     
@@ -149,7 +145,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
       result.add(logEntry);
     }
     return result;
-  }
+  }*/
 
   @Override
   public CollectVoteResponse collectVote(RpcController controller, CollectVoteRequest request)
@@ -206,7 +202,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     LOG.debug(node.getName() + ": set request responded");
     SetResponse.Builder builder = SetResponse.newBuilder();
     
-    boolean success = node.getRaftLog().set(request.getKey().toByteArray(), request.getValue().toByteArray());
+    boolean success = node.getRaftLog().set(request.getKv());
     builder.setSuccess(success);
     
     return builder.build();
@@ -223,14 +219,9 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   public ListResponse list(RpcController controller, ListRequest request) throws ServiceException {
     LOG.info(node.getName() + ": list request responded");
     ListResponse.Builder builder = ListResponse.newBuilder();
-    Collection<LogEntry> col = node.getRaftLog().list(request.getPattern().toByteArray());
-    //int i=0;
-    for(LogEntry entry: col) {
-      KeyValuePair.Builder kvbuilder = KeyValuePair.newBuilder();
-      kvbuilder.setKey(ByteString.copyFrom(entry.getKey()));
-      kvbuilder.setValue(ByteString.copyFrom(entry.getValue()));
-      builder.addResults(kvbuilder.build());
-      //builder.
+    Collection<RaftLogEntry> col = node.getRaftLog().list(request.getPattern().toByteArray());
+    for(RaftLogEntry entry: col) {
+      builder.addResults(entry.getKv());
     }
     builder.setSuccess(true);
     return builder.build();

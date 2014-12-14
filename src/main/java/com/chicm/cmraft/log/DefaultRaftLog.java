@@ -25,8 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,16 +46,19 @@ import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.core.RaftNode;
 import com.chicm.cmraft.core.State;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry;
 import com.chicm.cmraft.rpc.RpcTimeoutException;
 import com.chicm.cmraft.util.BlockingHashMap;
 import com.google.common.base.Preconditions;
+import com.google.protobuf.ByteString;
 
 public class DefaultRaftLog implements RaftLog {
   static final Log LOG = LogFactory.getLog(DefaultRaftLog.class);
   private static final String RAFT_ROOT_DIR_KEY = "raft.root.dir";
   private static final int DEFAULT_COMMIT_TIMEOUT = 5000;
   private Configuration conf;
-  private SortedMap<Long, LogEntry> entries = new TreeMap<>();
+  private SortedMap<Long, RaftLogEntry> entries = new TreeMap<>();
   private final static long INITIAL_TERM = 0;
   private RaftNode node;
   private final AtomicLong commitIndex = new AtomicLong(0);
@@ -144,10 +145,12 @@ public class DefaultRaftLog implements RaftLog {
   }
   
   @Override
-  public List<LogEntry> getLogEntries(long startIndex, long endIndex) {
+  public List<RaftLogEntry> getLogEntries(long startIndex, long endIndex) {
+    List<RaftLogEntry> result = new ArrayList<RaftLogEntry>();
+    
     if(startIndex < 1 || endIndex > getLastApplied())
-      return null;
-    List<LogEntry> result = new ArrayList<LogEntry>();
+      return result;
+    
     for(long key = startIndex; key <= endIndex; key++) {
       result.add(entries.get(key)); 
     }
@@ -200,7 +203,7 @@ public class DefaultRaftLog implements RaftLog {
   // for followers
   @Override
   public boolean appendEntries(long term, ServerInfo leaderId, long leaderCommit,
-      long prevLogIndex, long prevLogTerm, List<LogEntry> leaderEntries) {
+      long prevLogIndex, long prevLogTerm, List<RaftLogEntry> leaderEntries) {
     LOG.debug(getServerName() + "follower appending entry...");
     
     Preconditions.checkNotNull(leaderEntries);
@@ -220,7 +223,7 @@ public class DefaultRaftLog implements RaftLog {
     
     //append entries
     //need to assure that the entries are sorted before hand.
-    for(LogEntry entry: leaderEntries) {
+    for(RaftLogEntry entry: leaderEntries) {
       entries.put(entry.getIndex(), entry);
       if(entry.getIndex() > getLastApplied()) {
         setLastApplied(entry.getIndex());
@@ -279,11 +282,18 @@ public class DefaultRaftLog implements RaftLog {
   }
   
   @Override
-  public boolean set(byte[] key, byte[] value) {
+  public boolean set(KeyValuePair kv) {
     LOG.debug(getServerName() + ": set request received");
     //lastApplied initialized as 0, and the first time increase it to 1,
     //so the first index is 1
-    LogEntry entry = new LogEntry(lastApplied.incrementAndGet(), node.getCurrentTerm(), key, value, LogMutationType.SET);
+    //LogEntry entry = new LogEntry(lastApplied.incrementAndGet(), node.getCurrentTerm(), key, value, LogMutationType.SET);
+    RaftLogEntry.Builder builder = RaftLogEntry.newBuilder();
+    builder.setKv(kv);
+    builder.setIndex(lastApplied.incrementAndGet());
+    builder.setTerm(node.getCurrentTerm());
+    builder.setMode(RaftLogEntry.MutationMode.SET);
+    RaftLogEntry entry = builder.build();
+    
     entries.put(entry.getIndex(), entry);
     
     //making rpc call to followers
@@ -304,12 +314,24 @@ public class DefaultRaftLog implements RaftLog {
   public void delete(byte[] key) {
     //lastApplied initialized as 0, and the first time increase it to 1,
     //so the first index is 1
-    LogEntry entry = new LogEntry(lastApplied.incrementAndGet(), node.getCurrentTerm(), key, null, LogMutationType.DELETE);
+    //LogEntry entry = new LogEntry(lastApplied.incrementAndGet(), node.getCurrentTerm(), key, null, LogMutationType.DELETE);
+    Preconditions.checkNotNull(key);
+    
+    KeyValuePair.Builder kvBuilder = KeyValuePair.newBuilder();
+    kvBuilder.setKey(ByteString.copyFrom(key));
+    
+    RaftLogEntry.Builder builder = RaftLogEntry.newBuilder();
+    builder.setKv(kvBuilder.build());
+    builder.setIndex(lastApplied.incrementAndGet());
+    builder.setTerm(node.getCurrentTerm());
+    builder.setMode(RaftLogEntry.MutationMode.DELETE);
+    RaftLogEntry entry = builder.build();
+    
     entries.put(entry.getIndex(), entry);
   }
   
   @Override
-  public Collection<LogEntry> list(byte[] pattern) {
+  public Collection<RaftLogEntry> list(byte[] pattern) {
     return entries.values();
   }
   
@@ -331,11 +353,16 @@ public class DefaultRaftLog implements RaftLog {
     if(persistentDataLoaded) {
       return;
     }
-    try ( ObjectInputStream ois = new ObjectInputStream(new FileInputStream(getStorageFilePath().toFile()))) {
+    try ( FileInputStream fis = new FileInputStream(getStorageFilePath().toFile())) {
       long maxIndex = 0;
       while(true) {
         try {
-          LogEntry entry = (LogEntry)ois.readObject();
+          //LogEntry entry = (LogEntry)ois.readObject();
+          RaftLogEntry.Builder builder = RaftLogEntry.newBuilder();
+          if(!builder.mergeDelimitedFrom(fis)) {
+            break;
+          }
+          RaftLogEntry entry = builder.build();
           entries.put(entry.getIndex(), entry);
           if(entry.getIndex() > maxIndex) {
             maxIndex = entry.getIndex();
@@ -351,7 +378,7 @@ public class DefaultRaftLog implements RaftLog {
       }
     } catch(FileNotFoundException e) {
       LOG.warn("no persistant data to load");
-    } catch(IOException | ClassNotFoundException e) {
+    } catch(IOException e) {
       LOG.error("ERROR loadPersistentData" + e.getMessage(), e);
       //Will not try to load again if exception occurs.
       //so still set loaded mark persistentDataLoaded
@@ -410,11 +437,11 @@ public class DefaultRaftLog implements RaftLog {
           return;
         }
       } 
-      try ( ObjectOutputStream oos = AppendableObjectOutputStream.create(
-                    new FileOutputStream(path.toFile(), append), append)) {
+      try (/* ObjectOutputStream oos = AppendableObjectOutputStream.create(*/
+          FileOutputStream fos = new FileOutputStream(path.toFile(), append)) {
         for(long index = flushedIndex.get() + 1; index <= commitIndex.get(); index++) {
-          LogEntry entry = entries.get(index);
-          oos.writeObject(entry);
+          RaftLogEntry entry = entries.get(index);
+          entry.writeDelimitedTo(fos);
           setFlushedIndex(index);
         }
       } catch(IOException e) {

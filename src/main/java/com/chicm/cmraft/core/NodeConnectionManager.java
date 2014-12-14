@@ -21,6 +21,7 @@
 
 package com.chicm.cmraft.core;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +36,11 @@ import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
-import com.chicm.cmraft.log.LogEntry;
-import com.chicm.cmraft.log.DefaultRaftLog;
 import com.chicm.cmraft.log.RaftLog;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry;
+import com.google.common.base.Preconditions;
 import com.google.protobuf.ServiceException;
 
 public class NodeConnectionManager {
@@ -87,7 +88,8 @@ public class NodeConnectionManager {
   
   public void beatHeart(long term, ServerInfo leaderId, long leaderCommit,
       long prevLogIndex, long prevLogTerm) {
-    appendEntries(term, leaderId, leaderCommit, prevLogIndex, prevLogTerm, null, 0);
+    appendEntries(term, leaderId, leaderCommit, prevLogIndex, prevLogTerm, 
+      new ArrayList<RaftLogEntry>(), 0);
     
   }
   
@@ -121,7 +123,9 @@ public class NodeConnectionManager {
   }
   
   private void appendEntries(long term, ServerInfo leaderId, long leaderCommit,
-      long prevLogIndex, long prevLogTerm, List<LogEntry> entries, long maxIndex) {
+      long prevLogIndex, long prevLogTerm, List<RaftLogEntry> entries, long maxIndex) {
+    Preconditions.checkNotNull(entries);
+    
     int nServers = getOtherServers().size();
     if(nServers <= 0) {
       return;
@@ -216,14 +220,14 @@ public class NodeConnectionManager {
     private long leaderCommit;
     private long prevLogIndex;
     private long prevLogTerm;
-    private List<LogEntry> entries;
+    private List<RaftLogEntry> entries;
     private long maxIndex;
     private RaftNode node;
     private NodeConnection connection;
     private RaftLog logManager;
     
     public AsynchronousAppendEntriesWorker(RaftNode node, NodeConnection connection, RaftLog logMgr, ServerInfo thisServer, long term,
-        long leaderCommit, long prevLogIndex, long prevLogTerm, List<LogEntry> entries, Long maxIndex) {
+        long leaderCommit, long prevLogIndex, long prevLogTerm, List<RaftLogEntry> entries, Long maxIndex) {
       this.connection = connection;
       this.node = node;
       this.logManager = logMgr;

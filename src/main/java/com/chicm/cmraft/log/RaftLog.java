@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.core.State;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry;
 
 public interface RaftLog {
   void stateChange(State oldState, State newState);
@@ -13,15 +15,15 @@ public interface RaftLog {
   long getLastApplied();
   long getLastLogTerm();
   long getFlushedIndex();
-  List<LogEntry> getLogEntries(long startIndex, long endIndex);
+  List<RaftLogEntry> getLogEntries(long startIndex, long endIndex);
   long getFollowerMatchIndex(ServerInfo follower);
   
   boolean appendEntries(long term, ServerInfo leaderId, long leaderCommit,
-      long prevLogIndex, long prevLogTerm, List<LogEntry> leaderEntries);
+      long prevLogIndex, long prevLogTerm, List<RaftLogEntry> leaderEntries);
   void onAppendEntriesResponse(ServerInfo follower, long followerTerm, boolean success, 
       long followerLastApplied);
   
-  boolean set(byte[] key, byte[] value);
+  boolean set(KeyValuePair kv);
   void delete(byte[] key);
-  Collection<LogEntry> list(byte[] pattern);
+  Collection<RaftLogEntry> list(byte[] pattern);
 }

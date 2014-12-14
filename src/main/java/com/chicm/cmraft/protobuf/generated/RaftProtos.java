@@ -4082,7 +4082,490 @@ public final class RaftProtos {
     // @@protoc_insertion_point(class_scope:TestRpcResponse)
   }
 
-  public interface RaftEntryOrBuilder
+  public interface KeyValuePairOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional bytes key = 1;
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    boolean hasKey();
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    com.google.protobuf.ByteString getKey();
+
+    // optional bytes value = 2;
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    boolean hasValue();
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    com.google.protobuf.ByteString getValue();
+  }
+  /**
+   * Protobuf type {@code KeyValuePair}
+   */
+  public static final class KeyValuePair extends
+      com.google.protobuf.GeneratedMessage
+      implements KeyValuePairOrBuilder {
+    // Use KeyValuePair.newBuilder() to construct.
+    private KeyValuePair(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private KeyValuePair(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final KeyValuePair defaultInstance;
+    public static KeyValuePair getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public KeyValuePair getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private KeyValuePair(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              key_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              value_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.class, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<KeyValuePair> PARSER =
+        new com.google.protobuf.AbstractParser<KeyValuePair>() {
+      public KeyValuePair parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new KeyValuePair(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<KeyValuePair> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional bytes key = 1;
+    public static final int KEY_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString key_;
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    public boolean hasKey() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bytes key = 1;</code>
+     */
+    public com.google.protobuf.ByteString getKey() {
+      return key_;
+    }
+
+    // optional bytes value = 2;
+    public static final int VALUE_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString value_;
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    public boolean hasValue() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional bytes value = 2;</code>
+     */
+    public com.google.protobuf.ByteString getValue() {
+      return value_;
+    }
+
+    private void initFields() {
+      key_ = com.google.protobuf.ByteString.EMPTY;
+      value_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, key_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, value_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, key_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, value_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code KeyValuePair}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.class, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder.class);
+      }
+
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        key_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        value_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_descriptor;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair result = new com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.key_ = key_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.value_ = value_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance()) return this;
+        if (other.hasKey()) {
+          setKey(other.getKey());
+        }
+        if (other.hasValue()) {
+          setValue(other.getValue());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional bytes key = 1;
+      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public boolean hasKey() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public com.google.protobuf.ByteString getKey() {
+        return key_;
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public Builder setKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        key_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes key = 1;</code>
+       */
+      public Builder clearKey() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        key_ = getDefaultInstance().getKey();
+        onChanged();
+        return this;
+      }
+
+      // optional bytes value = 2;
+      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public boolean hasValue() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public com.google.protobuf.ByteString getValue() {
+        return value_;
+      }
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public Builder setValue(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes value = 2;</code>
+       */
+      public Builder clearValue() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        value_ = getDefaultInstance().getValue();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:KeyValuePair)
+    }
+
+    static {
+      defaultInstance = new KeyValuePair(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:KeyValuePair)
+  }
+
+  public interface RaftLogEntryOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
     // optional uint64 index = 1;
@@ -4095,45 +4578,59 @@ public final class RaftProtos {
      */
     long getIndex();
 
-    // optional bytes key = 2;
+    // optional uint64 term = 2;
     /**
-     * <code>optional bytes key = 2;</code>
+     * <code>optional uint64 term = 2;</code>
      */
-    boolean hasKey();
+    boolean hasTerm();
     /**
-     * <code>optional bytes key = 2;</code>
+     * <code>optional uint64 term = 2;</code>
      */
-    com.google.protobuf.ByteString getKey();
+    long getTerm();
 
-    // optional bytes value = 3;
+    // optional .KeyValuePair kv = 3;
     /**
-     * <code>optional bytes value = 3;</code>
+     * <code>optional .KeyValuePair kv = 3;</code>
      */
-    boolean hasValue();
+    boolean hasKv();
     /**
-     * <code>optional bytes value = 3;</code>
+     * <code>optional .KeyValuePair kv = 3;</code>
      */
-    com.google.protobuf.ByteString getValue();
+    com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getKv();
+    /**
+     * <code>optional .KeyValuePair kv = 3;</code>
+     */
+    com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder getKvOrBuilder();
+
+    // optional .RaftLogEntry.MutationMode mode = 4;
+    /**
+     * <code>optional .RaftLogEntry.MutationMode mode = 4;</code>
+     */
+    boolean hasMode();
+    /**
+     * <code>optional .RaftLogEntry.MutationMode mode = 4;</code>
+     */
+    com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode getMode();
   }
   /**
-   * Protobuf type {@code RaftEntry}
+   * Protobuf type {@code RaftLogEntry}
    */
-  public static final class RaftEntry extends
+  public static final class RaftLogEntry extends
       com.google.protobuf.GeneratedMessage
-      implements RaftEntryOrBuilder {
-    // Use RaftEntry.newBuilder() to construct.
-    private RaftEntry(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      implements RaftLogEntryOrBuilder {
+    // Use RaftLogEntry.newBuilder() to construct.
+    private RaftLogEntry(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
       this.unknownFields = builder.getUnknownFields();
     }
-    private RaftEntry(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+    private RaftLogEntry(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
 
-    private static final RaftEntry defaultInstance;
-    public static RaftEntry getDefaultInstance() {
+    private static final RaftLogEntry defaultInstance;
+    public static RaftLogEntry getDefaultInstance() {
       return defaultInstance;
     }
 
-    public RaftEntry getDefaultInstanceForType() {
+    public RaftLogEntry getDefaultInstanceForType() {
       return defaultInstance;
     }
 
@@ -4143,7 +4640,7 @@ public final class RaftProtos {
         getUnknownFields() {
       return this.unknownFields;
     }
-    private RaftEntry(
+    private RaftLogEntry(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -4171,14 +4668,33 @@ public final class RaftProtos {
               index_ = input.readUInt64();
               break;
             }
-            case 18: {
+            case 16: {
               bitField0_ |= 0x00000002;
-              key_ = input.readBytes();
+              term_ = input.readUInt64();
               break;
             }
             case 26: {
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = kv_.toBuilder();
+              }
+              kv_ = input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(kv_);
+                kv_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000004;
-              value_ = input.readBytes();
+              break;
+            }
+            case 32: {
+              int rawValue = input.readEnum();
+              com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode value = com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(4, rawValue);
+              } else {
+                bitField0_ |= 0x00000008;
+                mode_ = value;
+              }
               break;
             }
           }
@@ -4195,29 +4711,129 @@ public final class RaftProtos {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_RaftEntry_descriptor;
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_RaftLogEntry_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_RaftEntry_fieldAccessorTable
+      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_RaftLogEntry_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.class, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder.class);
+              com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.class, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder.class);
     }
 
-    public static com.google.protobuf.Parser<RaftEntry> PARSER =
-        new com.google.protobuf.AbstractParser<RaftEntry>() {
-      public RaftEntry parsePartialFrom(
+    public static com.google.protobuf.Parser<RaftLogEntry> PARSER =
+        new com.google.protobuf.AbstractParser<RaftLogEntry>() {
+      public RaftLogEntry parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new RaftEntry(input, extensionRegistry);
+        return new RaftLogEntry(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<RaftEntry> getParserForType() {
+    public com.google.protobuf.Parser<RaftLogEntry> getParserForType() {
       return PARSER;
+    }
+
+    /**
+     * Protobuf enum {@code RaftLogEntry.MutationMode}
+     */
+    public enum MutationMode
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>SET = 0;</code>
+       */
+      SET(0, 0),
+      /**
+       * <code>DELETE = 1;</code>
+       */
+      DELETE(1, 1),
+      /**
+       * <code>C_OLDNEW = 2;</code>
+       */
+      C_OLDNEW(2, 2),
+      /**
+       * <code>C_NEW = 3;</code>
+       */
+      C_NEW(3, 3),
+      ;
+
+      /**
+       * <code>SET = 0;</code>
+       */
+      public static final int SET_VALUE = 0;
+      /**
+       * <code>DELETE = 1;</code>
+       */
+      public static final int DELETE_VALUE = 1;
+      /**
+       * <code>C_OLDNEW = 2;</code>
+       */
+      public static final int C_OLDNEW_VALUE = 2;
+      /**
+       * <code>C_NEW = 3;</code>
+       */
+      public static final int C_NEW_VALUE = 3;
+
+
+      public final int getNumber() { return value; }
+
+      public static MutationMode valueOf(int value) {
+        switch (value) {
+          case 0: return SET;
+          case 1: return DELETE;
+          case 2: return C_OLDNEW;
+          case 3: return C_NEW;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<MutationMode>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<MutationMode>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<MutationMode>() {
+              public MutationMode findValueByNumber(int number) {
+                return MutationMode.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final MutationMode[] VALUES = values();
+
+      public static MutationMode valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private MutationMode(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:RaftLogEntry.MutationMode)
     }
 
     private int bitField0_;
@@ -4237,42 +4853,65 @@ public final class RaftProtos {
       return index_;
     }
 
-    // optional bytes key = 2;
-    public static final int KEY_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString key_;
+    // optional uint64 term = 2;
+    public static final int TERM_FIELD_NUMBER = 2;
+    private long term_;
     /**
-     * <code>optional bytes key = 2;</code>
+     * <code>optional uint64 term = 2;</code>
      */
-    public boolean hasKey() {
+    public boolean hasTerm() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional bytes key = 2;</code>
+     * <code>optional uint64 term = 2;</code>
      */
-    public com.google.protobuf.ByteString getKey() {
-      return key_;
+    public long getTerm() {
+      return term_;
     }
 
-    // optional bytes value = 3;
-    public static final int VALUE_FIELD_NUMBER = 3;
-    private com.google.protobuf.ByteString value_;
+    // optional .KeyValuePair kv = 3;
+    public static final int KV_FIELD_NUMBER = 3;
+    private com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair kv_;
     /**
-     * <code>optional bytes value = 3;</code>
+     * <code>optional .KeyValuePair kv = 3;</code>
      */
-    public boolean hasValue() {
+    public boolean hasKv() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional bytes value = 3;</code>
+     * <code>optional .KeyValuePair kv = 3;</code>
      */
-    public com.google.protobuf.ByteString getValue() {
-      return value_;
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getKv() {
+      return kv_;
+    }
+    /**
+     * <code>optional .KeyValuePair kv = 3;</code>
+     */
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder getKvOrBuilder() {
+      return kv_;
+    }
+
+    // optional .RaftLogEntry.MutationMode mode = 4;
+    public static final int MODE_FIELD_NUMBER = 4;
+    private com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode mode_;
+    /**
+     * <code>optional .RaftLogEntry.MutationMode mode = 4;</code>
+     */
+    public boolean hasMode() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional .RaftLogEntry.MutationMode mode = 4;</code>
+     */
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode getMode() {
+      return mode_;
     }
 
     private void initFields() {
       index_ = 0L;
-      key_ = com.google.protobuf.ByteString.EMPTY;
-      value_ = com.google.protobuf.ByteString.EMPTY;
+      term_ = 0L;
+      kv_ = com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
+      mode_ = com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode.SET;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -4290,10 +4929,13 @@ public final class RaftProtos {
         output.writeUInt64(1, index_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, key_);
+        output.writeUInt64(2, term_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, value_);
+        output.writeMessage(3, kv_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeEnum(4, mode_.getNumber());
       }
       getUnknownFields().writeTo(output);
     }
@@ -4310,11 +4952,15 @@ public final class RaftProtos {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, key_);
+          .computeUInt64Size(2, term_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, value_);
+          .computeMessageSize(3, kv_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(4, mode_.getNumber());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4328,53 +4974,53 @@ public final class RaftProtos {
       return super.writeReplace();
     }
 
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseFrom(byte[] data)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseFrom(java.io.InputStream input)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseDelimitedFrom(java.io.InputStream input)
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseDelimitedFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parseFrom(
+    public static com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -4383,7 +5029,7 @@ public final class RaftProtos {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry prototype) {
+    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -4395,24 +5041,24 @@ public final class RaftProtos {
       return builder;
     }
     /**
-     * Protobuf type {@code RaftEntry}
+     * Protobuf type {@code RaftLogEntry}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntryOrBuilder {
+       implements com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntryOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_RaftEntry_descriptor;
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_RaftLogEntry_descriptor;
       }
 
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_RaftEntry_fieldAccessorTable
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_RaftLogEntry_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.class, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder.class);
+                com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.class, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder.class);
       }
 
-      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.newBuilder()
+      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4424,6 +5070,7 @@ public final class RaftProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getKvFieldBuilder();
         }
       }
       private static Builder create() {
@@ -4434,10 +5081,16 @@ public final class RaftProtos {
         super.clear();
         index_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000001);
-        key_ = com.google.protobuf.ByteString.EMPTY;
+        term_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000002);
-        value_ = com.google.protobuf.ByteString.EMPTY;
+        if (kvBuilder_ == null) {
+          kv_ = com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
+        } else {
+          kvBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000004);
+        mode_ = com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode.SET;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -4447,23 +5100,23 @@ public final class RaftProtos {
 
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_RaftEntry_descriptor;
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_RaftLogEntry_descriptor;
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry getDefaultInstanceForType() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.getDefaultInstance();
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry getDefaultInstanceForType() {
+        return com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.getDefaultInstance();
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry build() {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry result = buildPartial();
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry build() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry buildPartial() {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry result = new com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry(this);
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry buildPartial() {
+        com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry result = new com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -4473,35 +5126,46 @@ public final class RaftProtos {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.key_ = key_;
+        result.term_ = term_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.value_ = value_;
+        if (kvBuilder_ == null) {
+          result.kv_ = kv_;
+        } else {
+          result.kv_ = kvBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.mode_ = mode_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
 
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry) {
-          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry)other);
+        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry) {
+          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry other) {
-        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry other) {
+        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.getDefaultInstance()) return this;
         if (other.hasIndex()) {
           setIndex(other.getIndex());
         }
-        if (other.hasKey()) {
-          setKey(other.getKey());
+        if (other.hasTerm()) {
+          setTerm(other.getTerm());
         }
-        if (other.hasValue()) {
-          setValue(other.getValue());
+        if (other.hasKv()) {
+          mergeKv(other.getKv());
+        }
+        if (other.hasMode()) {
+          setMode(other.getMode());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -4515,11 +5179,11 @@ public final class RaftProtos {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry parsedMessage = null;
+        com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry) e.getUnfinishedMessage();
+          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4563,87 +5227,201 @@ public final class RaftProtos {
         return this;
       }
 
-      // optional bytes key = 2;
-      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+      // optional uint64 term = 2;
+      private long term_ ;
       /**
-       * <code>optional bytes key = 2;</code>
+       * <code>optional uint64 term = 2;</code>
        */
-      public boolean hasKey() {
+      public boolean hasTerm() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional bytes key = 2;</code>
+       * <code>optional uint64 term = 2;</code>
        */
-      public com.google.protobuf.ByteString getKey() {
-        return key_;
+      public long getTerm() {
+        return term_;
       }
       /**
-       * <code>optional bytes key = 2;</code>
+       * <code>optional uint64 term = 2;</code>
        */
-      public Builder setKey(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        key_ = value;
+      public Builder setTerm(long value) {
+        bitField0_ |= 0x00000002;
+        term_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bytes key = 2;</code>
+       * <code>optional uint64 term = 2;</code>
        */
-      public Builder clearKey() {
+      public Builder clearTerm() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        key_ = getDefaultInstance().getKey();
+        term_ = 0L;
         onChanged();
         return this;
       }
 
-      // optional bytes value = 3;
-      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
+      // optional .KeyValuePair kv = 3;
+      private com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair kv_ = com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder> kvBuilder_;
       /**
-       * <code>optional bytes value = 3;</code>
+       * <code>optional .KeyValuePair kv = 3;</code>
        */
-      public boolean hasValue() {
+      public boolean hasKv() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional bytes value = 3;</code>
+       * <code>optional .KeyValuePair kv = 3;</code>
        */
-      public com.google.protobuf.ByteString getValue() {
-        return value_;
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getKv() {
+        if (kvBuilder_ == null) {
+          return kv_;
+        } else {
+          return kvBuilder_.getMessage();
+        }
       }
       /**
-       * <code>optional bytes value = 3;</code>
+       * <code>optional .KeyValuePair kv = 3;</code>
        */
-      public Builder setValue(com.google.protobuf.ByteString value) {
+      public Builder setKv(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair value) {
+        if (kvBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          kv_ = value;
+          onChanged();
+        } else {
+          kvBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .KeyValuePair kv = 3;</code>
+       */
+      public Builder setKv(
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder builderForValue) {
+        if (kvBuilder_ == null) {
+          kv_ = builderForValue.build();
+          onChanged();
+        } else {
+          kvBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .KeyValuePair kv = 3;</code>
+       */
+      public Builder mergeKv(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair value) {
+        if (kvBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              kv_ != com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance()) {
+            kv_ =
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.newBuilder(kv_).mergeFrom(value).buildPartial();
+          } else {
+            kv_ = value;
+          }
+          onChanged();
+        } else {
+          kvBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .KeyValuePair kv = 3;</code>
+       */
+      public Builder clearKv() {
+        if (kvBuilder_ == null) {
+          kv_ = com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
+          onChanged();
+        } else {
+          kvBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      /**
+       * <code>optional .KeyValuePair kv = 3;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder getKvBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getKvFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .KeyValuePair kv = 3;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder getKvOrBuilder() {
+        if (kvBuilder_ != null) {
+          return kvBuilder_.getMessageOrBuilder();
+        } else {
+          return kv_;
+        }
+      }
+      /**
+       * <code>optional .KeyValuePair kv = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder> 
+          getKvFieldBuilder() {
+        if (kvBuilder_ == null) {
+          kvBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder>(
+                  kv_,
+                  getParentForChildren(),
+                  isClean());
+          kv_ = null;
+        }
+        return kvBuilder_;
+      }
+
+      // optional .RaftLogEntry.MutationMode mode = 4;
+      private com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode mode_ = com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode.SET;
+      /**
+       * <code>optional .RaftLogEntry.MutationMode mode = 4;</code>
+       */
+      public boolean hasMode() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional .RaftLogEntry.MutationMode mode = 4;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode getMode() {
+        return mode_;
+      }
+      /**
+       * <code>optional .RaftLogEntry.MutationMode mode = 4;</code>
+       */
+      public Builder setMode(com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        value_ = value;
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000008;
+        mode_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bytes value = 3;</code>
+       * <code>optional .RaftLogEntry.MutationMode mode = 4;</code>
        */
-      public Builder clearValue() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        value_ = getDefaultInstance().getValue();
+      public Builder clearMode() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        mode_ = com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.MutationMode.SET;
         onChanged();
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:RaftEntry)
+      // @@protoc_insertion_point(builder_scope:RaftLogEntry)
     }
 
     static {
-      defaultInstance = new RaftEntry(true);
+      defaultInstance = new RaftLogEntry(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:RaftEntry)
+    // @@protoc_insertion_point(class_scope:RaftLogEntry)
   }
 
   public interface AppendEntriesRequestOrBuilder
@@ -4703,29 +5481,29 @@ public final class RaftProtos {
      */
     long getPrevLogTerm();
 
-    // repeated .RaftEntry entries = 6;
+    // repeated .RaftLogEntry entries = 6;
     /**
-     * <code>repeated .RaftEntry entries = 6;</code>
+     * <code>repeated .RaftLogEntry entries = 6;</code>
      */
-    java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry> 
+    java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry> 
         getEntriesList();
     /**
-     * <code>repeated .RaftEntry entries = 6;</code>
+     * <code>repeated .RaftLogEntry entries = 6;</code>
      */
-    com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry getEntries(int index);
+    com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry getEntries(int index);
     /**
-     * <code>repeated .RaftEntry entries = 6;</code>
+     * <code>repeated .RaftLogEntry entries = 6;</code>
      */
     int getEntriesCount();
     /**
-     * <code>repeated .RaftEntry entries = 6;</code>
+     * <code>repeated .RaftLogEntry entries = 6;</code>
      */
-    java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntryOrBuilder> 
+    java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntryOrBuilder> 
         getEntriesOrBuilderList();
     /**
-     * <code>repeated .RaftEntry entries = 6;</code>
+     * <code>repeated .RaftLogEntry entries = 6;</code>
      */
-    com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntryOrBuilder getEntriesOrBuilder(
+    com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntryOrBuilder getEntriesOrBuilder(
         int index);
   }
   /**
@@ -4814,10 +5592,10 @@ public final class RaftProtos {
             }
             case 50: {
               if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-                entries_ = new java.util.ArrayList<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry>();
+                entries_ = new java.util.ArrayList<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry>();
                 mutable_bitField0_ |= 0x00000020;
               }
-              entries_.add(input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.PARSER, extensionRegistry));
+              entries_.add(input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.PARSER, extensionRegistry));
               break;
             }
           }
@@ -4949,38 +5727,38 @@ public final class RaftProtos {
       return prevLogTerm_;
     }
 
-    // repeated .RaftEntry entries = 6;
+    // repeated .RaftLogEntry entries = 6;
     public static final int ENTRIES_FIELD_NUMBER = 6;
-    private java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry> entries_;
+    private java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry> entries_;
     /**
-     * <code>repeated .RaftEntry entries = 6;</code>
+     * <code>repeated .RaftLogEntry entries = 6;</code>
      */
-    public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry> getEntriesList() {
+    public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry> getEntriesList() {
       return entries_;
     }
     /**
-     * <code>repeated .RaftEntry entries = 6;</code>
+     * <code>repeated .RaftLogEntry entries = 6;</code>
      */
-    public java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntryOrBuilder> 
+    public java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntryOrBuilder> 
         getEntriesOrBuilderList() {
       return entries_;
     }
     /**
-     * <code>repeated .RaftEntry entries = 6;</code>
+     * <code>repeated .RaftLogEntry entries = 6;</code>
      */
     public int getEntriesCount() {
       return entries_.size();
     }
     /**
-     * <code>repeated .RaftEntry entries = 6;</code>
+     * <code>repeated .RaftLogEntry entries = 6;</code>
      */
-    public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry getEntries(int index) {
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry getEntries(int index) {
       return entries_.get(index);
     }
     /**
-     * <code>repeated .RaftEntry entries = 6;</code>
+     * <code>repeated .RaftLogEntry entries = 6;</code>
      */
-    public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntryOrBuilder getEntriesOrBuilder(
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntryOrBuilder getEntriesOrBuilder(
         int index) {
       return entries_.get(index);
     }
@@ -5600,23 +6378,23 @@ public final class RaftProtos {
         return this;
       }
 
-      // repeated .RaftEntry entries = 6;
-      private java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry> entries_ =
+      // repeated .RaftLogEntry entries = 6;
+      private java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry> entries_ =
         java.util.Collections.emptyList();
       private void ensureEntriesIsMutable() {
         if (!((bitField0_ & 0x00000020) == 0x00000020)) {
-          entries_ = new java.util.ArrayList<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry>(entries_);
+          entries_ = new java.util.ArrayList<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry>(entries_);
           bitField0_ |= 0x00000020;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntryOrBuilder> entriesBuilder_;
+          com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntryOrBuilder> entriesBuilder_;
 
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
-      public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry> getEntriesList() {
+      public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry> getEntriesList() {
         if (entriesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(entries_);
         } else {
@@ -5624,7 +6402,7 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
       public int getEntriesCount() {
         if (entriesBuilder_ == null) {
@@ -5634,9 +6412,9 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry getEntries(int index) {
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry getEntries(int index) {
         if (entriesBuilder_ == null) {
           return entries_.get(index);
         } else {
@@ -5644,10 +6422,10 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
       public Builder setEntries(
-          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry value) {
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry value) {
         if (entriesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -5661,10 +6439,10 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
       public Builder setEntries(
-          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder builderForValue) {
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder builderForValue) {
         if (entriesBuilder_ == null) {
           ensureEntriesIsMutable();
           entries_.set(index, builderForValue.build());
@@ -5675,9 +6453,9 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
-      public Builder addEntries(com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry value) {
+      public Builder addEntries(com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry value) {
         if (entriesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -5691,10 +6469,10 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
       public Builder addEntries(
-          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry value) {
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry value) {
         if (entriesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -5708,10 +6486,10 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
       public Builder addEntries(
-          com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder builderForValue) {
+          com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder builderForValue) {
         if (entriesBuilder_ == null) {
           ensureEntriesIsMutable();
           entries_.add(builderForValue.build());
@@ -5722,10 +6500,10 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
       public Builder addEntries(
-          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder builderForValue) {
+          int index, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder builderForValue) {
         if (entriesBuilder_ == null) {
           ensureEntriesIsMutable();
           entries_.add(index, builderForValue.build());
@@ -5736,10 +6514,10 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
       public Builder addAllEntries(
-          java.lang.Iterable<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry> values) {
+          java.lang.Iterable<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry> values) {
         if (entriesBuilder_ == null) {
           ensureEntriesIsMutable();
           super.addAll(values, entries_);
@@ -5750,7 +6528,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
       public Builder clearEntries() {
         if (entriesBuilder_ == null) {
@@ -5763,7 +6541,7 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
       public Builder removeEntries(int index) {
         if (entriesBuilder_ == null) {
@@ -5776,16 +6554,16 @@ public final class RaftProtos {
         return this;
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder getEntriesBuilder(
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder getEntriesBuilder(
           int index) {
         return getEntriesFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntryOrBuilder getEntriesOrBuilder(
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntryOrBuilder getEntriesOrBuilder(
           int index) {
         if (entriesBuilder_ == null) {
           return entries_.get(index);  } else {
@@ -5793,9 +6571,9 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
-      public java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntryOrBuilder> 
+      public java.util.List<? extends com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntryOrBuilder> 
            getEntriesOrBuilderList() {
         if (entriesBuilder_ != null) {
           return entriesBuilder_.getMessageOrBuilderList();
@@ -5804,33 +6582,33 @@ public final class RaftProtos {
         }
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder addEntriesBuilder() {
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder addEntriesBuilder() {
         return getEntriesFieldBuilder().addBuilder(
-            com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.getDefaultInstance());
+            com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.getDefaultInstance());
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder addEntriesBuilder(
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder addEntriesBuilder(
           int index) {
         return getEntriesFieldBuilder().addBuilder(
-            index, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.getDefaultInstance());
+            index, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.getDefaultInstance());
       }
       /**
-       * <code>repeated .RaftEntry entries = 6;</code>
+       * <code>repeated .RaftLogEntry entries = 6;</code>
        */
-      public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder> 
+      public java.util.List<com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder> 
            getEntriesBuilderList() {
         return getEntriesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntryOrBuilder> 
+          com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntryOrBuilder> 
           getEntriesFieldBuilder() {
         if (entriesBuilder_ == null) {
           entriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntry.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftEntryOrBuilder>(
+              com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntryOrBuilder>(
                   entries_,
                   ((bitField0_ & 0x00000020) == 0x00000020),
                   getParentForChildren(),
@@ -7159,25 +7937,19 @@ public final class RaftProtos {
   public interface SetRequestOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional bytes key = 1;
+    // optional .KeyValuePair kv = 1;
     /**
-     * <code>optional bytes key = 1;</code>
+     * <code>optional .KeyValuePair kv = 1;</code>
      */
-    boolean hasKey();
+    boolean hasKv();
     /**
-     * <code>optional bytes key = 1;</code>
+     * <code>optional .KeyValuePair kv = 1;</code>
      */
-    com.google.protobuf.ByteString getKey();
-
-    // optional bytes value = 2;
+    com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getKv();
     /**
-     * <code>optional bytes value = 2;</code>
+     * <code>optional .KeyValuePair kv = 1;</code>
      */
-    boolean hasValue();
-    /**
-     * <code>optional bytes value = 2;</code>
-     */
-    com.google.protobuf.ByteString getValue();
+    com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder getKvOrBuilder();
   }
   /**
    * Protobuf type {@code SetRequest}
@@ -7231,13 +8003,16 @@ public final class RaftProtos {
               break;
             }
             case 10: {
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = kv_.toBuilder();
+              }
+              kv_ = input.readMessage(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(kv_);
+                kv_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000001;
-              key_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              value_ = input.readBytes();
               break;
             }
           }
@@ -7280,41 +8055,30 @@ public final class RaftProtos {
     }
 
     private int bitField0_;
-    // optional bytes key = 1;
-    public static final int KEY_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString key_;
+    // optional .KeyValuePair kv = 1;
+    public static final int KV_FIELD_NUMBER = 1;
+    private com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair kv_;
     /**
-     * <code>optional bytes key = 1;</code>
+     * <code>optional .KeyValuePair kv = 1;</code>
      */
-    public boolean hasKey() {
+    public boolean hasKv() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional bytes key = 1;</code>
+     * <code>optional .KeyValuePair kv = 1;</code>
      */
-    public com.google.protobuf.ByteString getKey() {
-      return key_;
-    }
-
-    // optional bytes value = 2;
-    public static final int VALUE_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString value_;
-    /**
-     * <code>optional bytes value = 2;</code>
-     */
-    public boolean hasValue() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getKv() {
+      return kv_;
     }
     /**
-     * <code>optional bytes value = 2;</code>
+     * <code>optional .KeyValuePair kv = 1;</code>
      */
-    public com.google.protobuf.ByteString getValue() {
-      return value_;
+    public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder getKvOrBuilder() {
+      return kv_;
     }
 
     private void initFields() {
-      key_ = com.google.protobuf.ByteString.EMPTY;
-      value_ = com.google.protobuf.ByteString.EMPTY;
+      kv_ = com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -7329,10 +8093,7 @@ public final class RaftProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, key_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, value_);
+        output.writeMessage(1, kv_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -7345,11 +8106,7 @@ public final class RaftProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, key_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, value_);
+          .computeMessageSize(1, kv_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -7459,6 +8216,7 @@ public final class RaftProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getKvFieldBuilder();
         }
       }
       private static Builder create() {
@@ -7467,10 +8225,12 @@ public final class RaftProtos {
 
       public Builder clear() {
         super.clear();
-        key_ = com.google.protobuf.ByteString.EMPTY;
+        if (kvBuilder_ == null) {
+          kv_ = com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
+        } else {
+          kvBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        value_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -7502,11 +8262,11 @@ public final class RaftProtos {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.key_ = key_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
+        if (kvBuilder_ == null) {
+          result.kv_ = kv_;
+        } else {
+          result.kv_ = kvBuilder_.build();
         }
-        result.value_ = value_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -7523,11 +8283,8 @@ public final class RaftProtos {
 
       public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest other) {
         if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest.getDefaultInstance()) return this;
-        if (other.hasKey()) {
-          setKey(other.getKey());
-        }
-        if (other.hasValue()) {
-          setValue(other.getValue());
+        if (other.hasKv()) {
+          mergeKv(other.getKv());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -7556,76 +8313,121 @@ public final class RaftProtos {
       }
       private int bitField0_;
 
-      // optional bytes key = 1;
-      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
+      // optional .KeyValuePair kv = 1;
+      private com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair kv_ = com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder> kvBuilder_;
       /**
-       * <code>optional bytes key = 1;</code>
+       * <code>optional .KeyValuePair kv = 1;</code>
        */
-      public boolean hasKey() {
+      public boolean hasKv() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional bytes key = 1;</code>
+       * <code>optional .KeyValuePair kv = 1;</code>
        */
-      public com.google.protobuf.ByteString getKey() {
-        return key_;
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getKv() {
+        if (kvBuilder_ == null) {
+          return kv_;
+        } else {
+          return kvBuilder_.getMessage();
+        }
       }
       /**
-       * <code>optional bytes key = 1;</code>
+       * <code>optional .KeyValuePair kv = 1;</code>
        */
-      public Builder setKey(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        key_ = value;
-        onChanged();
+      public Builder setKv(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair value) {
+        if (kvBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          kv_ = value;
+          onChanged();
+        } else {
+          kvBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
-       * <code>optional bytes key = 1;</code>
+       * <code>optional .KeyValuePair kv = 1;</code>
        */
-      public Builder clearKey() {
+      public Builder setKv(
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder builderForValue) {
+        if (kvBuilder_ == null) {
+          kv_ = builderForValue.build();
+          onChanged();
+        } else {
+          kvBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .KeyValuePair kv = 1;</code>
+       */
+      public Builder mergeKv(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair value) {
+        if (kvBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              kv_ != com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance()) {
+            kv_ =
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.newBuilder(kv_).mergeFrom(value).buildPartial();
+          } else {
+            kv_ = value;
+          }
+          onChanged();
+        } else {
+          kvBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .KeyValuePair kv = 1;</code>
+       */
+      public Builder clearKv() {
+        if (kvBuilder_ == null) {
+          kv_ = com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
+          onChanged();
+        } else {
+          kvBuilder_.clear();
+        }
         bitField0_ = (bitField0_ & ~0x00000001);
-        key_ = getDefaultInstance().getKey();
-        onChanged();
-        return this;
-      }
-
-      // optional bytes value = 2;
-      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>optional bytes value = 2;</code>
-       */
-      public boolean hasValue() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional bytes value = 2;</code>
-       */
-      public com.google.protobuf.ByteString getValue() {
-        return value_;
-      }
-      /**
-       * <code>optional bytes value = 2;</code>
-       */
-      public Builder setValue(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        value_ = value;
-        onChanged();
         return this;
       }
       /**
-       * <code>optional bytes value = 2;</code>
+       * <code>optional .KeyValuePair kv = 1;</code>
        */
-      public Builder clearValue() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        value_ = getDefaultInstance().getValue();
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder getKvBuilder() {
+        bitField0_ |= 0x00000001;
         onChanged();
-        return this;
+        return getKvFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .KeyValuePair kv = 1;</code>
+       */
+      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder getKvOrBuilder() {
+        if (kvBuilder_ != null) {
+          return kvBuilder_.getMessageOrBuilder();
+        } else {
+          return kv_;
+        }
+      }
+      /**
+       * <code>optional .KeyValuePair kv = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder> 
+          getKvFieldBuilder() {
+        if (kvBuilder_ == null) {
+          kvBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder>(
+                  kv_,
+                  getParentForChildren(),
+                  isClean());
+          kv_ = null;
+        }
+        return kvBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:SetRequest)
@@ -8912,489 +9714,6 @@ public final class RaftProtos {
     }
 
     // @@protoc_insertion_point(class_scope:GetResponse)
-  }
-
-  public interface KeyValuePairOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // optional bytes key = 1;
-    /**
-     * <code>optional bytes key = 1;</code>
-     */
-    boolean hasKey();
-    /**
-     * <code>optional bytes key = 1;</code>
-     */
-    com.google.protobuf.ByteString getKey();
-
-    // optional bytes value = 2;
-    /**
-     * <code>optional bytes value = 2;</code>
-     */
-    boolean hasValue();
-    /**
-     * <code>optional bytes value = 2;</code>
-     */
-    com.google.protobuf.ByteString getValue();
-  }
-  /**
-   * Protobuf type {@code KeyValuePair}
-   */
-  public static final class KeyValuePair extends
-      com.google.protobuf.GeneratedMessage
-      implements KeyValuePairOrBuilder {
-    // Use KeyValuePair.newBuilder() to construct.
-    private KeyValuePair(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private KeyValuePair(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final KeyValuePair defaultInstance;
-    public static KeyValuePair getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public KeyValuePair getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private KeyValuePair(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              key_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              value_ = input.readBytes();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.class, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<KeyValuePair> PARSER =
-        new com.google.protobuf.AbstractParser<KeyValuePair>() {
-      public KeyValuePair parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new KeyValuePair(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<KeyValuePair> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // optional bytes key = 1;
-    public static final int KEY_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString key_;
-    /**
-     * <code>optional bytes key = 1;</code>
-     */
-    public boolean hasKey() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional bytes key = 1;</code>
-     */
-    public com.google.protobuf.ByteString getKey() {
-      return key_;
-    }
-
-    // optional bytes value = 2;
-    public static final int VALUE_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString value_;
-    /**
-     * <code>optional bytes value = 2;</code>
-     */
-    public boolean hasValue() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional bytes value = 2;</code>
-     */
-    public com.google.protobuf.ByteString getValue() {
-      return value_;
-    }
-
-    private void initFields() {
-      key_ = com.google.protobuf.ByteString.EMPTY;
-      value_ = com.google.protobuf.ByteString.EMPTY;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, key_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, value_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, key_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, value_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code KeyValuePair}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePairOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.class, com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.Builder.class);
-      }
-
-      // Construct using com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        key_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        value_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.internal_static_KeyValuePair_descriptor;
-      }
-
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair getDefaultInstanceForType() {
-        return com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance();
-      }
-
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair build() {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair buildPartial() {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair result = new com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.key_ = key_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.value_ = value_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair) {
-          return mergeFrom((com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair other) {
-        if (other == com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair.getDefaultInstance()) return this;
-        if (other.hasKey()) {
-          setKey(other.getKey());
-        }
-        if (other.hasValue()) {
-          setValue(other.getValue());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // optional bytes key = 1;
-      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>optional bytes key = 1;</code>
-       */
-      public boolean hasKey() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional bytes key = 1;</code>
-       */
-      public com.google.protobuf.ByteString getKey() {
-        return key_;
-      }
-      /**
-       * <code>optional bytes key = 1;</code>
-       */
-      public Builder setKey(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        key_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bytes key = 1;</code>
-       */
-      public Builder clearKey() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        key_ = getDefaultInstance().getKey();
-        onChanged();
-        return this;
-      }
-
-      // optional bytes value = 2;
-      private com.google.protobuf.ByteString value_ = com.google.protobuf.ByteString.EMPTY;
-      /**
-       * <code>optional bytes value = 2;</code>
-       */
-      public boolean hasValue() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional bytes value = 2;</code>
-       */
-      public com.google.protobuf.ByteString getValue() {
-        return value_;
-      }
-      /**
-       * <code>optional bytes value = 2;</code>
-       */
-      public Builder setValue(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        value_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bytes value = 2;</code>
-       */
-      public Builder clearValue() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        value_ = getDefaultInstance().getValue();
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:KeyValuePair)
-    }
-
-    static {
-      defaultInstance = new KeyValuePair(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:KeyValuePair)
   }
 
   public interface ListRequestOrBuilder
@@ -12114,10 +12433,15 @@ public final class RaftProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_TestRpcResponse_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_RaftEntry_descriptor;
+    internal_static_KeyValuePair_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_RaftEntry_fieldAccessorTable;
+      internal_static_KeyValuePair_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_RaftLogEntry_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_RaftLogEntry_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_AppendEntriesRequest_descriptor;
   private static
@@ -12159,11 +12483,6 @@ public final class RaftProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_GetResponse_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_KeyValuePair_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_KeyValuePair_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_ListRequest_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -12203,35 +12522,38 @@ public final class RaftProtos {
       "romHost\030\001 \002(\0132\t.ServerId\022\014\n\004term\030\002 \002(\004\022\017" +
       "\n\007granted\030\003 \002(\010\"\036\n\016TestRpcRequest\022\014\n\004dat",
       "a\030\001 \001(\014\"!\n\017TestRpcResponse\022\016\n\006result\030\001 \001" +
-      "(\014\"6\n\tRaftEntry\022\r\n\005index\030\001 \001(\004\022\013\n\003key\030\002 " +
-      "\001(\014\022\r\n\005value\030\003 \001(\014\"\237\001\n\024AppendEntriesRequ" +
-      "est\022\014\n\004term\030\001 \001(\004\022\033\n\010leaderId\030\002 \001(\0132\t.Se" +
-      "rverId\022\024\n\014leaderCommit\030\003 \001(\004\022\024\n\014prevLogI" +
-      "ndex\030\004 \001(\004\022\023\n\013prevLogTerm\030\005 \001(\004\022\033\n\007entri" +
-      "es\030\006 \003(\0132\n.RaftEntry\"6\n\025AppendEntriesRes" +
-      "ponse\022\014\n\004term\030\001 \001(\004\022\017\n\007success\030\002 \001(\010\"\025\n\023" +
-      "LookupLeaderRequest\"1\n\024LookupLeaderRespo" +
-      "nse\022\031\n\006leader\030\001 \001(\0132\t.ServerId\"(\n\nSetReq",
-      "uest\022\013\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\"\036\n\013SetR" +
-      "esponse\022\017\n\007success\030\001 \001(\010\"\031\n\nGetRequest\022\013" +
-      "\n\003key\030\001 \001(\014\"-\n\013GetResponse\022\r\n\005value\030\001 \001(" +
-      "\014\022\017\n\007success\030\002 \001(\010\"*\n\014KeyValuePair\022\013\n\003ke" +
-      "y\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\"\036\n\013ListRequest\022\017\n" +
-      "\007pattern\030\001 \001(\014\"?\n\014ListResponse\022\017\n\007succes" +
-      "s\030\001 \001(\010\022\036\n\007results\030\002 \003(\0132\r.KeyValuePair\"" +
-      "\034\n\rDeleteRequest\022\013\n\003key\030\001 \001(\014\"!\n\016DeleteR" +
-      "esponse\022\017\n\007success\030\001 \001(\0102\206\003\n\013RaftService" +
-      "\0228\n\013collectVote\022\023.CollectVoteRequest\032\024.C",
-      "ollectVoteResponse\022>\n\rappendEntries\022\025.Ap" +
-      "pendEntriesRequest\032\026.AppendEntriesRespon" +
-      "se\022,\n\007testRpc\022\017.TestRpcRequest\032\020.TestRpc" +
-      "Response\022;\n\014lookupLeader\022\024.LookupLeaderR" +
-      "equest\032\025.LookupLeaderResponse\022 \n\003get\022\013.G" +
-      "etRequest\032\014.GetResponse\022 \n\003set\022\013.SetRequ" +
-      "est\032\014.SetResponse\022)\n\006delete\022\016.DeleteRequ" +
-      "est\032\017.DeleteResponse\022#\n\004list\022\014.ListReque" +
-      "st\032\r.ListResponseB6\n#com.chicm.cmraft.pr" +
-      "otobuf.generatedB\nRaftProtosH\001\210\001\001"
+      "(\014\"*\n\014KeyValuePair\022\013\n\003key\030\001 \001(\014\022\r\n\005value" +
+      "\030\002 \001(\014\"\256\001\n\014RaftLogEntry\022\r\n\005index\030\001 \001(\004\022\014" +
+      "\n\004term\030\002 \001(\004\022\031\n\002kv\030\003 \001(\0132\r.KeyValuePair\022" +
+      "(\n\004mode\030\004 \001(\0162\032.RaftLogEntry.MutationMod" +
+      "e\"<\n\014MutationMode\022\007\n\003SET\020\000\022\n\n\006DELETE\020\001\022\014" +
+      "\n\010C_OLDNEW\020\002\022\t\n\005C_NEW\020\003\"\242\001\n\024AppendEntrie" +
+      "sRequest\022\014\n\004term\030\001 \001(\004\022\033\n\010leaderId\030\002 \001(\013" +
+      "2\t.ServerId\022\024\n\014leaderCommit\030\003 \001(\004\022\024\n\014pre" +
+      "vLogIndex\030\004 \001(\004\022\023\n\013prevLogTerm\030\005 \001(\004\022\036\n\007",
+      "entries\030\006 \003(\0132\r.RaftLogEntry\"6\n\025AppendEn" +
+      "triesResponse\022\014\n\004term\030\001 \001(\004\022\017\n\007success\030\002" +
+      " \001(\010\"\025\n\023LookupLeaderRequest\"1\n\024LookupLea" +
+      "derResponse\022\031\n\006leader\030\001 \001(\0132\t.ServerId\"\'" +
+      "\n\nSetRequest\022\031\n\002kv\030\001 \001(\0132\r.KeyValuePair\"" +
+      "\036\n\013SetResponse\022\017\n\007success\030\001 \001(\010\"\031\n\nGetRe" +
+      "quest\022\013\n\003key\030\001 \001(\014\"-\n\013GetResponse\022\r\n\005val" +
+      "ue\030\001 \001(\014\022\017\n\007success\030\002 \001(\010\"\036\n\013ListRequest" +
+      "\022\017\n\007pattern\030\001 \001(\014\"?\n\014ListResponse\022\017\n\007suc" +
+      "cess\030\001 \001(\010\022\036\n\007results\030\002 \003(\0132\r.KeyValuePa",
+      "ir\"\034\n\rDeleteRequest\022\013\n\003key\030\001 \001(\014\"!\n\016Dele" +
+      "teResponse\022\017\n\007success\030\001 \001(\0102\206\003\n\013RaftServ" +
+      "ice\0228\n\013collectVote\022\023.CollectVoteRequest\032" +
+      "\024.CollectVoteResponse\022>\n\rappendEntries\022\025" +
+      ".AppendEntriesRequest\032\026.AppendEntriesRes" +
+      "ponse\022,\n\007testRpc\022\017.TestRpcRequest\032\020.Test" +
+      "RpcResponse\022;\n\014lookupLeader\022\024.LookupLead" +
+      "erRequest\032\025.LookupLeaderResponse\022 \n\003get\022" +
+      "\013.GetRequest\032\014.GetResponse\022 \n\003set\022\013.SetR" +
+      "equest\032\014.SetResponse\022)\n\006delete\022\016.DeleteR",
+      "equest\032\017.DeleteResponse\022#\n\004list\022\014.ListRe" +
+      "quest\032\r.ListResponseB6\n#com.chicm.cmraft" +
+      ".protobuf.generatedB\nRaftProtosH\001\210\001\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -12280,66 +12602,66 @@ public final class RaftProtos {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_TestRpcResponse_descriptor,
               new java.lang.String[] { "Result", });
-          internal_static_RaftEntry_descriptor =
+          internal_static_KeyValuePair_descriptor =
             getDescriptor().getMessageTypes().get(7);
-          internal_static_RaftEntry_fieldAccessorTable = new
+          internal_static_KeyValuePair_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_RaftEntry_descriptor,
-              new java.lang.String[] { "Index", "Key", "Value", });
-          internal_static_AppendEntriesRequest_descriptor =
+              internal_static_KeyValuePair_descriptor,
+              new java.lang.String[] { "Key", "Value", });
+          internal_static_RaftLogEntry_descriptor =
             getDescriptor().getMessageTypes().get(8);
+          internal_static_RaftLogEntry_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_RaftLogEntry_descriptor,
+              new java.lang.String[] { "Index", "Term", "Kv", "Mode", });
+          internal_static_AppendEntriesRequest_descriptor =
+            getDescriptor().getMessageTypes().get(9);
           internal_static_AppendEntriesRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_AppendEntriesRequest_descriptor,
               new java.lang.String[] { "Term", "LeaderId", "LeaderCommit", "PrevLogIndex", "PrevLogTerm", "Entries", });
           internal_static_AppendEntriesResponse_descriptor =
-            getDescriptor().getMessageTypes().get(9);
+            getDescriptor().getMessageTypes().get(10);
           internal_static_AppendEntriesResponse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_AppendEntriesResponse_descriptor,
               new java.lang.String[] { "Term", "Success", });
           internal_static_LookupLeaderRequest_descriptor =
-            getDescriptor().getMessageTypes().get(10);
+            getDescriptor().getMessageTypes().get(11);
           internal_static_LookupLeaderRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_LookupLeaderRequest_descriptor,
               new java.lang.String[] { });
           internal_static_LookupLeaderResponse_descriptor =
-            getDescriptor().getMessageTypes().get(11);
+            getDescriptor().getMessageTypes().get(12);
           internal_static_LookupLeaderResponse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_LookupLeaderResponse_descriptor,
               new java.lang.String[] { "Leader", });
           internal_static_SetRequest_descriptor =
-            getDescriptor().getMessageTypes().get(12);
+            getDescriptor().getMessageTypes().get(13);
           internal_static_SetRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_SetRequest_descriptor,
-              new java.lang.String[] { "Key", "Value", });
+              new java.lang.String[] { "Kv", });
           internal_static_SetResponse_descriptor =
-            getDescriptor().getMessageTypes().get(13);
+            getDescriptor().getMessageTypes().get(14);
           internal_static_SetResponse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_SetResponse_descriptor,
               new java.lang.String[] { "Success", });
           internal_static_GetRequest_descriptor =
-            getDescriptor().getMessageTypes().get(14);
+            getDescriptor().getMessageTypes().get(15);
           internal_static_GetRequest_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_GetRequest_descriptor,
               new java.lang.String[] { "Key", });
           internal_static_GetResponse_descriptor =
-            getDescriptor().getMessageTypes().get(15);
+            getDescriptor().getMessageTypes().get(16);
           internal_static_GetResponse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_GetResponse_descriptor,
               new java.lang.String[] { "Value", "Success", });
-          internal_static_KeyValuePair_descriptor =
-            getDescriptor().getMessageTypes().get(16);
-          internal_static_KeyValuePair_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_KeyValuePair_descriptor,
-              new java.lang.String[] { "Key", "Value", });
           internal_static_ListRequest_descriptor =
             getDescriptor().getMessageTypes().get(17);
           internal_static_ListRequest_fieldAccessorTable = new

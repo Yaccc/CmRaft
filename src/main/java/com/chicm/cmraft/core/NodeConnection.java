@@ -23,9 +23,9 @@ package com.chicm.cmraft.core;
 import java.util.List;
 
 import com.chicm.cmraft.common.ServerInfo;
-import com.chicm.cmraft.log.LogEntry;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry;
 import com.google.protobuf.ServiceException;
 
 /**
@@ -39,7 +39,7 @@ public interface NodeConnection {
       long lastLogTerm) throws ServiceException ;
   
   AppendEntriesResponse appendEntries(long term, ServerInfo leaderId, long leaderCommit,
-      long prevLogIndex, long prevLogTerm, List<LogEntry> entries) throws ServiceException; 
+      long prevLogIndex, long prevLogTerm, List<RaftLogEntry> entries) throws ServiceException; 
   
   ServerInfo getRemoteServer();
   

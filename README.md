@@ -54,6 +54,8 @@ CmRaft是Raft算法的Java的实现。CmRaft已经列在Raft官方网站的Raft�
 
 [Raft系列文章之二：Leader选举](http://blog.csdn.net/chicm/article/details/41794475)
 
+[Raft系列文章之三：Raft RPC 详解](http://blog.csdn.net/chicm/article/details/41909261)
+
 将持续添加更多文章...
 
 CmRaft技术架构

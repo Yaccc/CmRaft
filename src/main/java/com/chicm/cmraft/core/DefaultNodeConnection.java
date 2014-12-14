@@ -27,13 +27,14 @@ import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
-import com.chicm.cmraft.log.LogEntry;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.CollectVoteResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftLogEntry;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ServerId;
 import com.chicm.cmraft.rpc.RpcClient;
+import com.google.common.base.Preconditions;
 import com.google.protobuf.ServiceException;
 
 /**
@@ -77,20 +78,18 @@ public class DefaultNodeConnection implements NodeConnection {
    */
   @Override
   public AppendEntriesResponse appendEntries(long term, ServerInfo leaderId, long leaderCommit,
-      long prevLogIndex, long prevLogTerm, List<LogEntry> entries) throws ServiceException {
+      long prevLogIndex, long prevLogTerm, List<RaftLogEntry> entries) throws ServiceException {
 
+    Preconditions.checkNotNull(entries);
+    
     AppendEntriesRequest.Builder builder = AppendEntriesRequest.newBuilder();
     builder.setTerm(term);
     builder.setLeaderId(leaderId.toServerId());
     builder.setLeaderCommit(leaderCommit);
     builder.setPrevLogIndex(prevLogIndex);
     builder.setPrevLogTerm(prevLogTerm);
-    if(entries != null) {
-      for(LogEntry entry: entries) {
-        //builder.setEntries(i, entries[i].toRaftEntry());
-        builder.addEntries(entry.toRaftEntry());
-      }
-    }
+    builder.addAllEntries(entries);
+    
     try {
       LOG.info(leaderId + "making appendEntries call to: " + getRemoteServer());
     } catch(Exception e) {LOG.error("exception", e);}

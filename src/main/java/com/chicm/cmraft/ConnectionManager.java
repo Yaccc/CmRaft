@@ -110,9 +110,13 @@ public class ConnectionManager {
 
     @Override
     public boolean set(byte[] key, byte[] value) {
+      
+      KeyValuePair.Builder kvBuilder = KeyValuePair.newBuilder();
+      kvBuilder.setKey(ByteString.copyFrom(key));
+      kvBuilder.setValue(ByteString.copyFrom(value));
+      
       SetRequest.Builder builder = SetRequest.newBuilder();
-      builder.setKey(ByteString.copyFrom(key));
-      builder.setValue(ByteString.copyFrom(value));
+      builder.setKv(kvBuilder.build());
       
       try {
         SetResponse response = rpcClient.getStub().set(null, builder.build());
