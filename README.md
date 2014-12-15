@@ -61,7 +61,7 @@ CmRaft是Raft算法的Java的实现。CmRaft已经列在Raft官方网站的Raft�
 CmRaft技术架构
 -------------
 CmRaft系统架构如下图：
-![CmRaft system architecture](http://d.pcs.baidu.com/thumbnail/18755e30857ce1920bd9240eef85ed9c?fid=1814569568-250528-751384116897336&time=1418029200&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-zO9aEQNrLhquByraFlu%2BPxJTUoE%3D&rt=sh&expires=2h&r=264316360&sharesign=unknown&size=c710_u500&quality=100)
+![CmRaft system architecture](http://chicm.github.io/images/cmraft_architecture.jpg)
 
 CmRaft架构比较简单，核心部分包含如下模块，分别对应Raft算法各个功能
 
