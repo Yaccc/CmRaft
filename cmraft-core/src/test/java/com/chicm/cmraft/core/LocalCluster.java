@@ -20,6 +20,8 @@
 
 package com.chicm.cmraft.core;
 
+import com.chicm.cmraft.Connection;
+import com.chicm.cmraft.ConnectionManager;
 import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
 
@@ -37,6 +39,8 @@ public class LocalCluster {
   
   private Configuration[] confs;
   private RaftNode[] nodes;
+  
+  private Connection connection;
 
   private LocalCluster() {
   }
@@ -47,6 +51,13 @@ public class LocalCluster {
       instance.createCluster(n, startPort);
     }
     return instance;
+  }
+  
+  public Connection getConnection() {
+    if(connection == null) {
+      connection = ConnectionManager.getConnection(getConf(0));
+    }
+    return connection;
   }
   
   public Configuration getConf(int index) {

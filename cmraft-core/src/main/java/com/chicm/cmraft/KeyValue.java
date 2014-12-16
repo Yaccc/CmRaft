@@ -61,6 +61,16 @@ public class KeyValue {
     this.value = value;
   }
   
+  @Override
+  public String toString() {
+    if(value != null) {
+      return String.format("[key:[%s], value:[%s]]", new String(key),
+        new String(value));
+    } else {
+      return String.format("[key:[%s], value:[null]]", new String(key));
+    }
+  }
+  
   public KeyValuePair toKeyValuePair() {
     KeyValuePair.Builder builder = KeyValuePair.newBuilder();
     if(getKey() != null)
