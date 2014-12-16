@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.chicm.cmraft</groupId>
-  <artifactId>CmRaft</artifactId>
+  <artifactId>cmraft-core</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>CmRaft</name>
+  <name>cmraft-core</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -106,7 +106,7 @@
           <version>3.0.0</version>
           <!--NOTE: Findbugs 3.0.0 requires jdk7-->
           <configuration>
-            <excludeFilterFile>${project.basedir}/dev-support/findbugs-exclude.xml</excludeFilterFile>
+            <excludeFilterFile>${project.basedir}/../dev-support/findbugs-exclude.xml</excludeFilterFile>
             <findbugsXmlOutput>true</findbugsXmlOutput>
             <xmlOutput>true</xmlOutput>
             <effort>Max</effort>
