@@ -36,10 +36,10 @@ import com.google.protobuf.ServiceException;
 public interface NodeConnection {
   
   CollectVoteResponse collectVote(ServerInfo candidate, long term, long lastLogIndex,
-      long lastLogTerm) throws ServiceException ;
+      long lastLogTerm) throws Exception ;
   
   AppendEntriesResponse appendEntries(long term, ServerInfo leaderId, long leaderCommit,
-      long prevLogIndex, long prevLogTerm, List<RaftLogEntry> entries) throws ServiceException; 
+      long prevLogIndex, long prevLogTerm, List<RaftLogEntry> entries) throws Exception; 
   
   ServerInfo getRemoteServer();
   

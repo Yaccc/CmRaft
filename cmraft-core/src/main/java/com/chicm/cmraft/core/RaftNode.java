@@ -27,6 +27,7 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.log.DefaultRaftLog;
@@ -372,5 +373,10 @@ public class RaftNode {
         
       }
     }
+  }
+  
+  public static void main(String[] args) {
+    Configuration conf = CmRaftConfiguration.create();
+    RaftNode node = new RaftNode(conf);
   }
 }

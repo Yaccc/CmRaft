@@ -3,6 +3,7 @@
 .classpath
 /build
 /.idea/
+/lib
 /logs
 *target/
 *.iml

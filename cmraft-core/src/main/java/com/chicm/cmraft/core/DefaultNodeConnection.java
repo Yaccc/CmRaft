@@ -58,7 +58,7 @@ public class DefaultNodeConnection implements NodeConnection {
    */
   @Override
   public CollectVoteResponse collectVote(ServerInfo candidate, long term, long lastLogIndex,
-      long lastLogTerm) throws ServiceException  {
+      long lastLogTerm) throws Exception  {
     ServerId.Builder sbuilder = ServerId.newBuilder();
     sbuilder.setHostName(candidate.getHost());
     sbuilder.setPort(candidate.getPort());
@@ -92,11 +92,12 @@ public class DefaultNodeConnection implements NodeConnection {
     
     try {
       LOG.info(leaderId + "making appendEntries call to: " + getRemoteServer());
-    } catch(Exception e) {LOG.error("exception", e);}
-    
-    AppendEntriesResponse response = rpcClient.getStub().appendEntries(null, builder.build());
-    
-    return response;
+      AppendEntriesResponse response = rpcClient.getStub().appendEntries(null, builder.build());
+      return response;
+    } catch(Exception e) {
+      LOG.error("exception", e);
+    }
+    return null;
   }
   
   /* (non-Javadoc)

@@ -86,8 +86,8 @@ public class ConnectionManager {
       if(response.getLeader() != null) {
         return ServerInfo.copyFrom(response.getLeader());
       }
-    } catch(ServiceException e) {
-      LOG.error("lookupLeader failed", e);
+    } catch(Exception e) {
+      LOG.error("lookupLeader failed:" + e.getMessage());
     }
     return null;
   }
@@ -122,8 +122,8 @@ public class ConnectionManager {
         SetResponse response = rpcClient.getStub().set(null, builder.build());
         if(response != null && response.getSuccess())
           return true;
-      } catch(ServiceException e) {
-        LOG.error("set failed");
+      } catch(Exception e) {
+        LOG.error("set failed:" + e.getMessage());
       }
       return false;
     }
@@ -176,8 +176,8 @@ public class ConnectionManager {
             result.add(kv);
           }
         }
-      } catch(ServiceException e) {
-        LOG.error("list failed");
+      } catch(Exception e) {
+        LOG.error("list failed:" + e.getMessage());
       }
       return result;
     }

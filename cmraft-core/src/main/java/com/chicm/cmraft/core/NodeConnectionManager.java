@@ -207,9 +207,9 @@ public class NodeConnectionManager {
           LOG.info(node.getName() + "VOTE REJECTED BY " + response.getFromHost().getHostName()
             + ":" + response.getFromHost().getPort());
         }
-      } catch(ServiceException e) {
+      } catch(Exception e) {
         LOG.error("RPC: collectVote failed: from " + getRaftNode().getName() + 
-          ", to: " + connection.getRemoteServer(), e);
+          ", to: " + connection.getRemoteServer() + ": " + e.getMessage());
       }
     }
   }
@@ -249,7 +249,7 @@ public class NodeConnectionManager {
           logManager.onAppendEntriesResponse(connection.getRemoteServer(), response.getTerm(),
             response.getSuccess(), maxIndex); 
         }
-      } catch(ServiceException e) {
+      } catch(Exception e) {
         LOG.error("RPC: collectVote failed: from " + getRaftNode().getName() + 
           ", to: " + connection.getRemoteServer(), e);
       }

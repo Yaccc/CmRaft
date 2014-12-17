@@ -65,7 +65,7 @@ public class RpcClient {
   private BlockingInterface stub = null;
   private ChannelHandlerContext ctx = null;
   private BlockingHashMap<Integer, RpcCall> responsesMap = new BlockingHashMap<>();
-  private volatile boolean initialized = false;
+  private volatile boolean connected = false;
   private int rpcTimeout;
   private ServerInfo remoteServer = null;
   
@@ -74,19 +74,19 @@ public class RpcClient {
     this.remoteServer = remoteServer;
   }
   
-  private boolean isInitialized() {
-    return initialized;
+  public boolean isConnected() {
+    return connected;
   }
   
-  private synchronized boolean init() 
+  private synchronized boolean connect() 
       throws IOException, InterruptedException, ExecutionException {
     
-    if(isInitialized())
+    if(isConnected())
       return true;
     try {
-      ctx = connect();
+      ctx = connectRemoteServer();
     } catch(Exception e) {
-      LOG.error("Failed connecting to:" + getRemoteServer(), e);
+      LOG.error("Failed connecting to:" + getRemoteServer() + " : " + e.getMessage());
       try {
         if(ctx != null && ctx.channel().isOpen()) {
           ctx.close().sync();
@@ -94,15 +94,15 @@ public class RpcClient {
       } catch(Exception e2) {
         LOG.error("Failed closing ctx, " + e2.getMessage());
       }
-      return false;
+      throw e;
     }
     
     BlockingRpcChannel c = createBlockingRpcChannel(responsesMap);
     stub =  RaftService.newBlockingStub(c);
 
     
-    initialized = true;
-    return initialized;
+    connected = true;
+    return connected;
   }
   
   public ServerInfo getRemoteServer() {
@@ -117,19 +117,16 @@ public class RpcClient {
     }
   }
   
-  public BlockingInterface getStub() {
-    if(!isInitialized()) {
-      try { 
-        init();
-      } catch(Exception e) {
-        LOG.error("RpcClient Initialization exception", e);
-        return null;
-      }
+  public BlockingInterface getStub() throws Exception {
+    if(!isConnected()) {
+        if(!connect()) {
+          return null;
+        }
     }
     return stub;
   }
   
-  public ChannelHandlerContext connect() throws Exception {
+  private ChannelHandlerContext connectRemoteServer() throws InterruptedException  {
     EventLoopGroup workerGroup = new NioEventLoopGroup();
     
     try {
@@ -247,7 +244,7 @@ public class RpcClient {
     }
   }
   
-  public void testRpc(int packetSize) throws ServiceException {
+  public void testRpc(int packetSize) throws Exception {
     TestRpcRequest.Builder builder = TestRpcRequest.newBuilder();
     byte[] bytes = new byte[packetSize];
     builder.setData(ByteString.copyFrom(bytes));
@@ -262,9 +259,9 @@ public class RpcClient {
    */
   public void sendRequest(int packetSize) {
     
-    if(!this.isInitialized()) {
+    if(!this.isConnected()) {
       try {
-        if(!init()) {
+        if(!connect()) {
           LOG.error("INIT error");
           return;
         }

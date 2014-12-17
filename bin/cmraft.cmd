@@ -1,0 +1,1 @@
+java -cp ..\cmraft-core\target\cmraft-core-1.0-SNAPSHOT-jar-with-dependencies.jar com.chicm.cmraft.core.RaftNode
