@@ -1,3 +1,9 @@
+include Java
+require 'pathname'
+
+source = java.lang.System.getProperty('cmraft.ruby.source')
+$LOAD_PATH.unshift Pathname.new(source)
+
 module Shell
   @@commands = {}
   @@exitCode = "exit"
@@ -19,7 +25,7 @@ module Shell
 
     # Load command
     begin
-      require "./commands/#{name}"
+      require "commands/#{name}"
       klass_name = name.to_s.gsub(/(?:^|_)(.)/) { $1.upcase } # camelize
       commands[name] = eval("Commands::#{klass_name}")
       aliases.each do |an_alias|

@@ -7,17 +7,25 @@ if [ -f "$CMRAFT_HOME/conf/cmraft-env.sh" ]; then
 fi
 JAVA=$JAVA_HOME/bin/java
 
+CLASSPATH=$CLASSPATH:$(echo "$CMRAFT_HOME"/lib/*.jar | tr ' ' ':'):"$CMRAFT_HOME"/conf
+
+cygwin=false
+case "`uname`" in
+CYGWIN*) cygwin=true;;
+esac
+
+# cygwin path translation
+if $cygwin; then
+  CLASSPATH=`cygpath -p -w "$CLASSPATH"`
+  CMRAFT_HOME=`cygpath -p -w "$CMRAFT_HOME"`
+fi
+
 # get arguments
 COMMAND=$1
 shift
 # figure out which class to run
 if [ "$COMMAND" = "shell" ] ; then
-  # eg export JRUBY_HOME=/usr/local/share/jruby
-  if [ "$JRUBY_HOME" != "" ] ; then
-    CLASSPATH="$JRUBY_HOME/lib/jruby.jar:$CLASSPATH"
-    #CMRAFT_OPTS="-Djruby.home=$JRUBY_HOME -Djruby.lib=$JRUBY_HOME/lib"
-  fi 
-  CLASS="org.jruby.Main -X+O ${JRUBY_OPTS} ../bin/hirb.rb"
+  CLASS="-Dcmraft.ruby.source=$CMRAFT_HOME/lib/ruby org.jruby.Main -X+O $CMRAFT_HOME/lib/ruby/shell.rb"
 elif [ "$COMMAND" = "start" ] ; then
   CLASS='com.chicm.cmraft.core.RaftNode'
 else
