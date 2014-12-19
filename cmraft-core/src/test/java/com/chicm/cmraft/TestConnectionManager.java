@@ -35,8 +35,8 @@ public class TestConnectionManager {
 
   @Test
   public void testGetConnection() throws Exception {
-    org.apache.log4j.LogManager.getRootLogger().setLevel(Level.ERROR);
-    LocalCluster cluster = LocalCluster.create(5, 14688);
+    org.apache.log4j.LogManager.getRootLogger().setLevel(Level.DEBUG);
+    LocalCluster cluster = LocalCluster.create(1, 14688);
     Thread.sleep(10000);
     RaftNode[] nodes = cluster.getNodes();
     cluster.checkNodesState();
@@ -52,7 +52,7 @@ public class TestConnectionManager {
     Connection conn = ConnectionManager.getConnection(cluster.getConf(0));
     KeyValueStore kvs = conn.getKeyValueStore();
     
-    for(int i = 1; i <= 50; i++) {
+    for(int i = 1; i <= 1; i++) {
       kvs.set("key" + i, "value"+i);
     }
     

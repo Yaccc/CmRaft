@@ -66,9 +66,12 @@ public class ConnectionManager {
     if(leader == null)
       return null;
     LOG.info("LOOKUPLEADER RETURNED:" + leader);
+    LOG.info("LOOKUPLEADER server:" + server);
     if(leader.equals(server)) {
+      LOG.info("LOOKUPLEADER 1:");
       return mgr.userConnection;
     } else {
+      LOG.info("LOOKUPLEADER 2:");
       mgr.close();
       ConnectionManager leaderMgr = new ConnectionManager(conf, leader);
       return leaderMgr.userConnection;

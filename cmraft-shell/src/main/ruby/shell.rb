@@ -1,5 +1,6 @@
 module Shell
   @@commands = {}
+  @@exitCode = "exit"
   def self.commands
     @@commands
   end
@@ -18,14 +19,14 @@ module Shell
 
     # Load command
     begin
-      require "./commands/#{name}.rb"
+      require "./commands/#{name}"
       klass_name = name.to_s.gsub(/(?:^|_)(.)/) { $1.upcase } # camelize
       commands[name] = eval("Commands::#{klass_name}")
       aliases.each do |an_alias|
         commands[an_alias] = commands[name]
       end
     rescue => e
-      raise "Can't load hbase shell command: #{name}. Error: #{e}\n#{e.backtrace.join("\n")}"
+      raise "Can't load cmraft shell command: #{name}. Error: #{e}\n#{e.backtrace.join("\n")}"
     end
   end
 
@@ -47,6 +48,33 @@ module Shell
     end
   end
 
+  def self.getCommand()
+	print "cmraft>:"
+	lastCommand = gets.chomp
+            
+    lastCommand = '' if (not lastCommand.to_s.empty? and lastCommand[0] == '#')
+	#puts "lastcommand" << lastCommand
+    return lastCommand
+  end
+  
+  def self.processExitCommand(cmd, *params)
+  	return 0 if(cmd != "exit" and cmd != "quit") 		
+  	return @@exitCode
+  end
+   
+  def self.processCommand(commandLine)
+    cmd, *params = commandLine.split   
+    return @@exitCode if(@@exitCode == processExitCommand(cmd, *params))
+	
+	if(commands[cmd])
+	  cmdobj = commands[cmd].new()
+	  cmdobj.command(*params)
+	else
+	  puts "command not recognized: " << cmd
+	end
+	return "success"
+  end
+   
 # Load commands base class
 #require 'shell/commands'
 
@@ -58,5 +86,15 @@ Shell.load_command_group(
     list
   ]
 )
+
+loop do
+  begin                 
+    command = Shell.getCommand()
+    result = Shell.processCommand(command)
+    break if result == @@exitCode
+    rescue Exception => e
+      raise "Error: #{e}\n#{e.backtrace.join("\n")}"
+    end
+  end
 
 end

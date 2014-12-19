@@ -296,15 +296,18 @@ public class DefaultRaftLog implements RaftLog {
     
     entries.put(entry.getIndex(), entry);
     
+    boolean committed = true;
     //making rpc call to followers
-    node.getNodeConnectionManager().appendEntries(this, getLastApplied());
-    //waiting for results
-    boolean committed = false;
-    try {
-      committed = rpcResults.take(getLastApplied(), DEFAULT_COMMIT_TIMEOUT);
-    } catch(RpcTimeoutException e) {
-      LOG.error(e.getMessage());
-      return false;
+    if(!node.getNodeConnectionManager().getOtherServers().isEmpty()) {
+      committed = false;
+      node.getNodeConnectionManager().appendEntries(this, getLastApplied());
+      //waiting for results
+      try {
+        committed = rpcResults.take(getLastApplied(), DEFAULT_COMMIT_TIMEOUT);
+      } catch(RpcTimeoutException e) {
+        LOG.error(e.getMessage());
+        return false;
+      }
     }
     LOG.debug(getServerName() + ": set committed, sending response");
     return committed;

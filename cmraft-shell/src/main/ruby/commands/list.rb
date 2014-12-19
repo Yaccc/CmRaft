@@ -26,14 +26,25 @@ module Shell
   cmraft> list
 EOF
       end
+      
+      def usage
+        return <<-EOF
+  usage: list 
+EOF
+      end
 
-      def command(table, *args)
-        #format_simple_command do
-        #  admin.alter(table, true, *args)
-		puts "set called"
+      def command(*args)
+        if(args.size != 0) then
+          print usage
+          return
+        end
+		conn = Java::com.chicm.cmraft.ConnectionManager.getConnection()		
+		kvs = conn.getKeyValueStore()
 		
+		result = kvs.list('')
+		0.upto(result.size()-1) {|i| puts result.get(i).toString()}
         end
       end
     end
-  end
+end
 

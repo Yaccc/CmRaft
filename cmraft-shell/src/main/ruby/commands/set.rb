@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'java'
 
 module Shell
   module Commands
@@ -26,14 +27,25 @@ module Shell
   cmraft> set a 100
 EOF
       end
+      
+      def usage
+        return <<-EOF
+  usage: set <key> <value>
+  example: set mykey 12345
+EOF
+      end
 
-      def command(table, *args)
-        #format_simple_command do
-        #  admin.alter(table, true, *args)
-		puts "set called"
-		
+      def command(*args)
+        if(args.size != 2) then
+          print usage
+          return
         end
+		#puts "set called" << args[0] << " :" << args[1]
+		conn = Java::com.chicm.cmraft.ConnectionManager.getConnection()		
+		kvs = conn.getKeyValueStore()
+        kvs.set(args[0], args[1])
       end
     end
   end
+end
 
