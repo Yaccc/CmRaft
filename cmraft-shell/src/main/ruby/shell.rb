@@ -6,11 +6,16 @@ $LOAD_PATH.unshift Pathname.new(source)
 
 module Shell
   @@commands = {}
+  @@connection = Java::com.chicm.cmraft.ConnectionManager.getConnection()	
   @@exitCode = "exit"
   def self.commands
     @@commands
   end
-
+  
+  def self.connection
+    @@connection
+  end
+  
   @@command_groups = {}
   def self.command_groups
     @@command_groups

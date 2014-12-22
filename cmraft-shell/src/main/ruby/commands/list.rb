@@ -38,8 +38,8 @@ EOF
           print usage
           return
         end
-		conn = Java::com.chicm.cmraft.ConnectionManager.getConnection()		
-		kvs = conn.getKeyValueStore()
+		#conn = Java::com.chicm.cmraft.ConnectionManager.getConnection()		
+		kvs = Shell.connection.getKeyValueStore()
 		
 		result = kvs.list('')
 		0.upto(result.size()-1) {|i| puts result.get(i).toString()}

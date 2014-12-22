@@ -65,13 +65,12 @@ public class ConnectionManager {
     ServerInfo leader = mgr.lookupLeader();
     if(leader == null)
       return null;
-    LOG.info("LOOKUPLEADER RETURNED:" + leader);
-    LOG.info("LOOKUPLEADER server:" + server);
+    LOG.info("LOOKUPLEADER, leader:" + leader + ", connected server:" + server);
     if(leader.equals(server)) {
-      LOG.info("LOOKUPLEADER 1:");
+      LOG.info("this connected server is leader");
       return mgr.userConnection;
     } else {
-      LOG.info("LOOKUPLEADER 2:");
+      LOG.info("closing connection to " + server + ", connecting to " + leader);
       mgr.close();
       ConnectionManager leaderMgr = new ConnectionManager(conf, leader);
       return leaderMgr.userConnection;
@@ -90,7 +89,7 @@ public class ConnectionManager {
         return ServerInfo.copyFrom(response.getLeader());
       }
     } catch(Exception e) {
-      LOG.error("lookupLeader failed:" + e.getMessage());
+      LOG.error("lookupLeader failed:" + e.getMessage(), e);
     }
     return null;
   }

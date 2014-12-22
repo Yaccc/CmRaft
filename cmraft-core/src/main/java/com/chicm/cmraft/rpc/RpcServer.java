@@ -99,7 +99,7 @@ public class RpcServer {
       ChannelFuture f = boot.bind(getServerInfo().getPort()).sync(); 
 
       // Wait until the server socket is closed.
-      System.out.println("server started");        
+      LOG.info("server started");        
       //f.channel().closeFuture().sync();
     }
   }

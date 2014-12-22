@@ -41,8 +41,8 @@ EOF
           return
         end
 		#puts "set called" << args[0] << " :" << args[1]
-		conn = Java::com.chicm.cmraft.ConnectionManager.getConnection()		
-		kvs = conn.getKeyValueStore()
+		#conn = Java::com.chicm.cmraft.ConnectionManager.getConnection()		
+		kvs = Shell.connection.getKeyValueStore()
         kvs.set(args[0], args[1])
       end
     end

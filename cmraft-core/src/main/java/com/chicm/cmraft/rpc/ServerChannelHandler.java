@@ -67,6 +67,7 @@ public class ServerChannelHandler extends ChannelInitializer<Channel> {
       if(call == null) {
         return;
       }
+      LOG.info("RpcServer read, call ID: " + call.getCallId() + ", local server:" + ctx.channel().localAddress().toString());
       try {
       Message response = service.callBlockingMethod(call.getMd(), null, call.getMessage());
         if(response != null) {
@@ -80,7 +81,7 @@ public class ServerChannelHandler extends ChannelInitializer<Channel> {
           callCounter.getAndIncrement();
         }
       } catch(ServiceException e) {
-        e.printStackTrace(System.out);
+        LOG.error("Rpc Server channelRead exception:" + e.getMessage(), e);
       }
     }
     
@@ -131,8 +132,9 @@ public class ServerChannelHandler extends ChannelInitializer<Channel> {
           call.getMessage().writeDelimitedTo(os);
         }
         out.add(encoded);
+        LOG.info("RpcServer encode response, call ID: " + call.getCallId());
       } catch(Exception e) {
-        e.printStackTrace(System.out);
+        LOG.error("Rpc Server encode exception:" + e.getMessage(), e);
       }
     }
   }

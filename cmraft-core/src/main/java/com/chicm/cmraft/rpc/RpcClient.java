@@ -29,6 +29,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -43,6 +44,7 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.RequestHeader;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.RaftService.BlockingInterface;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest;
 import com.chicm.cmraft.util.BlockingHashMap;
+import com.google.common.base.Preconditions;
 import com.google.protobuf.BlockingRpcChannel;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Message;
@@ -65,6 +67,7 @@ public class RpcClient {
   private BlockingInterface stub = null;
   private ChannelHandlerContext ctx = null;
   private BlockingHashMap<Integer, RpcCall> responsesMap = new BlockingHashMap<>();
+  private RpcClientEventListener listener = new RpcClientEventListenerImpl();
   private volatile boolean connected = false;
   private int rpcTimeout;
   private ServerInfo remoteServer = null;
@@ -72,6 +75,9 @@ public class RpcClient {
   public RpcClient(Configuration conf, ServerInfo remoteServer) {
     rpcTimeout = conf.getInt("rpc.call.timeout", DEFAULT_RPC_TIMEOUT);
     this.remoteServer = remoteServer;
+    //todo: to change call id init value
+    Random r = new Random();
+    client_call_id.set(r.nextInt(1000) * 100);
   }
   
   public boolean isConnected() {
@@ -97,9 +103,8 @@ public class RpcClient {
       throw e;
     }
     
-    BlockingRpcChannel c = createBlockingRpcChannel(responsesMap);
+    BlockingRpcChannel c = createBlockingRpcChannel();
     stub =  RaftService.newBlockingStub(c);
-
     
     connected = true;
     return connected;
@@ -109,9 +114,10 @@ public class RpcClient {
     return remoteServer;
   }
   
-  public void close() {
+  public synchronized void close() {
     try {
       ctx.close().sync();
+      connected = false;
     } catch(Exception e) {
       LOG.error("Closing failed", e);
     }
@@ -130,7 +136,7 @@ public class RpcClient {
     EventLoopGroup workerGroup = new NioEventLoopGroup();
     
     try {
-      ClientChannelHandler channelHandler = new ClientChannelHandler(responsesMap);
+      ClientChannelHandler channelHandler = new ClientChannelHandler(listener);
       Bootstrap b = new Bootstrap(); 
       b.group(workerGroup); 
       b.channel(NioSocketChannel.class); 
@@ -155,25 +161,19 @@ public class RpcClient {
     return client_call_id.get();
   }
  
-  private  BlockingRpcChannel createBlockingRpcChannel(BlockingHashMap<Integer, RpcCall> responseMap) {
-    return new BlockingRpcChannelImplementation(responseMap);
+  private  BlockingRpcChannel createBlockingRpcChannel() {
+    return new BlockingRpcChannelImplementation();
   }
 
   class BlockingRpcChannelImplementation implements BlockingRpcChannel {
-    private BlockingHashMap<Integer, RpcCall> responseMap = null;
-
-    protected BlockingRpcChannelImplementation(BlockingHashMap<Integer, RpcCall> responseMap) {
-      this.responseMap = responseMap;
-    }
-
     @Override
     public Message callBlockingMethod(MethodDescriptor md, RpcController controller,
                                       Message request, Message returnType) throws ServiceException {
 
       Message response = null;
+      int callId = generateCallId();
       try {
         RequestHeader.Builder builder = RequestHeader.newBuilder();
-        int callId = generateCallId();
         builder.setId(callId); 
         builder.setRequestName(md.getName());
         RequestHeader header = builder.build();
@@ -184,23 +184,41 @@ public class RpcClient {
         
         ctx.writeAndFlush(call);
         
-        RpcCall result = this.responseMap.take(callId, rpcTimeout);
+        RpcCall result = responsesMap.take(callId, rpcTimeout);
         
         response = result != null? result.getMessage() : null;
         if(response != null) {
           LOG.debug("response taken: " + callId);
           LOG.debug(String.format("RPC[%d] round trip takes %d ms", header.getId(), (System.currentTimeMillis() - tm)));
         }
-       } catch(RpcTimeoutException e) {
+      } catch(RpcTimeoutException e) {
+        LOG.error("Rpc Timeout, call ID:" + callId + ", remote server:" + getRemoteServer());
+        LOG.error("Rpc Timeout, call:" + request);
         LOG.error("Rpc Timeout", e);
         ServiceException se = new ServiceException(e.getMessage(), e);
         throw se;
+      } catch(Exception e) {
+        LOG.error("callBlockingMethod exception", e);
+        throw e;
       }
       return response;
     }
   }
   
  
+  class RpcClientEventListenerImpl implements RpcClientEventListener {
+    @Override
+    public void channelClosed() {
+      ctx.close();
+      connected = false;
+    }
+    @Override
+    public void onRpcResponse(RpcCall call) {
+      Preconditions.checkNotNull(call);
+      responsesMap.put(call.getCallId(), call);      
+    }
+  }
+  
   /*
    * For testing purpose
    * @param args

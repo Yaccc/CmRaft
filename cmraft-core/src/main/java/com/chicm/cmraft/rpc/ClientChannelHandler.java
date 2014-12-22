@@ -29,11 +29,11 @@ public class ClientChannelHandler extends ChannelInitializer<Channel>  {
   static final Log LOG = LogFactory.getLog(ClientChannelHandler.class);
   private static final int MAX_PACKET_SIZE = 1024*1024*100;
   private ChannelHandlerContext activeCtx;
-  private BlockingHashMap<Integer, RpcCall> responseMap;
+  private RpcClientEventListener listener;
   //private long startTime = System.currentTimeMillis();
   
-  public ClientChannelHandler(BlockingHashMap<Integer, RpcCall> responseMap) {
-    this.responseMap = responseMap;
+  public ClientChannelHandler(RpcClientEventListener listener) {
+    this.listener = listener;
   }
   
   @Override
@@ -55,9 +55,9 @@ public class ClientChannelHandler extends ChannelInitializer<Channel>  {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
       
       RpcCall call = (RpcCall) msg;
-      LOG.debug("client channel read, callid: " + call.getCallId());
+      LOG.info("client channel read, callid: " + call.getCallId());
       
-      responseMap.put(call.getCallId(), call);
+      listener.onRpcResponse(call);
     }
     
     /* (non-Javadoc)
@@ -83,21 +83,20 @@ public class ClientChannelHandler extends ChannelInitializer<Channel>  {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         LOG.error("Socket Exception: " + cause.getMessage(), cause);
-        ctx.close();
+        listener.channelClosed();
     }
   }
   
   class RpcResponseDecoder extends MessageToMessageDecoder<ByteBuf> {
+    @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out)       
         throws Exception {
-      //System.out.println("size:" + msg.capacity());
       
       ByteBufInputStream in = new ByteBufInputStream(msg);
 
       ResponseHeader.Builder hbuilder = ResponseHeader.newBuilder();
       hbuilder.mergeDelimitedFrom(in);
       ResponseHeader header = hbuilder.build();
-      //System.out.println("header:" + header);
 
       BlockingService service = RaftRpcService.create().getService();
       
@@ -107,15 +106,11 @@ public class ClientChannelHandler extends ChannelInitializer<Channel>  {
       if (builder != null) {
         if(builder.mergeDelimitedFrom(in)) {
           body = builder.build();
-          //System.out.println("body parsed:" + body);
-          
         } else {
-          //System.out.println("parse failed");
+          LOG.error("Parse packet failed!!");
         }
       }
       RpcCall call = new RpcCall(header.getId(), header, body, md);
-        //System.out.println("Parse Rpc request from socket: " + call.getCallId() 
-        //  + ", takes" + (System.currentTimeMillis() -t) + " ms");
 
       out.add(call);
     }
@@ -134,8 +129,9 @@ public class ClientChannelHandler extends ChannelInitializer<Channel>  {
           call.getMessage().writeDelimitedTo(os);
         }
         out.add(encoded);
+        LOG.info("Rpc encode: " + call.getCallId());
       } catch(Exception e) {
-        e.printStackTrace(System.out);
+        LOG.error("Rpc Encoder exception:" + e.getMessage(), e);
       }
     }
   }

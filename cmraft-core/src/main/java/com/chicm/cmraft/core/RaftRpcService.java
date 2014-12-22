@@ -93,7 +93,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     return builder.build();    
   }
   
-  
+  // For followers, handle appendEntries RPC from Leader
   @Override
   public AppendEntriesResponse appendEntries(RpcController controller, AppendEntriesRequest request)
       throws ServiceException {
@@ -111,19 +111,30 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     // always reset timer not mater whether it is a heart beat,
     // normal appendEntries RPC can also be treated as heart beat.
     node.resetTimer(); 
-    
+    boolean heartbeat = true;
     AppendEntriesResponse.Builder builder = AppendEntriesResponse.newBuilder();
     if(request.getEntriesCount() <= 0) {
       LOG.debug(getRaftNode().getName() + ": heartbeat, from: " + request.getLeaderId());
     } else {
       LOG.info("appendEntries RPC, from: " + request.getLeaderId() + ", to: " + node.getName());
       LOG.info("log entries:" + request.getEntriesList().toString());
+      heartbeat = false;
     }
-    boolean success = node.getRaftLog().appendEntries(request.getTerm(), 
+    boolean success = false;
+    
+    try {
+    success = node.getRaftLog().appendEntries(request.getTerm(), 
         ServerInfo.copyFrom(request.getLeaderId()), 
         request.getLeaderCommit(), request.getPrevLogIndex(), 
         request.getPrevLogTerm(), 
         request.getEntriesList());
+    } catch(Exception e) {
+      LOG.error("appendEntries exception", e);
+    }
+    
+    if(!heartbeat) {
+      LOG.info(node.getName() + "appendEntries, returned: " + success);
+    }
     
     builder.setTerm(node.getCurrentTerm());
     builder.setSuccess(/*request.getTerm() >= node.getCurrentTerm()*/success);
