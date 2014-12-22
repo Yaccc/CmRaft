@@ -59,6 +59,7 @@ public class DefaultRaftLog implements RaftLog {
   private static final int DEFAULT_COMMIT_TIMEOUT = 5000;
   private Configuration conf;
   private SortedMap<Long, RaftLogEntry> entries = new TreeMap<>();
+  private ConcurrentHashMap<ByteString, ByteString> keyValues = new ConcurrentHashMap<>();
   private final static long INITIAL_TERM = 0;
   private RaftNode node;
   private final AtomicLong commitIndex = new AtomicLong(0);
@@ -253,22 +254,23 @@ public class DefaultRaftLog implements RaftLog {
       return;
     }
     responseBag.add(followerLastApplied, 1);
-    checkAndCommit(followerLastApplied);
-  }
-  
-  private void checkAndCommit(long index) {
-    LOG.debug(getServerName() + ": checkAndCommit");
-    if(index <= getCommitIndex()) {
+    //checkAndCommit(followerLastApplied);
+    if(followerLastApplied <= getCommitIndex()) {
       return;
     }
     
-    if(responseBag.get(index) > nTotalServers/2) {
-      LOG.info(getServerName() + ": committed");
-      setCommitIndex(index);
-      rpcResults.put(index, true);
-      flushCommitted();
-      //to-do: need to notify followers after commit
+    if(responseBag.get(followerLastApplied) > nTotalServers/2) {
+      LOG.info(getServerName() + ": committed, index:" + followerLastApplied);
+      rpcResults.put(followerLastApplied, true);
     }
+  }
+  
+  // commit the specified log
+  private void commitLog(long index) {
+    setCommitIndex(index);
+    replayKeyValueLogEntries(index, index);
+    flushCommitted();
+  //to-do: need to notify followers after commit
   }
   
   private void updateFollowerMatchIndexes(ServerInfo follower, long lastApplied) {
@@ -284,6 +286,8 @@ public class DefaultRaftLog implements RaftLog {
   @Override
   public boolean set(KeyValuePair kv) {
     LOG.debug(getServerName() + ": set request received");
+    Preconditions.checkArgument(!kv.getKey().isEmpty());
+    Preconditions.checkArgument(!kv.getValue().isEmpty());
     //lastApplied initialized as 0, and the first time increase it to 1,
     //so the first index is 1
     //LogEntry entry = new LogEntry(lastApplied.incrementAndGet(), node.getCurrentTerm(), key, value, LogMutationType.SET);
@@ -300,14 +304,17 @@ public class DefaultRaftLog implements RaftLog {
     //making rpc call to followers
     if(!node.getNodeConnectionManager().getOtherServers().isEmpty()) {
       committed = false;
-      node.getNodeConnectionManager().appendEntries(this, getLastApplied());
+      node.getNodeConnectionManager().appendEntries(this, entry.getIndex());
       //waiting for results
       try {
-        committed = rpcResults.take(getLastApplied(), DEFAULT_COMMIT_TIMEOUT);
+        committed = rpcResults.take(entry.getIndex(), DEFAULT_COMMIT_TIMEOUT);
       } catch(RpcTimeoutException e) {
         LOG.error(e.getMessage());
         return false;
       }
+    }
+    if(committed) {
+      commitLog(entry.getIndex());
     }
     LOG.debug(getServerName() + ": set committed, sending response");
     return committed;
@@ -334,8 +341,29 @@ public class DefaultRaftLog implements RaftLog {
   }
   
   @Override
-  public Collection<RaftLogEntry> list(byte[] pattern) {
-    return entries.values();
+  public Collection<KeyValuePair> list(byte[] pattern) {
+    //return entries.values();
+    List<KeyValuePair> result = new ArrayList<>();
+    for(ByteString k: keyValues.keySet()) {
+      KeyValuePair.Builder builder = KeyValuePair.newBuilder();
+      builder.setKey(k);
+      builder.setValue(keyValues.get(k));
+      result.add(builder.build());
+    }
+    return result;
+  }
+  
+  private void replayKeyValueLogEntries(long startIndex, long endIndex) {
+    Preconditions.checkArgument(startIndex <= getLastApplied() && startIndex >= 0);
+    Preconditions.checkArgument(endIndex <= getLastApplied() && endIndex >= 0);
+    for(long index = startIndex; index <= endIndex; index++) {
+      RaftLogEntry log = entries.get(index);
+      if(log.hasMode() && log.getMode() == RaftLogEntry.MutationMode.SET) {
+        keyValues.put(log.getKv().getKey(), log.getKv().getValue());
+      } else if(log.hasMode() && log.getMode() == RaftLogEntry.MutationMode.DELETE) {
+        keyValues.remove(log.getKv().getKey().toByteArray());
+      } else;
+    }
   }
   
   private Path dataFile;
@@ -374,6 +402,8 @@ public class DefaultRaftLog implements RaftLog {
           setCommitIndex(maxIndex);
           setLastApplied(maxIndex);
           setFlushedIndex(maxIndex);
+          
+          replayKeyValueLogEntries(maxIndex, maxIndex);
           
         } catch(EOFException e) {
           break;

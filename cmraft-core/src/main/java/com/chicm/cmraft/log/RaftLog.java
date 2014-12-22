@@ -25,5 +25,5 @@ public interface RaftLog {
   
   boolean set(KeyValuePair kv);
   void delete(byte[] key);
-  Collection<RaftLogEntry> list(byte[] pattern);
+  Collection<KeyValuePair> list(byte[] pattern);
 }

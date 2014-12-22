@@ -91,11 +91,13 @@ public class DefaultNodeConnection implements NodeConnection {
     builder.addAllEntries(entries);
     
     try {
-      LOG.info(leaderId + "making appendEntries call to: " + getRemoteServer());
+      LOG.debug(leaderId + "making appendEntries call to: " + getRemoteServer());
       AppendEntriesResponse response = rpcClient.getStub().appendEntries(null, builder.build());
       return response;
     } catch(Exception e) {
       LOG.error("exception", e);
+      LOG.error("remote server:" + getRemoteServer());
+      LOG.error("Log entries:" + entries.toString());
     }
     return null;
   }

@@ -20,25 +20,10 @@
 
 package com.chicm.cmraft.core;
 
-import org.apache.log4j.Level;
-import org.junit.Test;
+public class TestLocalServer {
 
-public class TestCluster {
-
-  @Test
-  public void test() throws Exception {
-    //org.apache.log4j.LogManager.getRootLogger().setLevel(Level.INFO);
-    LocalCluster clu = LocalCluster.create(10, 13999);
-    Thread.sleep(10000);
-    
-    clu.checkNodesState();
-    
-    clu.killLeader();
-    
-    for(int i=0; i < 5; i++) {
-      Thread.sleep(8000);
-      clu.checkNodesState();
-      clu.checkGetCurrentLeader();
-    }
+  public static void main(String[] args) {
+    LocalCluster.create(3, 12888);
   }
+
 }

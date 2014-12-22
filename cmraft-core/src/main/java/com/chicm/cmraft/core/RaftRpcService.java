@@ -34,6 +34,7 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.LookupLeaderRequest;
@@ -45,6 +46,7 @@ import com.chicm.cmraft.protobuf.generated.RaftProtos.SetRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.SetResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.TestRpcResponse;
+import com.google.common.base.Preconditions;
 import com.google.protobuf.BlockingService;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.RpcController;
@@ -96,19 +98,14 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   public AppendEntriesResponse appendEntries(RpcController controller, AppendEntriesRequest request)
       throws ServiceException {
     LOG.debug(getRaftNode().getName() + "appendEntries CALLED, FROM:" + ServerInfo.copyFrom(request.getLeaderId()));
-    if(node == null) {
-      LOG.error("RaftNode is null");
-      return null;
-    }
+    
+    Preconditions.checkNotNull(node);
+    Preconditions.checkArgument(!node.getServerInfo().equals(ServerInfo.copyFrom( request.getLeaderId())), 
+      "appendEntries RPC should not be called from local node:%s", node.getServerInfo());
     
     getRaftNode().discoverLeader(ServerInfo.copyFrom(request.getLeaderId()), request.getTerm());
     if(request.getTerm() > node.getCurrentTerm()) {
       getRaftNode().discoverHigherTerm(ServerInfo.copyFrom(request.getLeaderId()), request.getTerm());
-    }
-    
-    if(node.getServerInfo().getPort() == request.getLeaderId().getPort()) {
-      Exception e = new Exception("heartbeat From my self");
-      e.printStackTrace(System.out);
     }
     
     // always reset timer not mater whether it is a heart beat,
@@ -117,8 +114,11 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     
     AppendEntriesResponse.Builder builder = AppendEntriesResponse.newBuilder();
     if(request.getEntriesCount() <= 0) {
-      LOG.debug(getRaftNode().getName() + ": HEARTBEAT CALLED**!");
-    } 
+      LOG.debug(getRaftNode().getName() + ": heartbeat, from: " + request.getLeaderId());
+    } else {
+      LOG.info("appendEntries RPC, from: " + request.getLeaderId() + ", to: " + node.getName());
+      LOG.info("log entries:" + request.getEntriesList().toString());
+    }
     boolean success = node.getRaftLog().appendEntries(request.getTerm(), 
         ServerInfo.copyFrom(request.getLeaderId()), 
         request.getLeaderCommit(), request.getPrevLogIndex(), 
@@ -131,22 +131,6 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     return builder.build();
   }
   
-  /*
-  private List<LogEntry> buildLogEntriesFromRaftEntries(List<RaftEntry> raftEntries, long term) {
-    List<LogEntry> result = new ArrayList<LogEntry>();
-    
-    if(raftEntries == null) {
-      return result;
-    }
-    
-    for(RaftEntry r: raftEntries) {
-      LogEntry logEntry = new LogEntry(r.getIndex(), term, r.getKey().toByteArray(), 
-        r.getValue().toByteArray(), LogMutationType.SET); //todo: add type to raft entry
-      result.add(logEntry);
-    }
-    return result;
-  }*/
-
   @Override
   public CollectVoteResponse collectVote(RpcController controller, CollectVoteRequest request)
       throws ServiceException {
@@ -219,9 +203,9 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   public ListResponse list(RpcController controller, ListRequest request) throws ServiceException {
     LOG.info(node.getName() + ": list request responded");
     ListResponse.Builder builder = ListResponse.newBuilder();
-    Collection<RaftLogEntry> col = node.getRaftLog().list(request.getPattern().toByteArray());
-    for(RaftLogEntry entry: col) {
-      builder.addResults(entry.getKv());
+    Collection<KeyValuePair> col = node.getRaftLog().list(request.getPattern().toByteArray());
+    for(KeyValuePair entry: col) {
+      builder.addResults(entry);
     }
     builder.setSuccess(true);
     return builder.build();

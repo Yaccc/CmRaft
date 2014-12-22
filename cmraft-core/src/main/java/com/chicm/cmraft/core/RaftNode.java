@@ -216,7 +216,7 @@ public class RaftNode {
     if(term < getCurrentTerm()) {
       return;
     }
-    LOG.info(getName() + " discover leader, leader term:" + leader + ":" + term + ", local term:" + getCurrentTerm());
+    LOG.debug(getName() + " discover leader, leader term:" + leader + ":" + term + ", local term:" + getCurrentTerm());
     setCurrentLeader(leader);
     if(term > getCurrentTerm()) {
       currentTerm.set(term);
@@ -354,7 +354,7 @@ public class RaftNode {
     
     @Override
     public void run() {
-      LOG.info(getName() + " state:" + fsm.getState() + " timeout!!");
+      LOG.debug(getName() + " state:" + fsm.getState() + " timeout!!");
       //perform state change
       fsm.electionTimeout();
       

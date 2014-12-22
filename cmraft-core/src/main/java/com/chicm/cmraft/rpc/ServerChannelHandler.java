@@ -86,10 +86,10 @@ public class ServerChannelHandler extends ChannelInitializer<Channel> {
     
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) { // (4)
-        // Close the connection when an exception is raised.
-      System.out.println("catched:" + cause.getMessage());
-        //cause.printStackTrace(System.out);
-        ctx.close();
+      // Close the connection when an exception is raised.
+      LOG.error(cause.getMessage(), cause);
+      cause.printStackTrace(System.out);
+      ctx.close();
     }
   }
   

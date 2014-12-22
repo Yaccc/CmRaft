@@ -143,7 +143,7 @@ public class NodeConnectionManager {
     
     for(ServerInfo server: getOtherServers()) {
       NodeConnection connection = connections.get(server);
-      LOG.info(getRaftNode().getName() + ": SENDING appendEntries Request TO: " + server);
+      LOG.debug(getRaftNode().getName() + ": SENDING appendEntries Request TO: " + server);
       Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), connection, getRaftNode().getRaftLog(), thisServer, term,
         leaderCommit, prevLogIndex, prevLogTerm, entries, maxIndex));
       t.setDaemon(true);

@@ -69,6 +69,7 @@ module Shell
   end
    
   def self.processCommand(commandLine)
+    return "" if(commandLine.to_s.empty?)
     cmd, *params = commandLine.split   
     return @@exitCode if(@@exitCode == processExitCommand(cmd, *params))
 	
