@@ -38,15 +38,16 @@ EOF
           print usage
           return
         end
-		#conn = Java::com.chicm.cmraft.ConnectionManager.getConnection()		
-		kvs = Shell.connection.getKeyValueStore()
+		conn = Java::com.chicm.cmraft.ConnectionManager.getConnection()		
+		kvs = conn.getKeyValueStore()
 		
 		success = kvs.delete(args[0])
 		if(success==true) then
 		  puts "done"
 		else
 		  puts "failed"
-		end		
+		end	
+		conn.close()	
         end
       end
     end

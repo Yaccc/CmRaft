@@ -68,7 +68,7 @@ public class ConnectionManager {
           break;
         }
       } catch(Exception e) {
-        LOG.error("Failed connecting to:" + remoteServer);
+        LOG.error("Failed connecting to:" + server, e);
       }
     }
     
@@ -90,7 +90,7 @@ public class ConnectionManager {
           connected = true;
         }
       } catch(Exception e) {
-        LOG.error("Failed connecting to:" + remoteServer, e);
+        LOG.error("Failed connecting to:" + leader, e);
       }
     } else if(leader != null && !leader.equals(remoteServer)) {
       LOG.info("This connected server is leader:" + leader);

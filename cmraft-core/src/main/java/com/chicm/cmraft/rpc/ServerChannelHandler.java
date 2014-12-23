@@ -87,7 +87,7 @@ public class ServerChannelHandler extends ChannelInitializer<Channel> {
     
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-      LOG.info("Channel closed: " + ctx.channel().remoteAddress().toString());
+      LOG.info("Channel closed");
     }
     
     @Override

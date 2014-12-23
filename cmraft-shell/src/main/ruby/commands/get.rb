@@ -38,8 +38,8 @@ EOF
           print usage
           return
         end
-		#conn = Java::com.chicm.cmraft.ConnectionManager.getConnection()		
-		kvs = Shell.connection.getKeyValueStore()
+		conn = Java::com.chicm.cmraft.ConnectionManager.getConnection()		
+		kvs = conn.getKeyValueStore()
 		
 		result = kvs.get(args[0])
 		
@@ -48,7 +48,7 @@ EOF
 		else
 			puts "Specified key #{args[0]} does not exist"
 		end
-        
+        conn.close()
         end
       end
     end

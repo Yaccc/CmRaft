@@ -50,20 +50,21 @@ public class TestConnection {
     }
     System.out.println("*****************************************");
     
-    Connection conn = ConnectionManager.getConnection(cluster.getConf(0));
-    KeyValueStore kvs = conn.getKeyValueStore();
+    
     
     for(int i = 1; i <= 50; i++) {
+      Connection conn = ConnectionManager.getConnection(cluster.getConf(0));
+      KeyValueStore kvs = conn.getKeyValueStore();
       
       kvs.set("key" + i, "value"+i);
       System.out.println(kvs.get("key" + i));
     }
-    
+    /*
     System.out.println("deleting");
     System.out.println("" + kvs.delete("key1"));
     System.out.println("" + kvs.delete("key1xxff"));
     System.out.println("" + kvs.list("key1xxff"));
-    
+    */
     
     Thread.sleep(3000);
     

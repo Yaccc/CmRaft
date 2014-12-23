@@ -54,9 +54,9 @@ public class TestClusterMemberManager {
   public void testLocalHost() {
     try {
       InetAddress inetAddress = InetAddress.getLocalHost();
-      String ip = inetAddress.getHostAddress();//获取ip地址
-      String canonical =inetAddress.getCanonicalHostName(); //获取本地的主机域名
-      String host =inetAddress.getHostName(); //获取本地的主机名
+      String ip = inetAddress.getHostAddress();
+      String canonical =inetAddress.getCanonicalHostName();
+      String host =inetAddress.getHostName();
       System.out.println("ip:"+ip);
       System.out.println("host name:"+canonical);
       System.out.println("hostname:"+host);

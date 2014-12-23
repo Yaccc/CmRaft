@@ -111,7 +111,8 @@ public class DefaultRaftLog implements RaftLog {
       followerIndexes.put(remoteServer, fIndexes);
     }
     
-    nTotalServers = followerIndexes.size();
+    // including local server + remote servers
+    nTotalServers = node.getRemoteServers().size() + 1;
   }
   
   private void cleanupLeaderWorker() {
@@ -259,8 +260,8 @@ public class DefaultRaftLog implements RaftLog {
     if(followerLastApplied <= getCommitIndex()) {
       return;
     }
-    
-    if(responseBag.get(followerLastApplied) > nTotalServers/2) {
+    // consider local server is already committed
+    if(responseBag.get(followerLastApplied)+1 > nTotalServers/2) {
       LOG.info(getServerName() + ": committed, index:" + followerLastApplied);
       rpcResults.put(followerLastApplied, true);
     }
