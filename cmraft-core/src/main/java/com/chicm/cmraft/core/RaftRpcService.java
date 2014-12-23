@@ -25,6 +25,7 @@ import java.util.Collection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.AppendEntriesResponse;
@@ -54,6 +55,9 @@ import com.google.protobuf.ServiceException;
 
 public class RaftRpcService implements RaftService.BlockingInterface{
   static final Log LOG = LogFactory.getLog(RaftRpcService.class);
+  private final static String RPC_TIMEOUT_KEY = "raft.rpc.timeout";
+  private final static int DEFAULT_RPC_TIMEOUT = 3000;
+  private Configuration config;
   
   private RaftNode node = null;
   //private TimeoutListener listener = null;
@@ -63,8 +67,10 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     return new RaftRpcService(null);
   }
   
-  public static RaftRpcService create(RaftNode node) {
-    return new RaftRpcService(node);
+  public static RaftRpcService create(RaftNode node, Configuration conf) {
+    RaftRpcService service = new RaftRpcService(node);
+    service.config = conf;
+    return service;
   }
   
   private RaftRpcService(RaftNode node) {
@@ -173,13 +179,26 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   @Override
   public LookupLeaderResponse lookupLeader(RpcController controller, LookupLeaderRequest request)
       throws ServiceException {
-    ServerId leader = node.getCurrentLeader().toServerId();
+    Preconditions.checkNotNull(node);
+    ServerInfo leader = node.getCurrentLeader();
+    if(leader == null) {
+      int rpcTimeout = config.getInt(RPC_TIMEOUT_KEY, DEFAULT_RPC_TIMEOUT);
+      try {
+        Thread.sleep(rpcTimeout/2);
+      } catch(Exception e) {
+        LOG.error("sleep exception", e);
+      }
+      leader = node.getCurrentLeader();
+    }
+    //ServerId leaderId = leader.toServerId();
     LookupLeaderResponse.Builder builder = LookupLeaderResponse.newBuilder();
     if(leader != null) {
-      builder.setLeader(leader);
-      LOG.debug(getRaftNode().getName() + ": lookupLeader responded: [" + leader.getHostName() 
+      builder.setSuccess(true);
+      builder.setLeader(leader.toServerId());
+      LOG.debug(getRaftNode().getName() + ": lookupLeader responded: [" + leader.getHost() 
         + ":" + leader.getPort() + "]");
     } else {
+      builder.setSuccess(false);
       LOG.debug(getRaftNode().getName() + ": lookupLeader responded: null");
     }
     
@@ -188,8 +207,18 @@ public class RaftRpcService implements RaftService.BlockingInterface{
 
   @Override
   public GetResponse get(RpcController controller, GetRequest request) throws ServiceException {
-    // TODO Auto-generated method stub
-    return null;
+    byte[] key = request.getKey().toByteArray();
+    byte[] value = node.getRaftLog().get(key);
+    
+    GetResponse.Builder builder = GetResponse.newBuilder();
+    if(value != null) {
+      builder.setSuccess(true);
+      builder.setValue(ByteString.copyFrom(value));
+    } else {
+      builder.setSuccess(false);
+    }
+    
+    return builder.build();
   }
 
   @Override
@@ -206,8 +235,11 @@ public class RaftRpcService implements RaftService.BlockingInterface{
   @Override
   public DeleteResponse delete(RpcController controller, DeleteRequest request)
       throws ServiceException {
-    // TODO Auto-generated method stub
-    return null;
+    DeleteResponse.Builder builder = DeleteResponse.newBuilder();
+    
+    builder.setSuccess(node.getRaftLog().delete(request.getKey().toByteArray()));
+        
+    return builder.build();
   }
 
   @Override

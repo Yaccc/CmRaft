@@ -36,7 +36,7 @@ public class TestConnection {
   @Test
   public void testConnection() throws Exception {
     //org.apache.log4j.LogManager.getRootLogger().setLevel(Level.DEBUG);
-    LocalCluster cluster = LocalCluster.create(2, 12688);
+    LocalCluster cluster = LocalCluster.create(3, 12688);
     Thread.sleep(10000);
     RaftNode[] nodes = cluster.getNodes();
     cluster.checkNodesState();
@@ -56,7 +56,13 @@ public class TestConnection {
     for(int i = 1; i <= 50; i++) {
       
       kvs.set("key" + i, "value"+i);
+      System.out.println(kvs.get("key" + i));
     }
+    
+    System.out.println("deleting");
+    System.out.println("" + kvs.delete("key1"));
+    System.out.println("" + kvs.delete("key1xxff"));
+    
     
     Thread.sleep(3000);
     

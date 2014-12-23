@@ -321,11 +321,29 @@ public class DefaultRaftLog implements RaftLog {
   }
   
   @Override
-  public void delete(byte[] key) {
+  public byte[] get(byte[] key) {
+    Preconditions.checkNotNull(key);
+    Preconditions.checkArgument(key.length > 0);
+    
+    ByteString result = keyValues.get(ByteString.copyFrom(key));
+    if(result != null)
+      return result.toByteArray();
+    else
+      return null;
+  }
+  
+  @Override
+  public boolean delete(byte[] key) {
     //lastApplied initialized as 0, and the first time increase it to 1,
     //so the first index is 1
     //LogEntry entry = new LogEntry(lastApplied.incrementAndGet(), node.getCurrentTerm(), key, null, LogMutationType.DELETE);
     Preconditions.checkNotNull(key);
+    Preconditions.checkArgument(key.length > 0);
+    
+    ByteString bsKey = ByteString.copyFrom(key);
+    if(!keyValues.containsKey(bsKey)) {
+      return false;
+    }
     
     KeyValuePair.Builder kvBuilder = KeyValuePair.newBuilder();
     kvBuilder.setKey(ByteString.copyFrom(key));
@@ -338,6 +356,25 @@ public class DefaultRaftLog implements RaftLog {
     RaftLogEntry entry = builder.build();
     
     entries.put(entry.getIndex(), entry);
+    
+    boolean committed = true;
+    //making rpc call to followers
+    if(!node.getNodeConnectionManager().getOtherServers().isEmpty()) {
+      committed = false;
+      node.getNodeConnectionManager().appendEntries(this, entry.getIndex());
+      //waiting for results
+      try {
+        committed = rpcResults.take(entry.getIndex(), DEFAULT_COMMIT_TIMEOUT);
+      } catch(RpcTimeoutException e) {
+        LOG.error(e.getMessage());
+        return false;
+      }
+    }
+    if(committed) {
+      commitLog(entry.getIndex());
+    }
+    LOG.debug(getServerName() + ": set committed, sending response");
+    return committed;
   }
   
   @Override
@@ -361,7 +398,7 @@ public class DefaultRaftLog implements RaftLog {
       if(log.hasMode() && log.getMode() == RaftLogEntry.MutationMode.SET) {
         keyValues.put(log.getKv().getKey(), log.getKv().getValue());
       } else if(log.hasMode() && log.getMode() == RaftLogEntry.MutationMode.DELETE) {
-        keyValues.remove(log.getKv().getKey().toByteArray());
+        keyValues.remove(log.getKv().getKey());
       } else;
     }
   }

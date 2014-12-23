@@ -109,7 +109,7 @@ public class RaftNode {
   public RaftNode(Configuration conf) {
     this.conf = conf;
     serverInfo = ServerInfo.parseFromString(conf.getString("raft.server.local"));
-    raftService = RaftRpcService.create(this);
+    raftService = RaftRpcService.create(this, conf);
     raftLog= new DefaultRaftLog(this, conf);
     //initialize the term value to be the saved term of last run
     currentTerm.set(raftLog.getLogTerm(raftLog.getCommitIndex()));

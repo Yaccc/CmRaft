@@ -29,6 +29,10 @@ import org.apache.commons.logging.LogFactory;
 import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest;
+import com.chicm.cmraft.protobuf.generated.RaftProtos.GetResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.KeyValuePair;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.ListResponse;
@@ -85,7 +89,7 @@ public class ConnectionManager {
     LookupLeaderRequest.Builder builder = LookupLeaderRequest.newBuilder();
     try {
       LookupLeaderResponse response = rpcClient.getStub().lookupLeader(null, builder.build());
-      if(response.getLeader() != null) {
+      if(response.getSuccess()) {
         return ServerInfo.copyFrom(response.getLeader());
       }
     } catch(Exception e) {
@@ -112,6 +116,11 @@ public class ConnectionManager {
 
     @Override
     public boolean set(byte[] key, byte[] value) {
+      Preconditions.checkNotNull(key);
+      Preconditions.checkArgument(key.length > 0);
+      
+      Preconditions.checkNotNull(value);
+      Preconditions.checkArgument(value.length > 0);
       
       KeyValuePair.Builder kvBuilder = KeyValuePair.newBuilder();
       kvBuilder.setKey(ByteString.copyFrom(key));
@@ -140,26 +149,56 @@ public class ConnectionManager {
 
     @Override
     public byte[] get(byte[] key) {
-      // TODO Auto-generated method stub
+      Preconditions.checkNotNull(key);
+      GetRequest.Builder builder = GetRequest.newBuilder();
+      builder.setKey(ByteString.copyFrom(key));
+      
+      try {
+        GetResponse response = rpcClient.getStub().get(null, builder.build());
+        if(response.getSuccess()) {
+          return response.getValue().toByteArray();
+        } else {
+          return null;
+        }
+      } catch (ServiceException e) {
+        LOG.error("Get exception,", e);
+      } catch (Exception e) {
+        LOG.error("Get exception,", e);
+      }
       return null;
     }
 
     @Override
     public String get(String key) {
-      // TODO Auto-generated method stub
-      return null;
+      Preconditions.checkNotNull(key);
+      Preconditions.checkArgument(!key.isEmpty());
+      byte[] result = get(key.getBytes());
+      
+      return result==null ? null : new String(result) ;
     }
 
     @Override
     public boolean delete(byte[] key) {
-      // TODO Auto-generated method stub
+      Preconditions.checkNotNull(key);
+      Preconditions.checkArgument(key.length > 0);
+      
+      DeleteRequest.Builder builder = DeleteRequest.newBuilder();
+      builder.setKey(ByteString.copyFrom(key));
+      
+      try {
+        DeleteResponse response = rpcClient.getStub().delete(null, builder.build());
+        return response.getSuccess();
+      } catch (ServiceException e) {
+        LOG.error("Delete exception,", e);
+      } catch (Exception e) {
+        LOG.error("Delete exception,", e);
+      }
       return false;
     }
 
     @Override
     public boolean delete(String key) {
-      // TODO Auto-generated method stub
-      return false;
+      return delete(key.getBytes());
     }
 
     @Override
@@ -191,8 +230,6 @@ public class ConnectionManager {
       else
         return list("".getBytes());
     }
-    
- 
   }
 }
 

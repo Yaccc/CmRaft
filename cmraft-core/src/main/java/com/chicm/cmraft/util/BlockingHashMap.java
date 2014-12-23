@@ -31,6 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.chicm.cmraft.rpc.RpcTimeoutException;
+import com.google.common.base.Preconditions;
 
 /**
  * A hash table supports blocking method like a blocking queue, except that
@@ -92,6 +93,7 @@ public class BlockingHashMap <K,V> {
    * @return null if it does not get the value at specified timeout and retries
    */
   public V take(K key, int timeout) throws RpcTimeoutException {
+    Preconditions.checkNotNull(key);
     V ret = null;
     KeyLock lock = locks.get(key);
     if(lock == null) {
@@ -121,9 +123,8 @@ public class BlockingHashMap <K,V> {
     finally {
         lock.unlock();
     }
-    if(key != null) {
-      remove(key);
-    }
+    
+    remove(key);
     return ret;
   }
   

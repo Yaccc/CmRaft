@@ -24,6 +24,7 @@ public interface RaftLog {
       long followerLastApplied);
   
   boolean set(KeyValuePair kv);
-  void delete(byte[] key);
+  byte[] get(byte[] key);
+  boolean delete(byte[] key);
   Collection<KeyValuePair> list(byte[] pattern);
 }

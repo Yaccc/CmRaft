@@ -55,7 +55,7 @@ public class ClientChannelHandler extends ChannelInitializer<Channel>  {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
       
       RpcCall call = (RpcCall) msg;
-      LOG.info("client channel read, callid: " + call.getCallId());
+      LOG.debug("client channel read, callid: " + call.getCallId());
       
       listener.onRpcResponse(call);
     }
@@ -129,7 +129,7 @@ public class ClientChannelHandler extends ChannelInitializer<Channel>  {
           call.getMessage().writeDelimitedTo(os);
         }
         out.add(encoded);
-        LOG.info("Rpc encode: " + call.getCallId());
+        LOG.debug("Rpc encode: " + call.getCallId());
       } catch(Exception e) {
         LOG.error("Rpc Encoder exception:" + e.getMessage(), e);
       }

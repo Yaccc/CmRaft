@@ -62,6 +62,7 @@ import com.google.protobuf.Descriptors.MethodDescriptor;
  */
 public class RpcClient {
   static final Log LOG = LogFactory.getLog(RpcClient.class);
+  private final static String RPC_TIMEOUT_KEY = "raft.rpc.timeout";
   private final static int DEFAULT_RPC_TIMEOUT = 3000;
   private static volatile AtomicInteger client_call_id = new AtomicInteger(0);
   private BlockingInterface stub = null;
@@ -73,7 +74,7 @@ public class RpcClient {
   private ServerInfo remoteServer = null;
   
   public RpcClient(Configuration conf, ServerInfo remoteServer) {
-    rpcTimeout = conf.getInt("rpc.call.timeout", DEFAULT_RPC_TIMEOUT);
+    rpcTimeout = conf.getInt(RPC_TIMEOUT_KEY, DEFAULT_RPC_TIMEOUT);
     this.remoteServer = remoteServer;
     //todo: to change call id init value
     Random r = new Random();
@@ -198,6 +199,7 @@ public class RpcClient {
         ServiceException se = new ServiceException(e.getMessage(), e);
         throw se;
       } catch(Exception e) {
+        LOG.error("ctx:" + ctx);
         LOG.error("callBlockingMethod exception", e);
         throw e;
       }

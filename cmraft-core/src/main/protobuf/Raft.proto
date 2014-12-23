@@ -77,7 +77,8 @@ message LookupLeaderRequest {
 }
 
 message LookupLeaderResponse {
-  optional ServerId leader = 1;
+  optional bool success = 1;
+  optional ServerId leader = 2;
 }
 
 message SetRequest {

@@ -32,7 +32,7 @@ import io.netty.util.concurrent.EventExecutorGroup;
 public class ServerChannelHandler extends ChannelInitializer<Channel> {
   static final Log LOG = LogFactory.getLog(ServerChannelHandler.class);
   private static final int MAX_PACKET_SIZE = 1024*1024*100;
-  private static final int RPC_WORKER_THREADS = 10;
+  private static final int RPC_WORKER_THREADS = 100;
   static final EventExecutorGroup rpcGroup = new DefaultEventExecutorGroup(RPC_WORKER_THREADS);
   private BlockingService service;
   private AtomicLong callCounter;
@@ -67,7 +67,7 @@ public class ServerChannelHandler extends ChannelInitializer<Channel> {
       if(call == null) {
         return;
       }
-      LOG.info("RpcServer read, call ID: " + call.getCallId() + ", local server:" + ctx.channel().localAddress().toString());
+      LOG.debug("RpcServer read, call ID: " + call.getCallId() + ", local server:" + ctx.channel().localAddress().toString());
       try {
       Message response = service.callBlockingMethod(call.getMd(), null, call.getMessage());
         if(response != null) {
@@ -88,8 +88,9 @@ public class ServerChannelHandler extends ChannelInitializer<Channel> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) { // (4)
       // Close the connection when an exception is raised.
+      //cause.printStackTrace(System.out);
+      LOG.info("Connection closed by:" + ctx.channel().remoteAddress().toString());
       LOG.error(cause.getMessage(), cause);
-      cause.printStackTrace(System.out);
       ctx.close();
     }
   }
@@ -132,7 +133,7 @@ public class ServerChannelHandler extends ChannelInitializer<Channel> {
           call.getMessage().writeDelimitedTo(os);
         }
         out.add(encoded);
-        LOG.info("RpcServer encode response, call ID: " + call.getCallId());
+        LOG.debug("RpcServer encode response, call ID: " + call.getCallId());
       } catch(Exception e) {
         LOG.error("Rpc Server encode exception:" + e.getMessage(), e);
       }

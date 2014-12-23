@@ -96,17 +96,26 @@ Shell.load_command_group(
   :commands => %w[
     set
     list
+    get
+    delete
   ]
 )
 
+if(!@@connection) then
+	puts "Could not connect to Raft servers, exiting..."
+	Java::java.lang.System.exit(0)
+end
+
 loop do
-  begin                 
+begin                 
     command = Shell.getCommand()
     result = Shell.processCommand(command)
     break if result == @@exitCode
     rescue Exception => e
       raise "Error: #{e}\n#{e.backtrace.join("\n")}"
     end
-  end
+end
+  
+Java::java.lang.System.exit(0)
 
 end
