@@ -131,10 +131,10 @@ public class LocalCluster {
       confs[i] = CmRaftConfiguration.create();
       confs[i].useResource("cmraft_cluster_test.properties");
       for(int j=0; j < nodeNumber;j++) {
-        confs[i].set("raft.server.remote." + j, "localhost:" + (startPort+j));
+        confs[i].set("raft.server.server" + j, "localhost:" + (startPort+j));
       }
-      confs[i].remove("raft.server.remote." + i);
-      confs[i].set("raft.server.local", "localhost:" + (startPort+i));
+      confs[i].remove("raft.server.server" + i);
+      confs[i].set("raft.local.server", "localhost:" + (startPort+i));
       
       System.out.println("confs[" + i + "]:\n" + confs[i].toString());
     }

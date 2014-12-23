@@ -50,7 +50,6 @@ import com.google.protobuf.BlockingService;
 public class RpcServer {
   static final Log LOG = LogFactory.getLog(RpcServer.class);
   
-  private static final String LOCAL_SERVER_ADDRESS_KEY = "raft.server.local";
   private static final int DEFAULT_CONNECTION_BACKLOG = 200;
   private RaftRpcService service = null;
   private PriorityBlockingQueue<RpcCall> requestQueue = new PriorityBlockingQueue<RpcCall>();
@@ -59,9 +58,9 @@ public class RpcServer {
   private boolean tpsReportStarted = false;
   private ServerInfo serverInfo;
   
-  public RpcServer (Configuration conf, RaftRpcService service) {
+  public RpcServer (Configuration conf, RaftRpcService service, ServerInfo localServer) {
     this.service = service;
-    this.serverInfo = ServerInfo.parseFromString(conf.getString(LOCAL_SERVER_ADDRESS_KEY));
+    this.serverInfo = localServer;
   }
   
   public BlockingService getService() {
@@ -149,9 +148,8 @@ public class RpcServer {
     int port = Integer.parseInt(args[0]);
     
     Configuration conf = CmRaftConfiguration.create();
-    conf.set(LOCAL_SERVER_ADDRESS_KEY, "localhost:" + port);
     
-    RpcServer server = new RpcServer(conf, RaftRpcService.create());
+    RpcServer server = new RpcServer(conf, RaftRpcService.create(), new ServerInfo("localhost", port));
     LOG.info("starting server");
     server.startRpcServer();
     server.startTPSReport();

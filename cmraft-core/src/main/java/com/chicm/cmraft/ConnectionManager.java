@@ -22,6 +22,7 @@ package com.chicm.cmraft;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import com.chicm.cmraft.common.CmRaftConfiguration;
 import com.chicm.cmraft.common.Configuration;
 import com.chicm.cmraft.common.ServerInfo;
+import com.chicm.cmraft.core.ClusterMemberManager;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteRequest;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.DeleteResponse;
 import com.chicm.cmraft.protobuf.generated.RaftProtos.GetRequest;
@@ -50,11 +52,61 @@ public class ConnectionManager {
   private RpcClient rpcClient;
   private ConnectionImpl userConnection;
   private KeyValueStore kvs;
+  private ServerInfo remoteServer;
   
-  private ConnectionManager(Configuration conf, ServerInfo server) {
-    rpcClient = new RpcClient(conf, server);
+  private ConnectionManager(Configuration conf, Set<ServerInfo> servers) {
+    Preconditions.checkNotNull(servers);
+    Preconditions.checkArgument(!servers.isEmpty());
+    boolean connected = false;
+    for(ServerInfo server: servers) {
+      try {
+        RpcClient rpc = new RpcClient(conf, server);
+        if(rpc.connect()) {
+          rpcClient = rpc;
+          remoteServer = server;
+          connected = true;
+          break;
+        }
+      } catch(Exception e) {
+        LOG.error("Failed connecting to:" + remoteServer);
+      }
+    }
+    
+    if(!connected) {
+      RuntimeException e = new RuntimeException("Could not connect to all raft servers");
+      throw e;
+    }
+    
+    connected = false;
+    ServerInfo leader = lookupLeader();
+    if(leader != null && !leader.equals(remoteServer)) {
+      LOG.info("closing connection to " + remoteServer + ", connecting to " + leader);
+      try {
+        rpcClient.close();
+        RpcClient rpcLeader = new RpcClient(conf, leader);
+        if(rpcLeader.connect()) {
+          rpcClient = rpcLeader;
+          remoteServer = leader;
+          connected = true;
+        }
+      } catch(Exception e) {
+        LOG.error("Failed connecting to:" + remoteServer, e);
+      }
+    } else if(leader != null && !leader.equals(remoteServer)) {
+      LOG.info("This connected server is leader:" + leader);
+    }
+    
+    if(!connected) {
+      RuntimeException e = new RuntimeException("Could not connect to leader:" + leader);
+      throw e;
+    }
+    
     userConnection = new ConnectionImpl();
     kvs = new KeyValueStoreImpl();
+  }
+  
+  public ServerInfo getRemoteServer() {
+    return remoteServer;
   }
   
   public static Connection getConnection() {
@@ -62,23 +114,8 @@ public class ConnectionManager {
   }
   
   public static Connection getConnection(Configuration conf) {
-    
-    ServerInfo server = ServerInfo.parseFromString(conf.getString("raft.server.local"));
-    ConnectionManager mgr = new ConnectionManager(conf, server);
-    
-    ServerInfo leader = mgr.lookupLeader();
-    if(leader == null)
-      return null;
-    LOG.info("LOOKUPLEADER, leader:" + leader + ", connected server:" + server);
-    if(leader.equals(server)) {
-      LOG.info("this connected server is leader");
-      return mgr.userConnection;
-    } else {
-      LOG.info("closing connection to " + server + ", connecting to " + leader);
-      mgr.close();
-      ConnectionManager leaderMgr = new ConnectionManager(conf, leader);
-      return leaderMgr.userConnection;
-    }
+    ConnectionManager mgr = new ConnectionManager(conf, ClusterMemberManager.getRaftServers(conf));
+    return mgr.userConnection;
   }
   
   public void close() {

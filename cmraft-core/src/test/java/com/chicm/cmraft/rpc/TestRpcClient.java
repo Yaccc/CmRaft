@@ -35,14 +35,19 @@ public class TestRpcClient {
     //server.startRpcServer();
     //server.startTPSReport();
     Configuration conf = CmRaftConfiguration.create();
-    int port = ServerInfo.parseFromString(conf.getString("raft.server.local")).getPort();
+    //int port = ServerInfo.parseFromString(conf.getString("raft.server.local")).getPort();
       
-      for(int i =0; i < 20; i++) {
+      for(int i =0; i < 1; i++) {
         final RpcClient client = new RpcClient(CmRaftConfiguration.create(), new ServerInfo( "localhost", 12888));
   
-        client.sendRequest(1024*1024);
-    
-        //Thread.sleep(100);
+        //client.sendRequest(1024*1024);
+       
+        client.connect();
+        client.testRpc(100);
+        client.close();
+        client.testRpc(100);
+        System.out.println("closing...");
+        Thread.sleep(10000000);
       }
       System.out.println("closing");
       //client.close();

@@ -89,7 +89,7 @@ public class DefaultRaftLog implements RaftLog {
   public DefaultRaftLog(RaftNode node, Configuration conf) {
     this.node = node;
     this.conf = conf;
-    thisServer = ServerInfo.parseFromString(conf.getString("raft.server.local"));
+    thisServer = node.getServerInfo();
     
     loadPersistentData();
     startFlushWorker();
@@ -106,7 +106,7 @@ public class DefaultRaftLog implements RaftLog {
   private void leaderInit() {
     LOG.info(getServerName() + ": LEADER INIT");
     
-    for(ServerInfo remoteServer: ServerInfo.getRemoteServersFromConfiguration(conf)) {
+    for(ServerInfo remoteServer: node.getRemoteServers()) {
       FollowerIndexes fIndexes = new FollowerIndexes(getLastApplied() +1, 0);
       followerIndexes.put(remoteServer, fIndexes);
     }
@@ -226,6 +226,7 @@ public class DefaultRaftLog implements RaftLog {
     //need to assure that the entries are sorted before hand.
     for(RaftLogEntry entry: leaderEntries) {
       entries.put(entry.getIndex(), entry);
+      applyKeyValueLog(entry.getIndex());
       if(entry.getIndex() > getLastApplied()) {
         setLastApplied(entry.getIndex());
       }
@@ -302,7 +303,7 @@ public class DefaultRaftLog implements RaftLog {
     
     boolean committed = true;
     //making rpc call to followers
-    if(!node.getNodeConnectionManager().getOtherServers().isEmpty()) {
+    if(!node.getNodeConnectionManager().getRemoteServers().isEmpty()) {
       committed = false;
       node.getNodeConnectionManager().appendEntries(this, entry.getIndex());
       //waiting for results
@@ -359,7 +360,7 @@ public class DefaultRaftLog implements RaftLog {
     
     boolean committed = true;
     //making rpc call to followers
-    if(!node.getNodeConnectionManager().getOtherServers().isEmpty()) {
+    if(!node.getNodeConnectionManager().getRemoteServers().isEmpty()) {
       committed = false;
       node.getNodeConnectionManager().appendEntries(this, entry.getIndex());
       //waiting for results
@@ -394,13 +395,17 @@ public class DefaultRaftLog implements RaftLog {
     Preconditions.checkArgument(startIndex <= getLastApplied() && startIndex >= 0);
     Preconditions.checkArgument(endIndex <= getLastApplied() && endIndex >= 0);
     for(long index = startIndex; index <= endIndex; index++) {
-      RaftLogEntry log = entries.get(index);
-      if(log.hasMode() && log.getMode() == RaftLogEntry.MutationMode.SET) {
-        keyValues.put(log.getKv().getKey(), log.getKv().getValue());
-      } else if(log.hasMode() && log.getMode() == RaftLogEntry.MutationMode.DELETE) {
-        keyValues.remove(log.getKv().getKey());
-      } else;
+      applyKeyValueLog(index);
     }
+  }
+  
+  private void applyKeyValueLog(long index) {
+    RaftLogEntry log = entries.get(index);
+    if(log.hasMode() && log.getMode() == RaftLogEntry.MutationMode.SET) {
+      keyValues.put(log.getKv().getKey(), log.getKv().getValue());
+    } else if(log.hasMode() && log.getMode() == RaftLogEntry.MutationMode.DELETE) {
+      keyValues.remove(log.getKv().getKey());
+    } else;
   }
   
   private Path dataFile;

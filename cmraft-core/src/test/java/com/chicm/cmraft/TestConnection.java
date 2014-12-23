@@ -62,6 +62,7 @@ public class TestConnection {
     System.out.println("deleting");
     System.out.println("" + kvs.delete("key1"));
     System.out.println("" + kvs.delete("key1xxff"));
+    System.out.println("" + kvs.list("key1xxff"));
     
     
     Thread.sleep(3000);

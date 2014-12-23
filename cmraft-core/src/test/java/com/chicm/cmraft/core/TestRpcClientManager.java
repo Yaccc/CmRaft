@@ -47,17 +47,12 @@ public class TestRpcClientManager {
   
   @Test
   public void testGetOtherServers() {
-    assertFalse(mgr.getOtherServers().contains(new ServerInfo("chicm1", 1111)));
-    assertTrue(mgr.getOtherServers().contains(new ServerInfo("chicm2", 2222)));
-    assertTrue(mgr.getOtherServers().contains(new ServerInfo("chicm3", 3333)));
+    assertFalse(mgr.getRemoteServers().contains(new ServerInfo("chicm1", 1111)));
+    assertTrue(mgr.getRemoteServers().contains(new ServerInfo("chicm2", 2222)));
+    assertTrue(mgr.getRemoteServers().contains(new ServerInfo("chicm3", 3333)));
   }
   
-  @Test
-  public void testGetAllServers() {
-    assertTrue(mgr.getAllServers().contains(new ServerInfo("chicm1", 1111)));
-    assertTrue(mgr.getAllServers().contains(new ServerInfo("chicm2", 2222)));
-    assertTrue(mgr.getAllServers().contains(new ServerInfo("chicm3", 3333)));
-  }
+  
   @Test
   public void testRpcClientMap() {
     RaftNode[] nodes =LocalCluster.create(3, 14888).getNodes(); 
@@ -69,8 +64,8 @@ public class TestRpcClientManager {
     for(int i = 0; i < nodes.length; i++) {
       NodeConnectionManager mgr = nodes[i].getNodeConnectionManager();
       
-      System.out.println(mgr.getThisServer());
-      for(ServerInfo server: mgr.getOtherServers()) {
+      //System.out.println(mgr.getThisServer());
+      for(ServerInfo server: mgr.getRemoteServers()) {
         System.out.println(server);
         //RpcClient client = mgr.getRpcClient(server);
         //AsynchronousChannel channel = client.getChannel();

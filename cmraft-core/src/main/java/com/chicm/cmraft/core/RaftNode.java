@@ -20,6 +20,7 @@
 
 package com.chicm.cmraft.core;
 
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -96,8 +97,9 @@ public class RaftNode {
   private RaftStateChangeListener stateChangeListener = new RaftStateChangeListenerImpl();
   private RaftRpcService raftService = null;
   private RaftLog raftLog= null;
+  private ClusterMemberManager memberManager = null;
 
-  private ServerInfo serverInfo = null;
+  //private ServerInfo serverInfo = null;
   private ServerInfo currentLeader = null;
   
   //persistent state for all servers
@@ -108,13 +110,14 @@ public class RaftNode {
 
   public RaftNode(Configuration conf) {
     this.conf = conf;
-    serverInfo = ServerInfo.parseFromString(conf.getString("raft.server.local"));
+    memberManager = new ClusterMemberManager(conf);
+    //serverInfo = ServerInfo.parseFromString(conf.getString("raft.server.local"));
     raftService = RaftRpcService.create(this, conf);
     raftLog= new DefaultRaftLog(this, conf);
     //initialize the term value to be the saved term of last run
     currentTerm.set(raftLog.getLogTerm(raftLog.getCommitIndex()));
     fsm = new StateMachine(stateChangeListener);
-    rpcServer = new RpcServer(conf, raftService);
+    rpcServer = new RpcServer(conf, raftService, getServerInfo());
     nodeConnectionManager = new NodeConnectionManager(conf, this);
     rpcServer.startRpcServer();
     timer = RaftNodeTimer.create(getName()+ "-timeout-worker", getElectionTimeout(), timeoutListener);
@@ -127,7 +130,11 @@ public class RaftNode {
   }
   
   public ServerInfo getServerInfo() {
-    return serverInfo;
+    return memberManager.getLocalServer();
+  }
+  
+  public Set<ServerInfo> getRemoteServers() {
+    return memberManager.getRemoteServers();
   }
   
   private void setCurrentLeader(ServerInfo newLeader) {
@@ -156,14 +163,11 @@ public class RaftNode {
   }
   
   public String getName() {
-    if(nodeConnectionManager == null)
-      return "";
-    return String.format("RaftNode[%s:%d]",  nodeConnectionManager.getThisServer().getHost(),
-      nodeConnectionManager.getThisServer().getPort());
+    return "RaftNode" + getServerInfo().toString();
   }
   
   public int getTotalServerNumbers () {
-    return nodeConnectionManager.getOtherServers().size() + 1;
+    return nodeConnectionManager.getRemoteServers().size() + 1;
   }
   
   public void resetTimer() {

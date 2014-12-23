@@ -157,11 +157,6 @@ public class RaftRpcService implements RaftService.BlockingInterface{
       getRaftNode().discoverHigherTerm(ServerInfo.copyFrom(request.getCandidateId()), request.getTerm());
     }
     
-    ServerId.Builder sbuilder = ServerId.newBuilder();
-    sbuilder.setHostName(getRaftNode().getServerInfo().getHost());
-    sbuilder.setPort(getRaftNode().getServerInfo().getPort());
-    sbuilder.setStartCode(getRaftNode().getServerInfo().getStartCode());
-    
     boolean granted = getRaftNode().voteRequest(new ServerInfo(request.getCandidateId().getHostName(), 
       request.getCandidateId().getPort()), request.getTerm(), request.getLastLogIndex(), request.getLastLogTerm());
     
@@ -171,7 +166,7 @@ public class RaftRpcService implements RaftService.BlockingInterface{
     CollectVoteResponse.Builder builder = CollectVoteResponse.newBuilder();
     builder.setGranted(granted);
     builder.setTerm(getRaftNode().getCurrentTerm());
-    builder.setFromHost(sbuilder.build());
+    builder.setFromHost(getRaftNode().getServerInfo().toServerId());
     
     return builder.build();
   }

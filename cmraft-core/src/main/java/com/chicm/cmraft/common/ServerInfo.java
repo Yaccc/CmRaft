@@ -32,18 +32,10 @@ public class ServerInfo {
   static final Log LOG = LogFactory.getLog(ServerInfo.class);
   private final String host;
   private final int port;
-  private final long startCode;
   
   public ServerInfo(String host, int port) {
     this.host = host;
     this.port = port;
-    this.startCode = 0;
-  }
-  
-  public ServerInfo(String host, int port, long startCode) {
-    this.host = host;
-    this.port = port;
-    this.startCode = startCode;
   }
   
   /**
@@ -58,13 +50,6 @@ public class ServerInfo {
    */
   public int getPort() {
     return port;
-  }
- 
-  /**
-   * @return the startCode
-   */
-  public long getStartCode() {
-    return startCode;
   }
   
   public static ServerInfo parseFromString(String hostAddress) {
@@ -82,7 +67,7 @@ public class ServerInfo {
     }
     return new ServerInfo(results[0], port);
   }
-  
+  /*
   public static List<ServerInfo> getRemoteServersFromConfiguration(Configuration conf) {
     List<ServerInfo> servers = new ArrayList<ServerInfo>();
     for (String key: conf.getKeys("raft.server.remote")) {
@@ -90,14 +75,13 @@ public class ServerInfo {
       servers.add(server);
     }
     return servers;
-  }
+  }*/
   
   public ServerId toServerId() {
     ServerId.Builder builder = ServerId.newBuilder();
     if(getHost() != null)
       builder.setHostName(getHost());
     builder.setPort(getPort());
-    builder.setStartCode(getStartCode());
     
     return builder.build();
   }
@@ -105,13 +89,13 @@ public class ServerInfo {
   public static ServerInfo copyFrom(ServerId serverId) {
     if(serverId == null)
       return null;
-    ServerInfo server = new ServerInfo(serverId.getHostName(), serverId.getPort(), serverId.getStartCode());
+    ServerInfo server = new ServerInfo(serverId.getHostName(), serverId.getPort());
     return server;
   }
   
   @Override
   public String toString() {
-    return String.format("[%s:%d:%d]", getHost(), getPort(), getStartCode());
+    return String.format("[%s:%d]", getHost(), getPort());
   }
 
   
@@ -124,7 +108,6 @@ public class ServerInfo {
     }
     int hash = 41;
     hash = (19 * hash) + getPort();
-    hash = (37 * hash) + (int)getStartCode();
     if(getHost()!=null) {
       hash = (53 * hash) + getHost().hashCode();
     }
@@ -153,7 +136,6 @@ public class ServerInfo {
     }
     
     result = result && (getPort()==other.getPort());
-    result = result && (getStartCode() == other.getStartCode());
     
     return result;
   }

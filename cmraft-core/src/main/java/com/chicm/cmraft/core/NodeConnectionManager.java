@@ -47,25 +47,18 @@ public class NodeConnectionManager {
   static final Log LOG = LogFactory.getLog(NodeConnectionManager.class);
   private Configuration conf;
   private Map<ServerInfo, NodeConnection> connections;
-  private ServerInfo thisServer;
   private RaftNode raftNode;
   
   public NodeConnectionManager(Configuration conf, RaftNode node) {
     this.conf = conf;
     this.raftNode = node;
-    initServerList(this.conf);
+    initServerList();
   }
   
-  public ServerInfo getThisServer() {
-    return thisServer;
-  }
-  
-  private void initServerList(Configuration conf) {
+  private void initServerList() {
     connections = new ConcurrentHashMap<>();
     
-    thisServer = ServerInfo.parseFromString(conf.getString("raft.server.local"));
-    
-    for (ServerInfo remote : ServerInfo.getRemoteServersFromConfiguration(conf)) {
+    for (ServerInfo remote : getRaftNode().getRemoteServers()) {
       NodeConnection client = new DefaultNodeConnection(conf, remote);
       connections.put(remote, client);
     }
@@ -75,15 +68,8 @@ public class NodeConnectionManager {
     return raftNode;
   }
   
-  public Set<ServerInfo> getOtherServers() {
+  public Set<ServerInfo> getRemoteServers() {
     return connections.keySet();
-  }
-  
-  public Set<ServerInfo> getAllServers() {
-    HashSet<ServerInfo> s = new HashSet<>();
-    s.addAll(getOtherServers());
-    s.add(thisServer);
-    return s;
   }
   
   public void beatHeart(long term, ServerInfo leaderId, long leaderCommit,
@@ -94,7 +80,7 @@ public class NodeConnectionManager {
   }
   
   public void appendEntries(RaftLog logMgr, long lastApplied) {
-    int nServers = getOtherServers().size();
+    int nServers = getRemoteServers().size();
     if(nServers <= 0) {
       return;
     }
@@ -109,13 +95,13 @@ public class NodeConnectionManager {
         }
     });
     
-    for(ServerInfo server: getOtherServers()) {
+    for(ServerInfo server: getRemoteServers()) {
       NodeConnection conn = connections.get(server);
       long startIndex = logMgr.getFollowerMatchIndex(server) + 1;
           
       LOG.info(getRaftNode().getName() + ": SENDING appendEntries Request TO: " + server);
       Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), conn, getRaftNode().getRaftLog(), 
-        thisServer, getRaftNode().getCurrentTerm(), logMgr.getCommitIndex(), startIndex-1, 
+        getRaftNode().getServerInfo(), getRaftNode().getCurrentTerm(), logMgr.getCommitIndex(), startIndex-1, 
         logMgr.getLogTerm(startIndex-1), logMgr.getLogEntries(startIndex, lastApplied), lastApplied));
       t.setDaemon(true);
       executor.execute(t);
@@ -126,7 +112,7 @@ public class NodeConnectionManager {
       long prevLogIndex, long prevLogTerm, List<RaftLogEntry> entries, long maxIndex) {
     Preconditions.checkNotNull(entries);
     
-    int nServers = getOtherServers().size();
+    int nServers = getRemoteServers().size();
     if(nServers <= 0) {
       return;
     }
@@ -141,10 +127,10 @@ public class NodeConnectionManager {
         }
     });
     
-    for(ServerInfo server: getOtherServers()) {
+    for(ServerInfo server: getRemoteServers()) {
       NodeConnection connection = connections.get(server);
       LOG.debug(getRaftNode().getName() + ": SENDING appendEntries Request TO: " + server);
-      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), connection, getRaftNode().getRaftLog(), thisServer, term,
+      Thread t = new Thread(new AsynchronousAppendEntriesWorker(getRaftNode(), connection, getRaftNode().getRaftLog(), getRaftNode().getServerInfo(), term,
         leaderCommit, prevLogIndex, prevLogTerm, entries, maxIndex));
       t.setDaemon(true);
       executor.execute(t);
@@ -152,7 +138,7 @@ public class NodeConnectionManager {
   }
   
   public void collectVote(long term, long lastLogIndex, long lastLogTerm) {
-    int nServers = getOtherServers().size();
+    int nServers = getRemoteServers().size();
     if(nServers <= 0) {
       return;
     }
@@ -166,10 +152,10 @@ public class NodeConnectionManager {
         }
     });
     
-    for(ServerInfo server: getOtherServers()) {
+    for(ServerInfo server: getRemoteServers()) {
       NodeConnection conn = connections.get(server);
       LOG.debug(getRaftNode().getName() + ": SENDING COLLECTVOTE Request TO: " + server);
-      Thread t = new Thread(new AsynchronousVoteWorker(getRaftNode(), conn, thisServer, term,
+      Thread t = new Thread(new AsynchronousVoteWorker(getRaftNode(), conn, getRaftNode().getServerInfo(), term,
         lastLogIndex, lastLogTerm));
       t.setDaemon(true);
       executor.execute(t);

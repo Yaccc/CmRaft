@@ -85,7 +85,7 @@ public class RpcClient {
     return connected;
   }
   
-  private synchronized boolean connect() 
+  public synchronized boolean connect() 
       throws IOException, InterruptedException, ExecutionException {
     
     if(isConnected())
@@ -117,6 +117,7 @@ public class RpcClient {
   
   public synchronized void close() {
     try {
+      LOG.info("Closing connection");
       ctx.close().sync();
       connected = false;
     } catch(Exception e) {
@@ -269,7 +270,7 @@ public class RpcClient {
     byte[] bytes = new byte[packetSize];
     builder.setData(ByteString.copyFrom(bytes));
     
-    getStub().testRpc(null, builder.build());
+    stub.testRpc(null, builder.build());
   }
   
   private ThreadLocal<Long> startTime = new ThreadLocal<>();

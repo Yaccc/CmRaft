@@ -51,18 +51,5 @@ public class TestServerInfo {
     ServerId sid = thisServer.toServerId();
     System.out.println(sid);
   }
-  
-  @Test 
-  public void testGetRemoteServersFromConfiguratoin() {
-    List<ServerInfo> list = ServerInfo.getRemoteServersFromConfiguration(conf);
-    System.out.println("testGetRemoteServersFromConfiguratoin");
-    for(ServerInfo s:list) {
-      System.out.println(s);
-    }
-    assertTrue(list.contains(new ServerInfo("chicm", 1111)));
-    assertTrue(list.contains(new ServerInfo("chicm", 2222)));
-    assertTrue(list.contains(new ServerInfo("chicm", 3333)));
-    assertFalse(list.contains(new ServerInfo("chicm", 5555)));
-    assertFalse(list.contains(new ServerInfo("chicm", 4444)));
-  }
+ 
 }

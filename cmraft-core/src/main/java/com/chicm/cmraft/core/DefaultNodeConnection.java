@@ -59,13 +59,9 @@ public class DefaultNodeConnection implements NodeConnection {
   @Override
   public CollectVoteResponse collectVote(ServerInfo candidate, long term, long lastLogIndex,
       long lastLogTerm) throws Exception  {
-    ServerId.Builder sbuilder = ServerId.newBuilder();
-    sbuilder.setHostName(candidate.getHost());
-    sbuilder.setPort(candidate.getPort());
-    sbuilder.setStartCode(candidate.getStartCode());
-    
+        
     CollectVoteRequest.Builder builder = CollectVoteRequest.newBuilder();
-    builder.setCandidateId(sbuilder.build());
+    builder.setCandidateId(candidate.toServerId());
     builder.setTerm(term);
     builder.setLastLogIndex(lastLogIndex);
     builder.setLastLogTerm(lastLogTerm);

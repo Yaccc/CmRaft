@@ -35,16 +35,6 @@ public final class RaftProtos {
      * <code>required uint32 port = 2;</code>
      */
     int getPort();
-
-    // optional uint64 start_code = 3;
-    /**
-     * <code>optional uint64 start_code = 3;</code>
-     */
-    boolean hasStartCode();
-    /**
-     * <code>optional uint64 start_code = 3;</code>
-     */
-    long getStartCode();
   }
   /**
    * Protobuf type {@code ServerId}
@@ -105,11 +95,6 @@ public final class RaftProtos {
             case 16: {
               bitField0_ |= 0x00000002;
               port_ = input.readUInt32();
-              break;
-            }
-            case 24: {
-              bitField0_ |= 0x00000004;
-              startCode_ = input.readUInt64();
               break;
             }
           }
@@ -211,26 +196,9 @@ public final class RaftProtos {
       return port_;
     }
 
-    // optional uint64 start_code = 3;
-    public static final int START_CODE_FIELD_NUMBER = 3;
-    private long startCode_;
-    /**
-     * <code>optional uint64 start_code = 3;</code>
-     */
-    public boolean hasStartCode() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional uint64 start_code = 3;</code>
-     */
-    public long getStartCode() {
-      return startCode_;
-    }
-
     private void initFields() {
       hostName_ = "";
       port_ = 0;
-      startCode_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -258,9 +226,6 @@ public final class RaftProtos {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeUInt32(2, port_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeUInt64(3, startCode_);
-      }
       getUnknownFields().writeTo(output);
     }
 
@@ -277,10 +242,6 @@ public final class RaftProtos {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(2, port_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(3, startCode_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -402,8 +363,6 @@ public final class RaftProtos {
         bitField0_ = (bitField0_ & ~0x00000001);
         port_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
-        startCode_ = 0L;
-        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -440,10 +399,6 @@ public final class RaftProtos {
           to_bitField0_ |= 0x00000002;
         }
         result.port_ = port_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.startCode_ = startCode_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -467,9 +422,6 @@ public final class RaftProtos {
         }
         if (other.hasPort()) {
           setPort(other.getPort());
-        }
-        if (other.hasStartCode()) {
-          setStartCode(other.getStartCode());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -609,39 +561,6 @@ public final class RaftProtos {
       public Builder clearPort() {
         bitField0_ = (bitField0_ & ~0x00000002);
         port_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // optional uint64 start_code = 3;
-      private long startCode_ ;
-      /**
-       * <code>optional uint64 start_code = 3;</code>
-       */
-      public boolean hasStartCode() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional uint64 start_code = 3;</code>
-       */
-      public long getStartCode() {
-        return startCode_;
-      }
-      /**
-       * <code>optional uint64 start_code = 3;</code>
-       */
-      public Builder setStartCode(long value) {
-        bitField0_ |= 0x00000004;
-        startCode_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional uint64 start_code = 3;</code>
-       */
-      public Builder clearStartCode() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        startCode_ = 0L;
         onChanged();
         return this;
       }
@@ -12592,50 +12511,49 @@ public final class RaftProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\nRaft.proto\"?\n\010ServerId\022\021\n\thost_name\030\001 " +
-      "\002(\t\022\014\n\004port\030\002 \002(\r\022\022\n\nstart_code\030\003 \001(\004\"1\n" +
-      "\rRequestHeader\022\n\n\002id\030\001 \002(\r\022\024\n\014request_na" +
-      "me\030\002 \002(\t\"3\n\016ResponseHeader\022\n\n\002id\030\001 \002(\r\022\025" +
-      "\n\rresponse_name\030\002 \002(\t\"m\n\022CollectVoteRequ" +
-      "est\022\036\n\013candidateId\030\001 \002(\0132\t.ServerId\022\014\n\004t" +
-      "erm\030\002 \002(\004\022\024\n\014lastLogIndex\030\003 \002(\004\022\023\n\013lastL" +
-      "ogTerm\030\004 \002(\004\"Q\n\023CollectVoteResponse\022\033\n\010f" +
-      "romHost\030\001 \002(\0132\t.ServerId\022\014\n\004term\030\002 \002(\004\022\017" +
-      "\n\007granted\030\003 \002(\010\"\036\n\016TestRpcRequest\022\014\n\004dat",
-      "a\030\001 \001(\014\"!\n\017TestRpcResponse\022\016\n\006result\030\001 \001" +
-      "(\014\"*\n\014KeyValuePair\022\013\n\003key\030\001 \001(\014\022\r\n\005value" +
-      "\030\002 \001(\014\"\256\001\n\014RaftLogEntry\022\r\n\005index\030\001 \001(\004\022\014" +
-      "\n\004term\030\002 \001(\004\022\031\n\002kv\030\003 \001(\0132\r.KeyValuePair\022" +
-      "(\n\004mode\030\004 \001(\0162\032.RaftLogEntry.MutationMod" +
-      "e\"<\n\014MutationMode\022\007\n\003SET\020\000\022\n\n\006DELETE\020\001\022\014" +
-      "\n\010C_OLDNEW\020\002\022\t\n\005C_NEW\020\003\"\242\001\n\024AppendEntrie" +
-      "sRequest\022\014\n\004term\030\001 \001(\004\022\033\n\010leaderId\030\002 \001(\013" +
-      "2\t.ServerId\022\024\n\014leaderCommit\030\003 \001(\004\022\024\n\014pre" +
-      "vLogIndex\030\004 \001(\004\022\023\n\013prevLogTerm\030\005 \001(\004\022\036\n\007",
-      "entries\030\006 \003(\0132\r.RaftLogEntry\"6\n\025AppendEn" +
-      "triesResponse\022\014\n\004term\030\001 \001(\004\022\017\n\007success\030\002" +
-      " \001(\010\"\025\n\023LookupLeaderRequest\"B\n\024LookupLea" +
-      "derResponse\022\017\n\007success\030\001 \001(\010\022\031\n\006leader\030\002" +
-      " \001(\0132\t.ServerId\"\'\n\nSetRequest\022\031\n\002kv\030\001 \001(" +
-      "\0132\r.KeyValuePair\"\036\n\013SetResponse\022\017\n\007succe" +
-      "ss\030\001 \001(\010\"\031\n\nGetRequest\022\013\n\003key\030\001 \001(\014\"-\n\013G" +
-      "etResponse\022\r\n\005value\030\001 \001(\014\022\017\n\007success\030\002 \001" +
-      "(\010\"\036\n\013ListRequest\022\017\n\007pattern\030\001 \001(\014\"?\n\014Li" +
-      "stResponse\022\017\n\007success\030\001 \001(\010\022\036\n\007results\030\002",
-      " \003(\0132\r.KeyValuePair\"\034\n\rDeleteRequest\022\013\n\003" +
-      "key\030\001 \001(\014\"!\n\016DeleteResponse\022\017\n\007success\030\001" +
-      " \001(\0102\206\003\n\013RaftService\0228\n\013collectVote\022\023.Co" +
-      "llectVoteRequest\032\024.CollectVoteResponse\022>" +
-      "\n\rappendEntries\022\025.AppendEntriesRequest\032\026" +
-      ".AppendEntriesResponse\022,\n\007testRpc\022\017.Test" +
-      "RpcRequest\032\020.TestRpcResponse\022;\n\014lookupLe" +
-      "ader\022\024.LookupLeaderRequest\032\025.LookupLeade" +
-      "rResponse\022 \n\003get\022\013.GetRequest\032\014.GetRespo" +
-      "nse\022 \n\003set\022\013.SetRequest\032\014.SetResponse\022)\n",
-      "\006delete\022\016.DeleteRequest\032\017.DeleteResponse" +
-      "\022#\n\004list\022\014.ListRequest\032\r.ListResponseB6\n" +
-      "#com.chicm.cmraft.protobuf.generatedB\nRa" +
-      "ftProtosH\001\210\001\001"
+      "\n\nRaft.proto\"+\n\010ServerId\022\021\n\thost_name\030\001 " +
+      "\002(\t\022\014\n\004port\030\002 \002(\r\"1\n\rRequestHeader\022\n\n\002id" +
+      "\030\001 \002(\r\022\024\n\014request_name\030\002 \002(\t\"3\n\016Response" +
+      "Header\022\n\n\002id\030\001 \002(\r\022\025\n\rresponse_name\030\002 \002(" +
+      "\t\"m\n\022CollectVoteRequest\022\036\n\013candidateId\030\001" +
+      " \002(\0132\t.ServerId\022\014\n\004term\030\002 \002(\004\022\024\n\014lastLog" +
+      "Index\030\003 \002(\004\022\023\n\013lastLogTerm\030\004 \002(\004\"Q\n\023Coll" +
+      "ectVoteResponse\022\033\n\010fromHost\030\001 \002(\0132\t.Serv" +
+      "erId\022\014\n\004term\030\002 \002(\004\022\017\n\007granted\030\003 \002(\010\"\036\n\016T" +
+      "estRpcRequest\022\014\n\004data\030\001 \001(\014\"!\n\017TestRpcRe",
+      "sponse\022\016\n\006result\030\001 \001(\014\"*\n\014KeyValuePair\022\013" +
+      "\n\003key\030\001 \001(\014\022\r\n\005value\030\002 \001(\014\"\256\001\n\014RaftLogEn" +
+      "try\022\r\n\005index\030\001 \001(\004\022\014\n\004term\030\002 \001(\004\022\031\n\002kv\030\003" +
+      " \001(\0132\r.KeyValuePair\022(\n\004mode\030\004 \001(\0162\032.Raft" +
+      "LogEntry.MutationMode\"<\n\014MutationMode\022\007\n" +
+      "\003SET\020\000\022\n\n\006DELETE\020\001\022\014\n\010C_OLDNEW\020\002\022\t\n\005C_NE" +
+      "W\020\003\"\242\001\n\024AppendEntriesRequest\022\014\n\004term\030\001 \001" +
+      "(\004\022\033\n\010leaderId\030\002 \001(\0132\t.ServerId\022\024\n\014leade" +
+      "rCommit\030\003 \001(\004\022\024\n\014prevLogIndex\030\004 \001(\004\022\023\n\013p" +
+      "revLogTerm\030\005 \001(\004\022\036\n\007entries\030\006 \003(\0132\r.Raft",
+      "LogEntry\"6\n\025AppendEntriesResponse\022\014\n\004ter" +
+      "m\030\001 \001(\004\022\017\n\007success\030\002 \001(\010\"\025\n\023LookupLeader" +
+      "Request\"B\n\024LookupLeaderResponse\022\017\n\007succe" +
+      "ss\030\001 \001(\010\022\031\n\006leader\030\002 \001(\0132\t.ServerId\"\'\n\nS" +
+      "etRequest\022\031\n\002kv\030\001 \001(\0132\r.KeyValuePair\"\036\n\013" +
+      "SetResponse\022\017\n\007success\030\001 \001(\010\"\031\n\nGetReque" +
+      "st\022\013\n\003key\030\001 \001(\014\"-\n\013GetResponse\022\r\n\005value\030" +
+      "\001 \001(\014\022\017\n\007success\030\002 \001(\010\"\036\n\013ListRequest\022\017\n" +
+      "\007pattern\030\001 \001(\014\"?\n\014ListResponse\022\017\n\007succes" +
+      "s\030\001 \001(\010\022\036\n\007results\030\002 \003(\0132\r.KeyValuePair\"",
+      "\034\n\rDeleteRequest\022\013\n\003key\030\001 \001(\014\"!\n\016DeleteR" +
+      "esponse\022\017\n\007success\030\001 \001(\0102\206\003\n\013RaftService" +
+      "\0228\n\013collectVote\022\023.CollectVoteRequest\032\024.C" +
+      "ollectVoteResponse\022>\n\rappendEntries\022\025.Ap" +
+      "pendEntriesRequest\032\026.AppendEntriesRespon" +
+      "se\022,\n\007testRpc\022\017.TestRpcRequest\032\020.TestRpc" +
+      "Response\022;\n\014lookupLeader\022\024.LookupLeaderR" +
+      "equest\032\025.LookupLeaderResponse\022 \n\003get\022\013.G" +
+      "etRequest\032\014.GetResponse\022 \n\003set\022\013.SetRequ" +
+      "est\032\014.SetResponse\022)\n\006delete\022\016.DeleteRequ",
+      "est\032\017.DeleteResponse\022#\n\004list\022\014.ListReque" +
+      "st\032\r.ListResponseB6\n#com.chicm.cmraft.pr" +
+      "otobuf.generatedB\nRaftProtosH\001\210\001\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -12647,7 +12565,7 @@ public final class RaftProtos {
           internal_static_ServerId_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ServerId_descriptor,
-              new java.lang.String[] { "HostName", "Port", "StartCode", });
+              new java.lang.String[] { "HostName", "Port", });
           internal_static_RequestHeader_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_RequestHeader_fieldAccessorTable = new

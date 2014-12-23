@@ -30,10 +30,11 @@ import com.chicm.cmraft.core.RaftRpcService;
 public class TestRpcServer {
 
   public static void main(String[] args) {
-    RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create());
+    RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create(), 
+      new ServerInfo("localhost", 12888));
     server.startRpcServer();
-    server.startTPSReport();
-    
+    //server.startTPSReport();
+    /*
     for (int i =0; i < 5; i++) {
       //final RpcClient client = new RpcClient(CmRaftConfiguration.create(), new ServerInfo("localhost", 18080));
       final RpcClient client = new RpcClient(CmRaftConfiguration.create(), server.getServerInfo());
@@ -45,12 +46,12 @@ public class TestRpcServer {
           }
         }).start();
       }
-    }
+    }*/
   }
 
   @Test
   public void testStartServer() {
-    RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create());
+    RpcServer server = new RpcServer(CmRaftConfiguration.create(), RaftRpcService.create(), new ServerInfo("localhost", 12888));
     //server.startRpcServer();
   }
 }
