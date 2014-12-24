@@ -82,6 +82,10 @@ public class RpcClient {
   }
   
   public boolean isConnected() {
+    if(ctx == null)
+      return false;
+    if(!ctx.channel().isActive())
+      return false;
     return connected;
   }
   

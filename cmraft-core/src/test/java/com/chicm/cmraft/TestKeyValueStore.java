@@ -41,12 +41,13 @@ public class TestKeyValueStore {
     Connection conn = null;
     while(true) {
       if(totalTime >= timeout) {
-        return conn;
+        return null;
       }
       try {
         conn = ConnectionManager.getConnection(cluster.getConf(0));
       } catch(Exception e) {
         System.out.println("connect failed, reconnect...");
+        continue;
       }
       if(conn == null) {
         int interval = 1000;

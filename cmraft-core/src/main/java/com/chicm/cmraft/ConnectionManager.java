@@ -110,6 +110,7 @@ public class ConnectionManager {
       RuntimeException e = new RuntimeException("Could not connect to leader:" + leader);
       throw e;
     }
+    Preconditions.checkArgument(rpcClient.isConnected());
     
     userConnection = new ConnectionImpl();
     kvs = new KeyValueStoreImpl();
