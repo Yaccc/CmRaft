@@ -58,7 +58,9 @@ public class ConnectionManager {
     Preconditions.checkNotNull(servers);
     Preconditions.checkArgument(!servers.isEmpty());
     boolean connected = false;
+    LOG.info("Raft servers:" + servers);
     for(ServerInfo server: servers) {
+      LOG.info("Trying connect to:" + server);
       try {
         RpcClient rpc = new RpcClient(conf, server);
         if(rpc.connect()) {
@@ -73,12 +75,17 @@ public class ConnectionManager {
     }
     
     if(!connected) {
-      RuntimeException e = new RuntimeException("Could not connect to all raft servers");
+      String msg = "Could not connect to all raft servers";
+      LOG.error(msg);
+      RuntimeException e = new RuntimeException(msg);
       throw e;
+    } else {
+      LOG.info("Connected to: " + remoteServer);
     }
     
     connected = false;
     ServerInfo leader = lookupLeader();
+    LOG.info("lookupLeader:" + leader);
     if(leader != null && !leader.equals(remoteServer)) {
       LOG.info("closing connection to " + remoteServer + ", connecting to " + leader);
       try {
@@ -92,8 +99,11 @@ public class ConnectionManager {
       } catch(Exception e) {
         LOG.error("Failed connecting to:" + leader, e);
       }
-    } else if(leader != null && !leader.equals(remoteServer)) {
+    } else if(leader != null && leader.equals(remoteServer)) {
       LOG.info("This connected server is leader:" + leader);
+      connected = true;
+    } else if(leader == null) {
+      LOG.error("Could not get Leader info");
     }
     
     if(!connected) {
@@ -132,6 +142,7 @@ public class ConnectionManager {
     } catch(Exception e) {
       LOG.error("lookupLeader failed:" + e.getMessage(), e);
     }
+    LOG.error("lookupLeader returned null");
     return null;
   }
   

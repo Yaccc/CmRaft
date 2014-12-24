@@ -35,6 +35,7 @@ public class LocalCluster {
   private static final int START_PORT = 12888;
   
   private int nodeNumber = NODE_NUMBER;
+  private int nodeStartNumber;
   private int startPort = START_PORT;
   
   private Configuration[] confs;
@@ -45,10 +46,10 @@ public class LocalCluster {
   private LocalCluster() {
   }
   
-  public static synchronized LocalCluster create(int n, int startPort) {
+  public static synchronized LocalCluster create(int n, int nStart, int startPort) {
     if(instance == null) {
       instance = new LocalCluster();
-      instance.createCluster(n, startPort);
+      instance.createCluster(n, nStart, startPort);
     }
     return instance;
   }
@@ -68,14 +69,15 @@ public class LocalCluster {
     return nodes;
   }
   
-  private void createCluster(int n, int startPort) {
+  private void createCluster(int n, int nStart, int startPort) {
     this.nodeNumber = n;
+    this.nodeStartNumber = nStart;
     this.startPort = startPort;
     
     createConfiguration();
     
-    nodes = new RaftNode[nodeNumber];
-    for(int i = 0; i < nodeNumber; i++) {
+    nodes = new RaftNode[nodeStartNumber];
+    for(int i = 0; i < nodeStartNumber; i++) {
       nodes[i] = new RaftNode(confs[i]);
     }
   }
@@ -85,7 +87,7 @@ public class LocalCluster {
     int nFollower = 0;
     
     System.out.println("******************");
-    for (int i =0; i < nodeNumber; i++) {
+    for (int i =0; i < nodeStartNumber; i++) {
       System.out.println(nodes[i].getName() + ":" + nodes[i].getState() 
         + "(" + nodes[i].getCurrentTerm() + ")");
       if(nodes[i].getState() == State.LEADER) {
@@ -95,12 +97,12 @@ public class LocalCluster {
       }
     }
     assertTrue(nLeader == 1);
-    assertTrue(nFollower == (nodeNumber -1));
+    assertTrue(nFollower == (nodeStartNumber -1));
   }
   
   public void printNodesState() {
     System.out.println("******************");
-    for (int i =0; i < nodeNumber; i++) {
+    for (int i =0; i < nodeStartNumber; i++) {
       System.out.println(nodes[i].getName() + ":" + nodes[i].getState() 
         + "(" + nodes[i].getCurrentTerm() + ")");
     }
@@ -108,7 +110,7 @@ public class LocalCluster {
   
   public void checkGetCurrentLeader() {
 
-    for (int i =0; i < nodeNumber; i++) {
+    for (int i =0; i < nodeStartNumber; i++) {
       if(i != 0) {
         assertTrue(nodes[i].getCurrentLeader().equals(nodes[i-1].getCurrentLeader()));
       }

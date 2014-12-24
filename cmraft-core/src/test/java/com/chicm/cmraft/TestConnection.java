@@ -36,7 +36,7 @@ public class TestConnection {
   @Test
   public void testConnection() throws Exception {
     //org.apache.log4j.LogManager.getRootLogger().setLevel(Level.DEBUG);
-    LocalCluster cluster = LocalCluster.create(3, 12688);
+    LocalCluster cluster = LocalCluster.create(5, 5, 12688);
     Thread.sleep(10000);
     RaftNode[] nodes = cluster.getNodes();
     cluster.checkNodesState();

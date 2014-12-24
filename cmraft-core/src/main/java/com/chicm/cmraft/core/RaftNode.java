@@ -370,6 +370,7 @@ public class RaftNode {
         
       } else if(fsm.getState() == State.CANDIDATE) {
         //every timeout period, candidates start up new election
+        setCurrentLeader(null);
         increaseTerm();
         voteMySelf();
         nodeConnectionManager.collectVote(currentTerm.get(), raftLog.getLastApplied(), raftLog.getLastLogTerm());

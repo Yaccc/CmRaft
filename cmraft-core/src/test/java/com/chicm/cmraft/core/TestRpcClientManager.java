@@ -55,7 +55,7 @@ public class TestRpcClientManager {
   
   @Test
   public void testRpcClientMap() {
-    RaftNode[] nodes =LocalCluster.create(3, 14888).getNodes(); 
+    RaftNode[] nodes =LocalCluster.create(3, 3, 14888).getNodes(); 
     try {
       Thread.sleep(5000);
     } catch(Exception e) {

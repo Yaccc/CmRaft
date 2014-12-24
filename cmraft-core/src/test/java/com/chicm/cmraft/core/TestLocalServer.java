@@ -23,7 +23,7 @@ package com.chicm.cmraft.core;
 public class TestLocalServer {
 
   public static void main(String[] args) {
-    LocalCluster.create(3, 12888);
+    LocalCluster.create(3,3, 12888);
   }
 
 }

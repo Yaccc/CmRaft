@@ -41,7 +41,7 @@ public class TestRaftNode {
   @BeforeClass
   public static void init() {
     org.apache.log4j.LogManager.getRootLogger().setLevel(Level.ERROR);
-    cluster = LocalCluster.create(3, 13555);
+    cluster = LocalCluster.create(3, 3, 13555);
     nodes = cluster.getNodes();
     
   }

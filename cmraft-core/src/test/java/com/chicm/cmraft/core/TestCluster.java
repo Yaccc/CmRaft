@@ -28,7 +28,7 @@ public class TestCluster {
   @Test
   public void test() throws Exception {
     //org.apache.log4j.LogManager.getRootLogger().setLevel(Level.INFO);
-    LocalCluster clu = LocalCluster.create(10, 13999);
+    LocalCluster clu = LocalCluster.create(10, 8, 13999);
     Thread.sleep(10000);
     
     clu.checkNodesState();
