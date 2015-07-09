@@ -63,6 +63,14 @@
           <include>**/*.cmd</include>
       </includes>
     </fileSet>
+	<!--create log directory.-->
+    <fileSet>
+      <directory>${project.basedir}/../logs</directory>
+      <outputDirectory>logs</outputDirectory>
+      <excludes>
+          <exclude>**/*.*</exclude>
+      </excludes>
+    </fileSet>
     <!-- Move the ruby code over -->
     <fileSet>
         <directory>${project.basedir}/../cmraft-shell/src/main/ruby</directory>
